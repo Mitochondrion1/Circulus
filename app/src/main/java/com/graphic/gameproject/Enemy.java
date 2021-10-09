@@ -34,7 +34,7 @@ public class Enemy implements Runnable {
     public void run() {
         while (alive) {
             findPixelPosition();
-            behave();
+            //behave();
 
             try {
                 Thread.sleep(15);
@@ -61,5 +61,9 @@ public class Enemy implements Runnable {
         float width = 100f, height = 100f;
         canvas.drawRect(pixelPosition.getX() - width / 2, pixelPosition.getY() - height / 2,
                 pixelPosition.getX() + width / 2, pixelPosition.getY() + height / 2, paint);
+    }
+
+    public Vector2 getPixelPosition() {
+        return this.pixelPosition;
     }
 }

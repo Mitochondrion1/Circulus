@@ -40,6 +40,7 @@ public class MainView extends View {
         enemy.draw(canvas);
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         canvas.drawText(player.getVelocity().toString(), 5f, 110f, paint);
+        canvas.drawText(enemy.getPixelPosition().toString(), 5f, 165f, paint);
 
         invalidate();
     }

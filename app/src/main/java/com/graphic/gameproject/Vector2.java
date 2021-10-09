@@ -27,6 +27,16 @@ public class Vector2 {
         this.y = y;
     }
 
+    public float getLength() {
+        return (float)Math.sqrt(x * x + y * y);
+    }
+
+    public void setLength(float length) {
+        float l = this.getLength();
+        this.x *= l / length;
+        this.y *= l / length;
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
