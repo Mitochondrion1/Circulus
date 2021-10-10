@@ -44,6 +44,7 @@ public class Player implements Runnable {
         while (health > 0) {
             velocity.setX(0.02f * (endX - startX));
             velocity.setY(0.02f * (endY - startY));
+            velocity.setLength(1f);
             position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
             position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
             try {
