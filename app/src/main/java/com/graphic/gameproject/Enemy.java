@@ -10,11 +10,17 @@ public class Enemy implements Runnable {
     protected float damage;
     protected Vector2 position;
     protected Vector2 pixelPosition;
+    protected Vector2 positionChange;
+    protected long waitTime;
     protected MainView view;
     protected Paint paint;
     protected boolean alive;
     protected Manager manager;
     protected Thread thread;
+
+    protected int directorCost;
+    protected float baseHealth;
+    protected float baseDamage;
 
     public Enemy(Vector2 position, Manager manager, MainView view) {
         alive = true;
@@ -23,6 +29,7 @@ public class Enemy implements Runnable {
         this.view = view;
         //findPixelPosition();
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
+        waitTime = 15;
 
         paint = new Paint();
         paint.setColor(Color.CYAN);
@@ -35,11 +42,11 @@ public class Enemy implements Runnable {
     public void run() {
         while (true) {
             this.pixelPosition = this.findPixelPosition();
-            //behave();
+            behave();
             //Log.d("Is running", "Yes");
 
             try {
-                Thread.sleep(15);
+                Thread.sleep(waitTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -55,7 +62,7 @@ public class Enemy implements Runnable {
         return alive;
     }
 
-    private Vector2 findPixelPosition() {
+    protected Vector2 findPixelPosition() {
         return view.positionToPixels(view.relativePosition(position));
         //Log.d("px pos", String.valueOf(pixelPosition));
     }

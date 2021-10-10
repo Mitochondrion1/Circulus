@@ -20,17 +20,17 @@ public class MainView extends View {
     public MainView(Context context) {
         super(context);
 
-        player = new Player(100, new Vector2(0, 0), this);
-
         displaySize = DisplayParams.getDisplaySize(context);
         widthInUnits = 5f;
         pixelsPerUnit = displaySize.getX() / widthInUnits;
 
-        enemy1 = new Enemy(new Vector2(1f, 1f), null, this);
-        enemy2 = new Enemy(new Vector2(-1f, 1.5f), null, this);
-        enemy3 = new Enemy(new Vector2(-0.5f, 0.5f), null, this);
+        manager = new Manager(this);
+        player = manager.getPlayer();
 
-        manager = new Manager();
+        enemy1 = new Exploder(new Vector2(1f, 1f), manager, this);
+        enemy2 = new Exploder(new Vector2(-1f, 1.5f), manager, this);
+        enemy3 = new Exploder(new Vector2(-0.5f, 0.5f), manager, this);
+
         manager.addEnemy(enemy1);
         manager.addEnemy(enemy2);
         manager.addEnemy(enemy3);
@@ -53,7 +53,7 @@ public class MainView extends View {
     }
 
     public Player getPlayer() {
-        return player;
+        return manager.getPlayer();
     }
 
     public Vector2 relativePosition(Vector2 position) {

@@ -37,6 +37,14 @@ public class Vector2 {
         this.y *= length / l;
     }
 
+    public static float distance(Vector2 v1, Vector2 v2) {
+        return (float)Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y * v2.y));
+    }
+
+    public static Vector2 sub(Vector2 v1, Vector2 v2) {
+        return new Vector2(v2.x - v1.x, v2.y - v1.y);
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";

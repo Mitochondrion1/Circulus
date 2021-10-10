@@ -6,11 +6,13 @@ import java.util.ArrayList;
 
 public class Manager implements Runnable{
     private int level;
+    private Player player;
     private ArrayList<Enemy> enemies;
     private Director director;
 
-    public Manager() {
+    public Manager(MainView view) {
         level = 1;
+        player = new Player(100f, new Vector2(0f, 0f), view);
         enemies = new ArrayList<Enemy>();
     }
 
@@ -46,5 +48,9 @@ public class Manager implements Runnable{
         for (int i = 0; i < this.enemies.size(); i++) {
             this.enemies.get(i).draw(canvas);
         }
+    }
+
+    public Player getPlayer() {
+        return this.player;
     }
 }
