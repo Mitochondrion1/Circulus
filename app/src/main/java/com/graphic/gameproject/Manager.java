@@ -1,5 +1,7 @@
 package com.graphic.gameproject;
 
+import android.graphics.Canvas;
+
 import java.util.ArrayList;
 
 public class Manager implements Runnable{
@@ -27,6 +29,22 @@ public class Manager implements Runnable{
             }
 
             // Show prompt to continue to next level
+        }
+    }
+
+    public void moveEnemies(Vector2 positionChange) {
+        for (int i = 0; i < this.enemies.size(); i++) {
+            this.enemies.get(i).changePosition(positionChange);
+        }
+    }
+
+    public void addEnemy(Enemy enemy) {
+        this.enemies.add(enemy);
+    }
+
+    public void drawEnemies(Canvas canvas) {
+        for (int i = 0; i < this.enemies.size(); i++) {
+            this.enemies.get(i).draw(canvas);
         }
     }
 }

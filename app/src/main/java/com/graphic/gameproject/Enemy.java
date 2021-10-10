@@ -3,6 +3,7 @@ package com.graphic.gameproject;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class Enemy implements Runnable {
     protected float health;
@@ -21,20 +22,21 @@ public class Enemy implements Runnable {
         this.manager = manager;
         this.view = view;
         //findPixelPosition();
-        pixelPosition = view.positionToPixels(view.relativePosition(position));
+        pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
 
         paint = new Paint();
         paint.setColor(Color.CYAN);
 
-        thread = new Thread();
+        thread = new Thread(this);
         thread.start();
     }
 
     @Override
     public void run() {
-        while (alive) {
-            findPixelPosition();
+        while (true) {
+            this.pixelPosition = this.findPixelPosition();
             //behave();
+            //Log.d("Is running", "Yes");
 
             try {
                 Thread.sleep(15);
@@ -42,7 +44,7 @@ public class Enemy implements Runnable {
                 e.printStackTrace();
             }
         }
-        alive = false;
+        //alive = false;
     }
 
     protected void behave() {
@@ -53,8 +55,9 @@ public class Enemy implements Runnable {
         return alive;
     }
 
-    private void findPixelPosition() {
-        pixelPosition = view.positionToPixels(view.relativePosition(position));
+    private Vector2 findPixelPosition() {
+        return view.positionToPixels(view.relativePosition(position));
+        //Log.d("px pos", String.valueOf(pixelPosition));
     }
 
     public void draw(Canvas canvas) {
@@ -65,5 +68,15 @@ public class Enemy implements Runnable {
 
     public Vector2 getPixelPosition() {
         return this.pixelPosition;
+    }
+
+    public Vector2 getPosition() {
+        return this.position;
+    }
+
+    public void changePosition(Vector2 change) {
+        //this.position.setX(this.position.getX() + change.getX());
+        //this.position.setY(this.position.getY() + change.getY());
+        findPixelPosition();
     }
 }

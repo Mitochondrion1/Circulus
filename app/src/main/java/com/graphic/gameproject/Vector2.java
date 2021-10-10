@@ -33,8 +33,8 @@ public class Vector2 {
 
     public void setLength(float length) {
         float l = this.getLength();
-        this.x *= l / length;
-        this.y *= l / length;
+        this.x *= length / l;
+        this.y *= length / l;
     }
 
     @Override

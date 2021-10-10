@@ -8,7 +8,8 @@ import android.view.View;
 
 public class MainView extends View {
     private Player player;
-    private Enemy enemy;
+    private Enemy enemy1, enemy2, enemy3;
+    private Manager manager;
 
     private Vector2 displaySize;
     private float widthInUnits;
@@ -25,7 +26,14 @@ public class MainView extends View {
         widthInUnits = 5f;
         pixelsPerUnit = displaySize.getX() / widthInUnits;
 
-        enemy = new Enemy(new Vector2(5f, 1f), null, this);
+        enemy1 = new Enemy(new Vector2(1f, 1f), null, this);
+        enemy2 = new Enemy(new Vector2(-1f, 1.5f), null, this);
+        enemy3 = new Enemy(new Vector2(-0.5f, 0.5f), null, this);
+
+        manager = new Manager();
+        manager.addEnemy(enemy1);
+        manager.addEnemy(enemy2);
+        manager.addEnemy(enemy3);
 
         paint = new Paint();
         paint.setColor(Color.WHITE);
@@ -37,10 +45,9 @@ public class MainView extends View {
         super.onDraw(canvas);
 
         player.draw(canvas);
-        enemy.draw(canvas);
+        manager.drawEnemies(canvas);
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         canvas.drawText(player.getVelocity().toString(), 5f, 110f, paint);
-        canvas.drawText(enemy.getPixelPosition().toString(), 5f, 165f, paint);
 
         invalidate();
     }
