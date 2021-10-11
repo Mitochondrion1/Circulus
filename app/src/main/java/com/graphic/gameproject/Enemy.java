@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-public class Enemy implements Runnable {
+public abstract class Enemy implements Runnable {
     protected float health;
     protected float damage;
     protected Vector2 position;
