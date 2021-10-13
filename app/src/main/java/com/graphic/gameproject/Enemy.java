@@ -5,10 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-public abstract class Enemy implements Runnable {
-    protected float health;
-    protected float damage;
-    protected Vector2 position;
+public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;
     protected Vector2 positionChange;
     protected long waitTime;
@@ -16,15 +13,15 @@ public abstract class Enemy implements Runnable {
     protected Paint paint;
     protected boolean alive;
     protected Manager manager;
-    protected Thread thread;
 
     protected int directorCost;
     protected float baseHealth;
     protected float baseDamage;
 
-    public Enemy(Vector2 position, Manager manager, MainView view) {
+    public Enemy(Vector2 position, float speed, float maxHealth, float damage, Manager manager, MainView view) {
+        super(position, speed, maxHealth, damage);
+
         alive = true;
-        this.position = position;
         this.manager = manager;
         this.view = view;
         //findPixelPosition();
@@ -33,14 +30,11 @@ public abstract class Enemy implements Runnable {
 
         paint = new Paint();
         paint.setColor(Color.CYAN);
-
-        thread = new Thread(this);
-        thread.start();
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (health > 0) {
             this.pixelPosition = this.findPixelPosition();
             behave();
             //Log.d("Is running", "Yes");
@@ -51,11 +45,7 @@ public abstract class Enemy implements Runnable {
                 e.printStackTrace();
             }
         }
-        //alive = false;
-    }
-
-    protected void behave() {
-
+        alive = false;
     }
 
     public boolean isAlive() {
@@ -85,5 +75,13 @@ public abstract class Enemy implements Runnable {
         //this.position.setX(this.position.getX() + change.getX());
         //this.position.setY(this.position.getY() + change.getY());
         findPixelPosition();
+    }
+
+    public void damage(float damage) {
+        this.health -= damage;
+    }
+
+    public boolean detectHit(Projectile projectile) {
+        return false;
     }
 }

@@ -4,13 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Player implements Runnable {
-    private float health;
-    private Vector2 position;
-    private Vector2 velocity;
+public class Player extends Entity implements Runnable {
     private MainView view;
     private Paint paint;
-    private Thread thread;
 
     private float displayWidth;
     private float displayHeight;
@@ -18,13 +14,12 @@ public class Player implements Runnable {
 
     private float startX, startY, endX, endY;
 
-    public Player(float health, Vector2 position, MainView view) {
-        this.health = health;
-        this.position = position;
+    public Player(Vector2 position, float speed, float maxHealth, float damage, MainView view) {
+        super(position, speed, maxHealth, damage);
+
         this.view = view;
         paint = new Paint();
         paint.setColor(Color.WHITE);
-        velocity = new Vector2(0, 0);
 
         displayWidth = DisplayParams.getDisplaySize(view).getX();
         displayHeight = DisplayParams.getDisplaySize(view).getY();
@@ -34,21 +29,12 @@ public class Player implements Runnable {
         startY = 0;
         endX = 0;
         endY = 0;
-
-        thread = new Thread(this);
-        thread.start();
     }
 
     @Override
     public void run() {
         while (health > 0) {
-            velocity.setX(0.02f * (endX - startX));
-            velocity.setY(0.02f * (endY - startY));
-            if (velocity.getLength() != 0) {
-                velocity.setLength(1f);
-            }
-            position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
-            position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
+            behave();
             try {
                 Thread.sleep(waitTime);
             } catch (InterruptedException e) {
@@ -89,5 +75,16 @@ public class Player implements Runnable {
 
     public void setEndY(float endY) {
         this.endY = endY;
+    }
+
+    @Override
+    protected void behave() {
+        velocity.setX(0.02f * (endX - startX));
+        velocity.setY(0.02f * (endY - startY));
+        if (velocity.getLength() != 0) {
+            velocity.setLength(1f);
+        }
+        position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
+        position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
     }
 }

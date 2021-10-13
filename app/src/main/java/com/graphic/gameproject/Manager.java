@@ -4,15 +4,17 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
-public class Manager implements Runnable{
+public class Manager implements Runnable {
     private int level;
     private Player player;
     private ArrayList<Enemy> enemies;
+    private ArrayList<Projectile> playerProjectiles;
+    private ArrayList<Projectile> enemyProjectiles;
     private Director director;
 
     public Manager(MainView view) {
         level = 1;
-        player = new Player(100f, new Vector2(0f, 0f), view);
+        player = new Player(new Vector2(0, 0), 1f, 100f, 10f, view);
         enemies = new ArrayList<Enemy>();
     }
 
@@ -24,6 +26,16 @@ public class Manager implements Runnable{
             // While enemies exist, continue running the level
             while (!enemies.isEmpty()) {
                 for (int i = 0; i < enemies.size(); i++) {
+                    for (int j = 0; j > playerProjectiles.size(); j++) {
+                        if (playerProjectiles.get(j).isFromPlayer()) {
+                            if (enemies.get(i).detectHit(playerProjectiles.get(j))) {
+                                enemies.get(i).damage(playerProjectiles.get(j).getDamage());
+                                playerProjectiles.get(j).setHitTarget(false);
+                                playerProjectiles.remove(j);
+                                j--;
+                            }
+                        }
+                    }
                     if (!enemies.get(i).isAlive()) {
                         enemies.remove(i);
                     }
@@ -52,5 +64,13 @@ public class Manager implements Runnable{
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public void addPlayerProjectile(Projectile projectile) {
+        playerProjectiles.add(projectile);
+    }
+
+    public void addEnemyProjectile(Projectile projectile) {
+        enemyProjectiles.add(projectile);
     }
 }
