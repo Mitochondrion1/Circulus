@@ -1,6 +1,4 @@
-package com.graphic.gameproject;
-
-import android.util.Log;
+package com.graphic.main;
 
 public class Exploder extends Enemy {
     private float damage;
@@ -21,7 +19,6 @@ public class Exploder extends Enemy {
 
     @Override
     protected void behave() {
-        Log.d("player", manager.getPlayer().getPosition().toString());
         if (Vector2.distance(position, manager.getPlayer().getPosition()) != 0) {
             this.positionChange = Vector2.sub(position, manager.getPlayer().getPosition());
             this.positionChange.setLength(waitTime / 1000f * velocity);

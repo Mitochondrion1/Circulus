@@ -1,4 +1,4 @@
-package com.graphic.gameproject;
+package com.graphic.main;
 
 import android.app.Activity;
 import android.content.Context;

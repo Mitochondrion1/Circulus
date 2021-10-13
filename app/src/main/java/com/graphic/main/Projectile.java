@@ -1,4 +1,4 @@
-package com.graphic.gameproject;
+package com.graphic.main;
 
 public class Projectile implements Runnable {
     private float damage;

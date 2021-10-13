@@ -1,4 +1,4 @@
-package com.graphic.gameproject;
+package com.graphic.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 

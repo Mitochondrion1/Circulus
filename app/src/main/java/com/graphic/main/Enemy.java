@@ -1,9 +1,8 @@
-package com.graphic.gameproject;
+package com.graphic.main;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;

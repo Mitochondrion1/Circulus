@@ -1,6 +1,4 @@
-package com.graphic.gameproject;
-
-import androidx.annotation.NonNull;
+package com.graphic.main;
 
 public class Vector2 {
     private float x;

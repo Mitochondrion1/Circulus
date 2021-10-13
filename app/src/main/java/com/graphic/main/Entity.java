@@ -1,4 +1,4 @@
-package com.graphic.gameproject;
+package com.graphic.main;
 
 public abstract class Entity implements Runnable {
     protected Vector2 position;
