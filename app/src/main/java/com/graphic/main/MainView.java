@@ -44,6 +44,7 @@ public class MainView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        manager.drawBackground(canvas);
         player.draw(canvas);
         manager.drawEnemies(canvas);
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
@@ -64,5 +65,17 @@ public class MainView extends View {
     public Vector2 positionToPixels(Vector2 position) {
         return new Vector2(position.getX() * pixelsPerUnit + displaySize.getX() / 2,
                 position.getY() * pixelsPerUnit + displaySize.getY() / 2);
+    }
+
+    public float getWidthInUnits() {
+        return this.widthInUnits;
+    }
+
+    public Vector2 getDisplaySize() {
+        return this.displaySize;
+    }
+
+    public float getPixelsPerUnit() {
+        return pixelsPerUnit;
     }
 }

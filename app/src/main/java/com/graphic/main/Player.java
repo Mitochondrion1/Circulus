@@ -44,9 +44,7 @@ public class Player extends Entity implements Runnable {
     }
 
     public void draw(Canvas canvas) {
-        float width = 100f, height = 100f;
-        canvas.drawRect((displayWidth - width) / 2, (displayHeight - height) / 2,
-                (displayWidth + width) / 2, (displayHeight + height) / 2, paint);
+        canvas.drawCircle(displayWidth / 2, displayHeight / 2, 50f, paint);
     }
 
     public Vector2 getVelocity() {
