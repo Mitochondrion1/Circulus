@@ -81,8 +81,8 @@ public class Manager implements Runnable {
         int horizontalLines = (int)Math.ceil(heightInUnits * 2);
         int verticalLines = (int)Math.ceil(this.view.getWidthInUnits() * 2);
         float distBetweenLines = 0.5f * this.view.getPixelsPerUnit();
-        float beginHorizontal = this.view.getDisplaySize().getY() / 2 + (1f - this.player.getPosition().getY() % 1f) * distBetweenLines;
-        float beginVertical = this.view.getDisplaySize().getX() / 2 + (1f - this.player.getPosition().getX() % 1f) * distBetweenLines;
+        float beginHorizontal = this.view.getDisplaySize().getY() / 2 + (0.5f - y % 0.5f) * (distBetweenLines * 2);
+        float beginVertical = this.view.getDisplaySize().getX() / 2 + (0.5f - x % 0.5f) * (distBetweenLines * 2);
 
         canvas.drawRect(0f, 0f, this.view.getDisplaySize().getX(), this.view.getDisplaySize().getY(), bgPaint);
         for (int i = 0; i < horizontalLines / 2 + 1; i++) {
