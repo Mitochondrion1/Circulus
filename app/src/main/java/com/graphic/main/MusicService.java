@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -21,11 +20,15 @@ public class MusicService extends Service {
 
     HeadsetIntentReceiver receiver = new HeadsetIntentReceiver();
 
+    private int headsetVolume, speakerVolume;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mPlayer = MediaPlayer.create(this, R.raw.project_theme);
+        headsetVolume = Store.read(getApplicationContext(), R.string.headset_volume_key, 20);
+        speakerVolume = Store.read(getApplicationContext(), R.string.speaker_volume_key, 100);
 
         if (null != mPlayer) {
             mPlayer.setLooping(true);
@@ -55,12 +58,12 @@ public class MusicService extends Service {
         //startForeground(NOTIFICATION_ID, notification);
     }
 
-    public void setLawVolume(){
-        mPlayer.setVolume(0.2f, 0.2f);
+    public void setVolumeHeadset(){
+        mPlayer.setVolume(headsetVolume / 100f, headsetVolume / 100f);
     }
 
-    public void resetLawVolume(){
-        mPlayer.setVolume(1f, 1f);
+    public void setVolumeSpeaker(){
+        mPlayer.setVolume(speakerVolume / 100f, speakerVolume / 100f);
     }
 
     @Override
@@ -99,10 +102,10 @@ public class MusicService extends Service {
     private void updateState(String state) {
         Toast.makeText(this, state, Toast.LENGTH_LONG).show();
         if(state.equals("Plugged")) {
-            setLawVolume();
+            setVolumeHeadset();
         }
         else {
-            resetLawVolume();
+            setVolumeSpeaker();
         }
     }
 

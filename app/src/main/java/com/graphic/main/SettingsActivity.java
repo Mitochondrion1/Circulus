@@ -19,8 +19,8 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         speakerVolume = findViewById(R.id.speakerVol);
         headsetVolume.setMax(100);
         speakerVolume.setMax(100);
-        headsetVolume.setProgress(Store.read(this, R.string.headset_volume_key, 20));
-        speakerVolume.setProgress(Store.read(this, R.string.speaker_volume_key, 100));
+        headsetVolume.setProgress(Store.read(getApplicationContext(), R.string.headset_volume_key, 20));
+        speakerVolume.setProgress(Store.read(getApplicationContext(), R.string.speaker_volume_key, 100));
     }
 
     @Override
@@ -42,8 +42,8 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
     }
 
     private void saveSettings() {
-        Store.save(this, R.string.headset_volume_key, headsetVolume.getProgress());
-        Store.save(this, R.string.speaker_volume_key, speakerVolume.getProgress());
+        Store.save(getApplicationContext(), R.string.headset_volume_key, headsetVolume.getProgress());
+        Store.save(getApplicationContext(), R.string.speaker_volume_key, speakerVolume.getProgress());
     }
 
     @Override
