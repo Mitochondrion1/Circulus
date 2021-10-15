@@ -6,7 +6,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.SeekBar;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+    private SeekBar headsetVolume, speakerVolume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,5 +15,47 @@ public class SettingsActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_settings);
+        headsetVolume = findViewById(R.id.headsetVol);
+        speakerVolume = findViewById(R.id.speakerVol);
+        headsetVolume.setMax(100);
+        speakerVolume.setMax(100);
+        headsetVolume.setProgress(Store.read(this, R.string.headset_volume_key, 20));
+        speakerVolume.setProgress(Store.read(this, R.string.speaker_volume_key, 100));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveSettings();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveSettings();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveSettings();
+    }
+
+    private void saveSettings() {
+        Store.save(this, R.string.headset_volume_key, headsetVolume.getProgress());
+        Store.save(this, R.string.speaker_volume_key, speakerVolume.getProgress());
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        saveSettings();
     }
 }
