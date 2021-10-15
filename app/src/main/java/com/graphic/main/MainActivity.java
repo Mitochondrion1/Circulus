@@ -2,19 +2,23 @@ package com.graphic.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
 public class MainActivity extends AppCompatActivity {
     private MainView view;
+    private Intent musicServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        musicServiceIntent = new Intent(getApplicationContext(), MusicService.class);
         view = new MainView(this);
+        startService(musicServiceIntent);
         setContentView(view);
     }
 
@@ -39,5 +43,23 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(musicServiceIntent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopService(musicServiceIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(musicServiceIntent);
     }
 }
