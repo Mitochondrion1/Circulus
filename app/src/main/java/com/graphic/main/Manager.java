@@ -18,8 +18,10 @@ public class Manager implements Runnable {
 
     public Manager(MainView view) {
         level = 1;
-        player = new Player(new Vector2(0, 0), 1f, 100f, 10f, view);
+        player = new Player(new Vector2(0, 0), 1f, 100f, 10f, view, this);
         enemies = new ArrayList<Enemy>();
+        playerProjectiles = new ArrayList<Projectile>();
+        enemyProjectiles = new ArrayList<Projectile>();
         this.view = view;
 
         this.bgLinePaint = new Paint();
@@ -71,6 +73,15 @@ public class Manager implements Runnable {
     public void drawEnemies(Canvas canvas) {
         for (int i = 0; i < this.enemies.size(); i++) {
             this.enemies.get(i).draw(canvas);
+        }
+    }
+
+    public void drawProjectiles(Canvas canvas) {
+        for (int i = 0; i < playerProjectiles.size(); i++) {
+            playerProjectiles.get(i).draw(canvas);
+        }
+        for (int j = 0; j < enemyProjectiles.size(); j++) {
+            enemyProjectiles.get(j).draw(canvas);
         }
     }
 
