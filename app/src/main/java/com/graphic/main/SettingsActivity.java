@@ -6,7 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.SeekBar;
 
-public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class SettingsActivity extends AppCompatActivity {
     private SeekBar headsetVolume, speakerVolume;
 
     @Override
@@ -22,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         headsetVolume.setProgress(Store.read(getApplicationContext(), R.string.headset_volume_key, 20));
         speakerVolume.setProgress(Store.read(getApplicationContext(), R.string.speaker_volume_key, 100));
     }
+
 
     @Override
     protected void onStop() {
@@ -41,21 +42,9 @@ public class SettingsActivity extends AppCompatActivity implements SeekBar.OnSee
         saveSettings();
     }
 
+
     private void saveSettings() {
         Store.save(getApplicationContext(), R.string.headset_volume_key, headsetVolume.getProgress());
         Store.save(getApplicationContext(), R.string.speaker_volume_key, speakerVolume.getProgress());
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        saveSettings();
     }
 }
