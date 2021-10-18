@@ -46,7 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
         saveSettings();
     }
 
-
     private void saveSettings() {
         Store.saveInt(getApplicationContext(), R.string.headset_volume_key, headsetVolume.getProgress());
         Store.saveInt(getApplicationContext(), R.string.speaker_volume_key, speakerVolume.getProgress());

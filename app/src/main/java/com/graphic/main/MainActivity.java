@@ -212,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (Math.abs(x) > 2 || Math.abs(y) > 2) {
                         view.getPlayer().setStartX(0);
                         view.getPlayer().setStartY(0);
-                        view.getPlayer().setEndX(-x);
-                        view.getPlayer().setEndY(y);
+                        view.getPlayer().setEndY(x);
+                        view.getPlayer().setEndX(y);
                     }
                     else {
                         view.getPlayer().setEndX(0);
