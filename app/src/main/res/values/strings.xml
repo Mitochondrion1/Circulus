@@ -7,4 +7,8 @@
     <string name="speaker_volume_key">speaker_key</string>
     <string name="button_settings">Settings</string>
     <string name="shared_pref_key">prefs</string>
+    <string name="accelerometer_key">accelerometer_mode</string>
+    <string name="volume_text">Volume</string>
+    <string name="accessibility_text">Accessibility</string>
+    <string name="accelerometer_text">Use Accelerometer</string>
 </resources>

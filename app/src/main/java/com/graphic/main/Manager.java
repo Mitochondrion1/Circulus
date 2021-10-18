@@ -40,7 +40,7 @@ public class Manager implements Runnable {
             // While enemies exist, continue running the level
             while (!enemies.isEmpty()) {
                 for (int i = 0; i < enemies.size(); i++) {
-                    for (int j = 0; j > playerProjectiles.size(); j++) {
+                    for (int j = 0; j < playerProjectiles.size(); j++) {
                         if (playerProjectiles.get(j).isFromPlayer()) {
                             if (enemies.get(i).detectHit(playerProjectiles.get(j))) {
                                 enemies.get(i).damage(playerProjectiles.get(j).getDamage());

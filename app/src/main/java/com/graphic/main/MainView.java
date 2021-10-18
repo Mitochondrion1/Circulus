@@ -45,9 +45,10 @@ public class MainView extends View {
         super.onDraw(canvas);
 
         manager.drawBackground(canvas);
+        manager.drawProjectiles(canvas);
         player.draw(canvas);
         manager.drawEnemies(canvas);
-        manager.drawProjectiles(canvas);
+
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         canvas.drawText(player.getVelocity().toString(), 5f, 110f, paint);
 

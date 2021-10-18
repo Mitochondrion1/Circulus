@@ -27,8 +27,8 @@ public class MusicService extends Service {
         super.onCreate();
 
         mPlayer = MediaPlayer.create(this, R.raw.project_theme);
-        headsetVolume = Store.read(getApplicationContext(), R.string.headset_volume_key, 20);
-        speakerVolume = Store.read(getApplicationContext(), R.string.speaker_volume_key, 100);
+        headsetVolume = Store.readInt(getApplicationContext(), R.string.headset_volume_key, 20);
+        speakerVolume = Store.readInt(getApplicationContext(), R.string.speaker_volume_key, 100);
 
         if (null != mPlayer) {
             mPlayer.setLooping(true);
