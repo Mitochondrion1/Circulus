@@ -57,7 +57,8 @@ public abstract class Enemy extends Entity implements Runnable {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawCircle(pixelPosition.getX(), pixelPosition.getY(), 50f, paint);
+        canvas.drawCircle(pixelPosition.getX(), pixelPosition.getY(),
+                this.view.getPixelsPerUnit() * this.size / 2, paint);
     }
 
     public Vector2 getPixelPosition() {

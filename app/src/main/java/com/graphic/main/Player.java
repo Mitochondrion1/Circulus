@@ -23,6 +23,7 @@ public class Player extends Entity implements Runnable {
 
         this.view = view;
         this.manager = manager;
+        this.size = 0.3f;
         paint = new Paint();
         paint.setColor(Color.WHITE);
 
@@ -51,7 +52,8 @@ public class Player extends Entity implements Runnable {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawCircle(displayWidth / 2, displayHeight / 2, 50f, paint);
+        canvas.drawCircle(displayWidth / 2, displayHeight / 2,
+                this.view.getPixelsPerUnit() * this.size / 2, paint);
     }
 
     public Vector2 getVelocity() {

@@ -11,6 +11,7 @@ public class Exploder extends Enemy {
 
         this.manager = manager;
         this.velocity = 0.5f;
+        this.size = 0.3f;
 
         this.directorCost = EnemyTypeData.EXPLODER.getDirectorCost();
         this.baseDamage = EnemyTypeData.EXPLODER.getBaseDamage();

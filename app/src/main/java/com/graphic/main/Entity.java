@@ -7,6 +7,7 @@ public abstract class Entity implements Runnable {
     protected float health;
     protected float maxHealth;
     protected float damage;
+    protected float size;
     protected Thread thread;
 
     public Entity(Vector2 position, float speed, float maxHealth, float damage) {

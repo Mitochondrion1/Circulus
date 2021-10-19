@@ -9,6 +9,7 @@ public class Projectile implements Runnable {
     private Vector2 position;
     private Vector2 velocity;
     private float speed;
+    private float size;
     private int waitTime;
     private boolean isFromPlayer;
     private boolean hitTarget;
@@ -20,6 +21,7 @@ public class Projectile implements Runnable {
         this.damage = damage;
         this.position = new Vector2(position.getX(), position.getY());
         this.velocity = velocity;
+        this.size = 0.1f;
         speed = 2f;
         waitTime = 15;
         this.velocity.setLength(speed);
@@ -69,7 +71,8 @@ public class Projectile implements Runnable {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawCircle(findPixelPosition().getX(), findPixelPosition().getY(), 25f, paint);
+        canvas.drawCircle(findPixelPosition().getX(), findPixelPosition().getY(),
+                this.view.getPixelsPerUnit() * this.size / 2, paint);
     }
 
     private Vector2 findPixelPosition() {
