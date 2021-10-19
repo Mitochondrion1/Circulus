@@ -15,6 +15,7 @@ public class Manager implements Runnable {
     private MainView view;
     private Paint bgLinePaint;
     private Paint bgPaint;
+    private Thread thread;
 
     public Manager(MainView view) {
         level = 1;
@@ -30,6 +31,9 @@ public class Manager implements Runnable {
 
         this.bgPaint = new Paint();
         this.bgPaint.setColor(0xff000000);
+
+        this.thread = new Thread(this);
+        this.thread.start();
     }
 
     @Override
@@ -41,10 +45,10 @@ public class Manager implements Runnable {
             while (!enemies.isEmpty()) {
                 for (int i = 0; i < enemies.size(); i++) {
                     for (int j = 0; j < playerProjectiles.size(); j++) {
-                        if (playerProjectiles.get(j).isFromPlayer()) {
+                        if (playerProjectiles.get(j) != null) {
                             if (enemies.get(i).detectHit(playerProjectiles.get(j))) {
                                 enemies.get(i).damage(playerProjectiles.get(j).getDamage());
-                                playerProjectiles.get(j).setHitTarget(false);
+                                playerProjectiles.get(j).setHitTarget(true);
                                 playerProjectiles.remove(j);
                                 j--;
                             }
@@ -52,6 +56,7 @@ public class Manager implements Runnable {
                     }
                     if (!enemies.get(i).isAlive()) {
                         enemies.remove(i);
+                        i--;
                     }
                 }
             }

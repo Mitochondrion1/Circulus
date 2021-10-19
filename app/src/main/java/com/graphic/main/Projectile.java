@@ -66,6 +66,10 @@ public class Projectile implements Runnable {
         return hitTarget;
     }
 
+    public float getSize() {
+        return size;
+    }
+
     public void setHitTarget(boolean hasHitTarget) {
         this.hitTarget = hasHitTarget;
     }

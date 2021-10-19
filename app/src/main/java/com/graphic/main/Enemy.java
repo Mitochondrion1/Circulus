@@ -3,6 +3,7 @@ package com.graphic.main;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;
@@ -80,6 +81,6 @@ public abstract class Enemy extends Entity implements Runnable {
     }
 
     public boolean detectHit(Projectile projectile) {
-        return false;
+        return Vector2.distance(this.position, projectile.getPosition()) < this.size / 2 + projectile.getSize() / 2;
     }
 }
