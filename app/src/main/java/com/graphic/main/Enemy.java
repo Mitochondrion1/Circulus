@@ -9,7 +9,6 @@ public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;
     protected Vector2 positionChange;
     protected long waitTime;
-    protected MainView view;
     protected Paint paint;
     protected boolean alive;
     protected Manager manager;
@@ -60,6 +59,7 @@ public abstract class Enemy extends Entity implements Runnable {
     public void draw(Canvas canvas) {
         canvas.drawCircle(pixelPosition.getX(), pixelPosition.getY(),
                 this.view.getPixelsPerUnit() * this.size / 2, paint);
+        drawHealthBar(canvas);
     }
 
     public Vector2 getPixelPosition() {

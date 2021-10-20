@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class Player extends Entity implements Runnable {
-    private MainView view;
     private Manager manager;
     private Paint paint;
 
@@ -53,6 +52,7 @@ public class Player extends Entity implements Runnable {
     public void draw(Canvas canvas) {
         canvas.drawCircle(displayWidth / 2, displayHeight / 2,
                 this.view.getPixelsPerUnit() * this.size / 2, paint);
+        drawHealthBar(canvas);
     }
 
     public Vector2 getVelocity() {

@@ -1,5 +1,9 @@
 package com.graphic.main;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
 public abstract class Entity implements Runnable {
     protected Vector2 position;
     protected Vector2 velocity;
@@ -9,6 +13,7 @@ public abstract class Entity implements Runnable {
     protected float damage;
     protected float size;
     protected Thread thread;
+    protected MainView view;
 
     public Entity(Vector2 position, float speed, float maxHealth, float damage) {
         this.position = position;
@@ -79,5 +84,27 @@ public abstract class Entity implements Runnable {
     }
 
     protected void behave() {
+    }
+
+    protected void drawHealthBar(Canvas canvas) {
+        float healthBarBottom = this.position.getY() - 0.6f * this.size;
+        float height = 15f;
+
+        Paint green, red;
+        green = new Paint();
+        green.setColor(Color.GREEN);
+        red = new Paint();
+        red.setColor(Color.RED);
+
+        Vector2 bottomLeft = new Vector2(this.position.getX() - this.size / 2, healthBarBottom);
+        bottomLeft = view.positionToPixels(view.relativePosition(bottomLeft));
+        if (health < maxHealth && health > 0) {
+            canvas.drawRect(bottomLeft.getX(), bottomLeft.getY() - 15f,
+                    bottomLeft.getX() + (this.health / this.maxHealth) * this.size * view.getPixelsPerUnit(),
+                    bottomLeft.getY(), green);
+            canvas.drawRect(bottomLeft.getX() + (this.health / this.maxHealth) * this.size * view.getPixelsPerUnit(),
+                    bottomLeft.getY() - height, bottomLeft.getX() + this.size * view.getPixelsPerUnit(),
+                    bottomLeft.getY(), red);
+        }
     }
 }
