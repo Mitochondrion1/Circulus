@@ -12,7 +12,7 @@ public class Player extends Entity implements Runnable {
     private float displayWidth;
     private float displayHeight;
     private long waitTime;
-    private int projectileTickDelay;
+    private final int projectileTickDelay = 20;
     private int tick;
 
     private float startX, startY, endX, endY;
@@ -30,7 +30,6 @@ public class Player extends Entity implements Runnable {
         displayWidth = DisplayParams.getDisplaySize(view).getX();
         displayHeight = DisplayParams.getDisplaySize(view).getY();
         waitTime = 15;
-        projectileTickDelay = 10;
         tick = 0;
 
         startX = 0;
@@ -114,14 +113,14 @@ public class Player extends Entity implements Runnable {
         }
         position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
         position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
-        tick = (tick + 1) % 10;
+        tick = (tick + 1) % projectileTickDelay;
     }
 
     public void setTick(int tick) {
         this.tick = tick;
     }
 
-    private void summonProjectile() {
+    public void summonProjectile() {
         Vector2 projVelocity = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
         this.manager.addPlayerProjectile(new Projectile(this.damage, this.position, projVelocity, true, this.view));
     }
