@@ -76,10 +76,6 @@ public abstract class Enemy extends Entity implements Runnable {
         findPixelPosition();
     }
 
-    public void damage(float damage) {
-        this.health -= damage;
-    }
-
     public boolean detectHit(Projectile projectile) {
         return Vector2.distance(this.position, projectile.getPosition()) < this.size / 2 + projectile.getSize() / 2;
     }

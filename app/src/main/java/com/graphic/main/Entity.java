@@ -63,6 +63,10 @@ public abstract class Entity implements Runnable {
         return maxHealth;
     }
 
+    public float getSize() {
+        return this.size;
+    }
+
     public void setMaxHealth(float maxHealth) {
         this.maxHealth = maxHealth;
     }

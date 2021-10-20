@@ -100,6 +100,11 @@ public class Player extends Entity implements Runnable {
     }
 
     @Override
+    public void damage(float damage) {
+        super.damage(damage);
+    }
+
+    @Override
     protected void behave() {
         velocity.setX(0.02f * (endX - startX));
         velocity.setY(0.02f * (endY - startY));
