@@ -33,9 +33,11 @@ public class Exploder extends Enemy {
         }
         if (this.exploding) {
             this.explosionCountdown--;
-            if (this.explosionCountdown == 0 && Vector2.distance(position, manager.getPlayer().getPosition()) <
-                    0.75f * (this.size + manager.getPlayer().getSize())) {
-                manager.getPlayer().damage(this.damage);
+            if (this.explosionCountdown == 0) {
+                if (Vector2.distance(position, manager.getPlayer().getPosition()) <
+                        0.75f * (this.size + manager.getPlayer().getSize())) {
+                    manager.getPlayer().damage(this.damage);
+                }
                 this.alive = false;
             }
         }

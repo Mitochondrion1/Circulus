@@ -121,10 +121,6 @@ public class Manager implements Runnable {
         return this.player;
     }
 
-    public void damagePlayer(float damage) {
-        this.player.damage(damage);
-    }
-
     public void addPlayerProjectile(Projectile projectile) {
         playerProjectiles.add(projectile);
     }
