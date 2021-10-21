@@ -2,14 +2,11 @@ package com.graphic.main;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
 
 public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;
     protected Vector2 positionChange;
     protected long waitTime;
-    protected Paint paint;
     protected boolean alive;
     protected Manager manager;
 
@@ -26,9 +23,7 @@ public abstract class Enemy extends Entity implements Runnable {
         //findPixelPosition();
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
         waitTime = 15;
-
-        paint = new Paint();
-        paint.setColor(Color.CYAN);
+        this.paint.setColor(Color.CYAN);
     }
 
     @Override

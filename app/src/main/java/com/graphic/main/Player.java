@@ -2,11 +2,9 @@ package com.graphic.main;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 
 public class Player extends Entity implements Runnable {
     private Manager manager;
-    private Paint paint;
 
     private float displayWidth;
     private float displayHeight;
@@ -23,8 +21,7 @@ public class Player extends Entity implements Runnable {
         this.view = view;
         this.manager = manager;
         this.size = 0.3f;
-        paint = new Paint();
-        paint.setColor(Color.WHITE);
+        this.paint.setColor(Color.WHITE);
 
         displayWidth = DisplayParams.getDisplaySize(view).getX();
         displayHeight = DisplayParams.getDisplaySize(view).getY();

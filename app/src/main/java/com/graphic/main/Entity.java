@@ -12,6 +12,7 @@ public abstract class Entity implements Runnable {
     protected float maxHealth;
     protected float damage;
     protected float size;
+    protected Paint paint;
     protected Thread thread;
     protected MainView view;
 
@@ -22,6 +23,7 @@ public abstract class Entity implements Runnable {
         this.maxHealth = maxHealth;
         this.health = this.maxHealth;
         this.damage = damage;
+        this.paint = new Paint();
 
         this.thread = new Thread(this);
         this.thread.start();
