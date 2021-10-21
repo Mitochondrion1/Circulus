@@ -86,7 +86,7 @@ public abstract class Entity implements Runnable {
     }
 
     public boolean detectHit(Projectile projectile) {
-        return false;
+        return Vector2.distance(this.position, projectile.getPosition()) < this.size / 2 + projectile.getSize() / 2;
     }
 
     protected void behave() {

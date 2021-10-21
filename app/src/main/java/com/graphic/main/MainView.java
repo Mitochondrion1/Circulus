@@ -8,7 +8,7 @@ import android.view.View;
 
 public class MainView extends View {
     private Player player;
-    private Enemy enemy1, enemy2, enemy3;
+    private Enemy enemy1, enemy2, enemy3, enemy4;
     private Manager manager;
 
     private Vector2 displaySize;
@@ -30,10 +30,12 @@ public class MainView extends View {
         enemy1 = new Exploder(new Vector2(1f, 1f), 0.5f, 100f, 20f, manager, this);
         enemy2 = new Exploder(new Vector2(-1f, 1.5f), 0.5f, 100f, 20f, manager, this);
         enemy3 = new Exploder(new Vector2(-0.5f, 0.5f), 0.5f, 100f, 20f, manager, this);
+        enemy4 = new Shooter(new Vector2(-3f, 5f), 0.5f, 100f, 20f, manager, this);
 
         manager.addEnemy(enemy1);
         manager.addEnemy(enemy2);
         manager.addEnemy(enemy3);
+        manager.addEnemy(enemy4);
 
         paint = new Paint();
         paint.setColor(Color.WHITE);

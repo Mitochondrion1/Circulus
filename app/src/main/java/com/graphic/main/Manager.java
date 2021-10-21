@@ -59,6 +59,16 @@ public class Manager implements Runnable {
                         i--;
                     }
                 }
+                for (int k = 0; k < enemyProjectiles.size(); k++) {
+                    if (enemyProjectiles.get(k) != null) {
+                        if (player.detectHit(enemyProjectiles.get(k))) {
+                            player.damage(enemyProjectiles.get(k).getDamage());
+                            enemyProjectiles.get(k).setHitTarget(true);
+                            enemyProjectiles.remove(k);
+                            k--;
+                        }
+                    }
+                }
             }
 
             // Show prompt to continue to next level
