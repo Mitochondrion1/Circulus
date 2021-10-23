@@ -11,6 +11,7 @@ public class Projectile implements Runnable {
     private float speed;
     private float size;
     private int waitTime;
+    private int lifetime;
     private boolean isFromPlayer;
     private boolean hitTarget;
     private Paint paint;
@@ -24,6 +25,7 @@ public class Projectile implements Runnable {
         this.size = 0.1f;
         speed = 2f;
         waitTime = 15;
+        lifetime = 200;
         this.velocity.setLength(speed);
         this.isFromPlayer = isFromPlayer;
         hitTarget = false;
@@ -38,15 +40,19 @@ public class Projectile implements Runnable {
 
     @Override
     public void run() {
-        while (!hitTarget) {
+        while (!hitTarget && lifetime > 0) {
             this.position.setX(this.position.getX() + (waitTime / 1000f) * this.velocity.getX());
             this.position.setY(this.position.getY() + (waitTime / 1000f) * this.velocity.getY());
+            lifetime--;
 
             try {
                 Thread.sleep(waitTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        if (lifetime == 0) {
+            hitTarget = true;
         }
     }
 

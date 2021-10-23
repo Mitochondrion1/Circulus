@@ -20,9 +20,9 @@ public class Manager implements Runnable {
     public Manager(MainView view) {
         level = 1;
         player = new Player(new Vector2(0, 0), 1f, 100f, 10f, view, this);
-        enemies = new ArrayList<Enemy>();
-        playerProjectiles = new ArrayList<Projectile>();
-        enemyProjectiles = new ArrayList<Projectile>();
+        enemies = new ArrayList<>();
+        playerProjectiles = new ArrayList<>();
+        enemyProjectiles = new ArrayList<>();
         this.view = view;
 
         this.bgLinePaint = new Paint();
@@ -49,6 +49,8 @@ public class Manager implements Runnable {
                             if (enemies.get(i).detectHit(playerProjectiles.get(j))) {
                                 enemies.get(i).damage(playerProjectiles.get(j).getDamage());
                                 playerProjectiles.get(j).setHitTarget(true);
+                            }
+                            if (playerProjectiles.get(j).isHitTarget()) {
                                 playerProjectiles.remove(j);
                                 j--;
                             }
