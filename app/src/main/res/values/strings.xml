@@ -11,7 +11,9 @@
     <string name="volume_text">Volume</string>
     <string name="accessibility_text">Accessibility</string>
     <string name="accelerometer_text">Use Accelerometer</string>
+    <string name="directions_text">Show movement and shot directions</string>
     <string name="credits_text">Created by Richard \"Mitochondrion\" Stroev</string>
     <string name="repo_text">GitHub Repository: https://github.com/Mitochondrion1/GameProject</string>
     <string name="button_credits">Credits</string>
+    <string name="direction_display_key">display_directions</string>
 </resources>

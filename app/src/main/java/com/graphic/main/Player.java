@@ -103,8 +103,8 @@ public class Player extends Entity implements Runnable {
 
     @Override
     protected void behave() {
-        velocity.setX(0.02f * (endX - startX));
-        velocity.setY(0.02f * (endY - startY));
+        velocity.setX(endX - startX);
+        velocity.setY(endY - startY);
         if (velocity.getLength() != 0) {
             velocity.setLength(1f);
         }
@@ -120,6 +120,12 @@ public class Player extends Entity implements Runnable {
 
     public void setTick(int tick) {
         this.tick = tick;
+    }
+
+    public Vector2 getProjectileVelocityNormalized() {
+        Vector2 vel = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
+        vel.setLength(1f);
+        return vel;
     }
 
     public void summonProjectile() {

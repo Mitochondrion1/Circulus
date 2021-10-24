@@ -17,6 +17,10 @@ public class MainView extends View {
 
     private Paint paint;
 
+    private boolean showDirections;
+    private float dirLength;
+    private Paint dirPaint1, dirPaint2;
+
     public MainView(Context context) {
         super(context);
 
@@ -40,6 +44,18 @@ public class MainView extends View {
         paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setTextSize(50f);
+
+        showDirections = Store.readBool(context.getApplicationContext(), R.string.direction_display_key, false);
+        dirLength = 0.75f * getPixelsPerUnit();
+        if (showDirections) {
+            dirPaint1 = new Paint();
+            dirPaint1.setStrokeWidth(3f);
+            dirPaint1.setColor(Color.RED);
+
+            dirPaint2 = new Paint();
+            dirPaint2.setStrokeWidth(3f);
+            dirPaint2.setColor(Color.BLUE);
+        }
     }
 
     @Override
@@ -47,6 +63,16 @@ public class MainView extends View {
         super.onDraw(canvas);
 
         manager.drawBackground(canvas);
+        if (showDirections) {
+            canvas.drawLine(displaySize.getX() / 2, displaySize.getY() / 2,
+                    displaySize.getX() / 2 + player.getVelocity().getX() * dirLength,
+                    displaySize.getY() / 2 + player.getVelocity().getY() * dirLength,
+                    dirPaint2);
+            canvas.drawLine(displaySize.getX() / 2, displaySize.getY() / 2,
+                    displaySize.getX() / 2 + player.getProjectileVelocityNormalized().getX() * dirLength,
+                    displaySize.getY() / 2 + player.getProjectileVelocityNormalized().getY() * dirLength,
+                    dirPaint1);
+        }
         manager.drawProjectiles(canvas);
         player.draw(canvas);
         manager.drawEnemies(canvas);
