@@ -26,4 +26,9 @@ public class MenuActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
+
+    public void showCredits(View view) {
+        Intent intent = new Intent(this, CreditsActivity.class);
+        startActivity(intent);
+    }
 }

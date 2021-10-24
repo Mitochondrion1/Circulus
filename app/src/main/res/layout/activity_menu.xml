@@ -10,48 +10,64 @@
 
     <Button
         android:id="@+id/settings_button"
-        android:layout_width="162dp"
-        android:layout_height="76dp"
-        android:layout_marginStart="285dp"
-        android:layout_marginLeft="285dp"
-        android:layout_marginTop="243dp"
+        android:layout_width="163dp"
+        android:layout_height="46dp"
         android:layout_marginEnd="284dp"
         android:layout_marginRight="284dp"
-        android:layout_marginBottom="92dp"
         android:onClick="openSettings"
         android:text="@string/button_settings"
+        android:textColor="#ffffff"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toTopOf="@+id/credits_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_button" />
+
+    <Button
+        android:id="@+id/credits_button"
+        android:layout_width="163dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginEnd="284dp"
+        android:layout_marginRight="284dp"
+        android:layout_marginBottom="124dp"
+        android:onClick="showCredits"
+        android:text="@string/button_credits"
+        android:textColor="#ffffff"
+        app:backgroundTint="#2196F3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/settings_button" />
 
     <Button
         android:id="@+id/play_button"
-        android:layout_width="162dp"
-        android:layout_height="76dp"
+        android:layout_width="163dp"
+        android:layout_height="46dp"
         android:layout_marginStart="285dp"
         android:layout_marginLeft="285dp"
-        android:layout_marginTop="164dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="284dp"
         android:layout_marginRight="284dp"
-        android:layout_marginBottom="16dp"
         android:onClick="play"
         android:text="@string/button_play"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="#2196F3"
         app:layout_constraintBottom_toTopOf="@+id/settings_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="226dp"
-        android:layout_marginLeft="226dp"
         android:layout_marginTop="68dp"
         android:layout_marginEnd="227dp"
         android:layout_marginRight="227dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@color/teal_200"
@@ -60,7 +76,6 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/play_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
