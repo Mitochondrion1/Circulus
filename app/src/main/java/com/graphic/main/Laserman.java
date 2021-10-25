@@ -27,6 +27,7 @@ public class Laserman extends Enemy {
         super(position, speed, maxHealth, damage, manager, view);
 
         this.speed = 0.2f;
+        this.size = 0.4f;
         this.shotDirection = new Vector2(0f, 0f);
         this.detectedPlayer = false;
         this.isCharging = false;
@@ -34,7 +35,7 @@ public class Laserman extends Enemy {
         this.isShooting = false;
         this.isOnCooldown = false;
         this.tick = 0;
-        this.paint.setColor(0xffffffff);
+        this.paint.setColor(0xffa0a0a0);
 
         this.laserPaint1 = new Paint();
         this.laserPaint1.setColor(Color.RED);
@@ -114,12 +115,9 @@ public class Laserman extends Enemy {
         }
         else if (isShooting) {
             this.tick++;
-            float s = (shotDirection.getX() * (this.manager.getPlayer().getPosition().getY() - this.position.getY()) -
-                    shotDirection.getY() * (this.position.getX() - this.manager.getPlayer().getPosition().getX())) /
-                    (shotDirection.getX() * shotDirection.getX() + shotDirection.getY() * shotDirection.getY());
-            Vector2 point = new Vector2(this.manager.getPlayer().getPosition().getX() + s * shotDirection.getY(),
-                    this.manager.getPlayer().getPosition().getY() - s * shotDirection.getX());
-            if (Vector2.distance(this.manager.getPlayer().getPosition(), point) < this.manager.getPlayer().getSize() / 2) {
+            Vector2 v = Vector2.sub(this.position, this.manager.getPlayer().getPosition());
+            float cos = (v.getX() * shotDirection.getX() + v.getY() * shotDirection.getY()) / (v.getLength() * shotDirection.getLength());
+            if (cos > (float)Math.sqrt(1 - Math.pow((this.manager.getPlayer().getSize() / 2) / v.getLength(), 2))) {
                 this.manager.getPlayer().damage(this.damage);
             }
             if (this.tick == shotTickLength) {
