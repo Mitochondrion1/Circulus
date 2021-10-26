@@ -46,7 +46,7 @@ public class Manager implements Runnable {
                 for (int i = 0; i < enemies.size(); i++) {
                     for (int j = 0; j < playerProjectiles.size(); j++) {
                         if (playerProjectiles.get(j) != null) {
-                            if (enemies.get(i).detectHit(playerProjectiles.get(j))) {
+                            if (enemies.get(i) != null && enemies.get(i).detectHit(playerProjectiles.get(j))) {
                                 enemies.get(i).damage(playerProjectiles.get(j).getDamage());
                                 playerProjectiles.get(j).setHitTarget(true);
                             }
@@ -56,7 +56,7 @@ public class Manager implements Runnable {
                             }
                         }
                     }
-                    if (!enemies.get(i).isAlive()) {
+                    if (enemies.get(i) != null && !enemies.get(i).isAlive()) {
                         enemies.remove(i);
                         i--;
                     }

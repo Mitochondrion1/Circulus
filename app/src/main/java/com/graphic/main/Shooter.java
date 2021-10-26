@@ -32,6 +32,7 @@ public class Shooter extends Enemy {
 
         this.damage = this.baseDamage;
         this.health = this.baseHealth;
+        this.maxHealth = this.baseHealth;
     }
 
     @Override
