@@ -33,6 +33,7 @@ public class Exploder extends Enemy {
 
         this.damage = baseDamage;
         this.health = baseHealth;
+        this.maxHealth = health;
     }
 
     @Override

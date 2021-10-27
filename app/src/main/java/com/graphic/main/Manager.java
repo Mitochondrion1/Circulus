@@ -73,6 +73,11 @@ public class Manager implements Runnable {
                         }
                     }
                 }
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             // Show prompt to continue to next level

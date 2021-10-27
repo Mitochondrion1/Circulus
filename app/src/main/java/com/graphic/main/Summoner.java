@@ -1,5 +1,7 @@
 package com.graphic.main;
 
+import android.graphics.Color;
+
 public class Summoner extends Enemy {
     private static final int summonTickDelay = 800;
     private static final float summonDistance = 1f;
@@ -14,7 +16,7 @@ public class Summoner extends Enemy {
         this.size = 0.5f;
         this.detectedPlayer = false;
         this.tick = 600;
-        this.paint.setColor(0xffffa0a0);
+        this.paint.setColor(Color.MAGENTA);
 
         this.directorCost = EnemyTypeData.SUMMONER.getDirectorCost();
         this.baseHealth = EnemyTypeData.SUMMONER.getBaseHealth();

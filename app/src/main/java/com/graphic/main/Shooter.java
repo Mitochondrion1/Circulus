@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 public class Shooter extends Enemy {
-    private static final int shotTickDelay = 30;
+    private static final int shotTickDelay = 60;
     private static final int ticksToForget = 100;
     private static final float detectDistance = 3f;
     private static final float stopDistance = 1f;
