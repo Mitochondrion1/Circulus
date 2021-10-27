@@ -14,8 +14,8 @@ public class Shooter extends Enemy {
     private int shootingTick;
     private int forgetTick;
 
-    public Shooter(Vector2 position, float speed, float maxHealth, float damage, Manager manager, MainView view) {
-        super(position, speed, maxHealth, damage, manager, view);
+    public Shooter(Vector2 position, Manager manager, MainView view) {
+        super(position, manager, view);
 
         this.speed = 0.3f;
         this.size = 0.3f;

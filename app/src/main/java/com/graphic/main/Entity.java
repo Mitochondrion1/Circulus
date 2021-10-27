@@ -16,13 +16,9 @@ public abstract class Entity implements Runnable {
     protected Thread thread;
     protected MainView view;
 
-    public Entity(Vector2 position, float speed, float maxHealth, float damage) {
+    public Entity(Vector2 position) {
         this.position = position;
         this.velocity = new Vector2(0, 0);
-        this.speed = speed;
-        this.maxHealth = maxHealth;
-        this.health = this.maxHealth;
-        this.damage = damage;
         this.paint = new Paint();
 
         this.thread = new Thread(this);

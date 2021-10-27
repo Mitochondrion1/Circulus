@@ -12,8 +12,8 @@ public class Exploder extends Enemy {
     private float aoeRadius;
     private Paint aoePaint;
 
-    public Exploder(Vector2 position, float speed, float maxHealth, float damage, Manager manager, MainView view) {
-        super(position, speed, maxHealth, damage, manager, view);
+    public Exploder(Vector2 position, Manager manager, MainView view) {
+        super(position, manager, view);
 
         this.manager = manager;
         this.velocity = 0.5f;

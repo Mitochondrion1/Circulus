@@ -15,8 +15,13 @@ public class Player extends Entity implements Runnable {
     private float startX, startY, endX, endY;
     private float shotStartX, shotStartY, shotEndX, shotEndY;
 
-    public Player(Vector2 position, float speed, float maxHealth, float damage, MainView view, Manager manager) {
-        super(position, speed, maxHealth, damage);
+    public Player(Vector2 position, MainView view, Manager manager) {
+        super(position);
+
+        this.speed = 1f;
+        this.damage = 10f;
+        this.maxHealth = 100f;
+        this.health = maxHealth;
 
         this.view = view;
         this.manager = manager;

@@ -19,7 +19,7 @@ public class Manager implements Runnable {
 
     public Manager(MainView view) {
         level = 1;
-        player = new Player(new Vector2(0, 0), 1f, 100f, 10f, view, this);
+        player = new Player(new Vector2(0, 0), view, this);
         enemies = new ArrayList<>();
         playerProjectiles = new ArrayList<>();
         enemyProjectiles = new ArrayList<>();
@@ -72,11 +72,6 @@ public class Manager implements Runnable {
                             k--;
                         }
                     }
-                }
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
 

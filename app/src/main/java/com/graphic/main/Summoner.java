@@ -9,8 +9,8 @@ public class Summoner extends Enemy {
     private boolean detectedPlayer;
     private int tick;
 
-    public Summoner(Vector2 position, float speed, float maxHealth, float damage, Manager manager, MainView view) {
-        super(position, speed, maxHealth, damage, manager, view);
+    public Summoner(Vector2 position, Manager manager, MainView view) {
+        super(position, manager, view);
 
         this.speed = 0.2f;
         this.size = 0.5f;
@@ -31,16 +31,16 @@ public class Summoner extends Enemy {
     protected void behave() {
         super.behave();
 
-        if (Vector2.distance(this.manager.getPlayer().getPosition(), this.position) <= 2) {
-            detectedPlayer = true;
-        }
         if (detectedPlayer) {
             move();
             tick = (tick + 1) % summonTickDelay;
             if (tick == 0) {
                 Vector2 summonPos = new Vector2(this.position.getX(), this.position.getY() - summonDistance);
-                this.manager.addEnemy(new Shooter(summonPos, 0.3f, 100f, 10f, this.manager, this.view));
+                this.manager.addEnemy(new Shooter(summonPos, this.manager, this.view));
             }
+        }
+        else if (Vector2.distance(this.manager.getPlayer().getPosition(), this.position) <= 2 || health < maxHealth) {
+            detectedPlayer = true;
         }
     }
 

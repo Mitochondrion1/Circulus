@@ -14,8 +14,8 @@ public abstract class Enemy extends Entity implements Runnable {
     protected float baseHealth;
     protected float baseDamage;
 
-    public Enemy(Vector2 position, float speed, float maxHealth, float damage, Manager manager, MainView view) {
-        super(position, speed, maxHealth, damage);
+    public Enemy(Vector2 position, Manager manager, MainView view) {
+        super(position);
 
         alive = true;
         this.manager = manager;

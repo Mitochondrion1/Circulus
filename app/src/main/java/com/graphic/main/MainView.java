@@ -31,11 +31,11 @@ public class MainView extends View {
         manager = new Manager(this);
         player = manager.getPlayer();
 
-        enemy1 = new Exploder(new Vector2(1f, 1f), 0.5f, 100f, 20f, manager, this);
-        enemy2 = new Exploder(new Vector2(-1f, 1.5f), 0.5f, 100f, 20f, manager, this);
-        enemy3 = new Exploder(new Vector2(-0.5f, 0.5f), 0.5f, 100f, 20f, manager, this);
-        enemy4 = new Summoner(new Vector2(-3f, 5f), 0.5f, 100f, 20f, manager, this);
-        enemy5 = new Laserman(new Vector2(3f, 5f), 0.2f, 150f, 1f, manager, this);
+        enemy1 = new Exploder(new Vector2(1f, 1f), manager, this);
+        enemy2 = new Exploder(new Vector2(-1f, 1.5f), manager, this);
+        enemy3 = new Exploder(new Vector2(-0.5f, 0.5f), manager, this);
+        enemy4 = new Summoner(new Vector2(-3f, 5f), manager, this);
+        enemy5 = new Laserman(new Vector2(3f, 5f), manager, this);
 
         manager.addEnemy(enemy1);
         manager.addEnemy(enemy2);
