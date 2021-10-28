@@ -20,7 +20,6 @@ public abstract class Enemy extends Entity implements Runnable {
         alive = true;
         this.manager = manager;
         this.view = view;
-        //findPixelPosition();
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
         waitTime = 15;
         this.paint.setColor(Color.CYAN);
@@ -31,7 +30,6 @@ public abstract class Enemy extends Entity implements Runnable {
         while (health > 0) {
             this.pixelPosition = this.findPixelPosition();
             behave();
-            //Log.d("Is running", "Yes");
 
             try {
                 Thread.sleep(waitTime);

@@ -31,6 +31,7 @@ public class MainView extends View {
         manager = new Manager(this);
         player = manager.getPlayer();
 
+        /*
         enemy1 = new Exploder(new Vector2(1f, 1f), manager, this);
         enemy2 = new Exploder(new Vector2(-1f, 1.5f), manager, this);
         enemy3 = new Exploder(new Vector2(-0.5f, 0.5f), manager, this);
@@ -42,6 +43,7 @@ public class MainView extends View {
         manager.addEnemy(enemy3);
         manager.addEnemy(enemy4);
         manager.addEnemy(enemy5);
+         */
 
         paint = new Paint();
         paint.setColor(Color.WHITE);
@@ -81,6 +83,7 @@ public class MainView extends View {
 
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         canvas.drawText(player.getVelocity().toString(), 5f, 110f, paint);
+        canvas.drawText(String.valueOf(manager.getEnemiesLeft()), 5f, 165f, paint);
 
         invalidate();
     }

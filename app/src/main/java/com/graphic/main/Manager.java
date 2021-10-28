@@ -24,6 +24,7 @@ public class Manager implements Runnable {
         playerProjectiles = new ArrayList<>();
         enemyProjectiles = new ArrayList<>();
         this.view = view;
+        this.director = new Director(this);
 
         this.bgLinePaint = new Paint();
         this.bgLinePaint.setStrokeWidth(3);
@@ -40,6 +41,8 @@ public class Manager implements Runnable {
     public void run() {
         while (true) {
             // Generate enemies using the director
+            director.setCredits(20);
+            director.generateEnemies();
 
             // While enemies exist, continue running the level
             while (!enemies.isEmpty()) {
@@ -133,6 +136,14 @@ public class Manager implements Runnable {
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public MainView getView() {
+        return view;
+    }
+
+    public int getEnemiesLeft() {
+        return this.enemies.size();
     }
 
     public void addPlayerProjectile(Projectile projectile) {
