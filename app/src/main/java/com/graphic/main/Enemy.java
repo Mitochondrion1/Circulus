@@ -9,6 +9,7 @@ public abstract class Enemy extends Entity implements Runnable {
     protected long waitTime;
     protected boolean alive;
     protected Manager manager;
+    protected Arrow arrow;
 
     protected int directorCost;
     protected float baseHealth;
@@ -20,6 +21,7 @@ public abstract class Enemy extends Entity implements Runnable {
         alive = true;
         this.manager = manager;
         this.view = view;
+        this.arrow = new Arrow(this.view);
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
         waitTime = 15;
         this.paint.setColor(Color.CYAN);
@@ -27,8 +29,14 @@ public abstract class Enemy extends Entity implements Runnable {
 
     @Override
     public void run() {
+        Vector2 arrowDir;
         while (health > 0) {
             this.pixelPosition = this.findPixelPosition();
+            arrowDir = Vector2.sub(this.manager.getPlayer().getPosition(), this.position);
+            arrowDir.setLength(0.5f);
+            arrow.setPosition(view.positionToPixels(view.relativePosition(
+                    new Vector2(this.manager.getPlayer().getPosition().getX() + arrowDir.getX(),
+                    this.manager.getPlayer().getPosition().getY() + arrowDir.getY()))));
             behave();
 
             try {
@@ -52,6 +60,7 @@ public abstract class Enemy extends Entity implements Runnable {
     public void draw(Canvas canvas) {
         canvas.drawCircle(pixelPosition.getX(), pixelPosition.getY(),
                 this.view.getPixelsPerUnit() * this.size / 2, paint);
+        this.arrow.draw(canvas);
         drawHealthBar(canvas);
     }
 

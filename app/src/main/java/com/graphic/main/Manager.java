@@ -2,6 +2,7 @@ package com.graphic.main;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -11,16 +12,19 @@ public class Manager implements Runnable {
     private ArrayList<Enemy> enemies;
     private ArrayList<Projectile> playerProjectiles;
     private ArrayList<Projectile> enemyProjectiles;
+    private ArrayList<Vector2> arrows;
     private Director director;
     private MainView view;
     private Paint bgLinePaint;
     private Paint bgPaint;
+    private Paint arrowPaint;
     private Thread thread;
 
     public Manager(MainView view) {
         level = 1;
         player = new Player(new Vector2(0, 0), view, this);
         enemies = new ArrayList<>();
+        arrows = new ArrayList<>();
         playerProjectiles = new ArrayList<>();
         enemyProjectiles = new ArrayList<>();
         this.view = view;
@@ -32,6 +36,9 @@ public class Manager implements Runnable {
 
         this.bgPaint = new Paint();
         this.bgPaint.setColor(0xff000000);
+
+        this.arrowPaint = new Paint();
+        this.arrowPaint.setColor(0xffffffff);
 
         this.thread = new Thread(this);
         this.thread.start();

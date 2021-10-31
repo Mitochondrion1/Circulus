@@ -75,7 +75,7 @@ public class Laserman extends Enemy {
         super.behave();
 
         float distToPlayer = Vector2.distance(this.position, this.manager.getPlayer().getPosition());
-        if (!detectedPlayer && distToPlayer <= detectDistance) {
+        if (!detectedPlayer && (distToPlayer <= detectDistance || this.health < this.maxHealth)) {
             detectedPlayer = true;
             isOnCooldown = true;
         }
