@@ -41,7 +41,7 @@ public class Manager implements Runnable {
     public void run() {
         while (true) {
             // Generate enemies using the director
-            director.setCredits(20);
+            director.setCredits(100);
             director.generateEnemies();
 
             // While enemies exist, continue running the level

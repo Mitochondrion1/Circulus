@@ -6,6 +6,7 @@ public class Director {
     private Manager manager;
     private EnemyType[] enemyTypes;
     private int credits;
+    private int initialCredits;
 
     public Director(Manager manager) {
         this.manager = manager;
@@ -16,12 +17,18 @@ public class Director {
 
     public void setCredits(int credits) {
         this.credits = credits;
+        this.initialCredits = this.credits;
     }
 
     public void generateEnemies() {
+        float[] values = new float[this.enemyTypes.length];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = generateValue(this.enemyTypes[i]);
+        }
+
         int mostExpensive = this.enemyTypes.length - 1;
-        int total, sum;
-        int generatedNum;
+        float sum;
+        float generatedNum;
         Random random = new Random();
         while (mostExpensive >= 0) {
             for (int i = this.enemyTypes.length - 1; i >= 0; i--) {
@@ -29,19 +36,32 @@ public class Director {
                     mostExpensive--;
                 }
             }
-            total = 0;
-            for (int j = 0; j <= mostExpensive; j++) {
-                total += enemyTypes[j].getDirectorCost();
-            }
-            generatedNum = random.nextInt(total + 1);
+            normalizeValues(values, mostExpensive);
 
-            sum = 0;
+            generatedNum = random.nextFloat();
+
+            sum = 0f;
             for (int k = 0; k <= mostExpensive; k++) {
-                sum += enemyTypes[k].getDirectorCost();
+                sum += values[k];
                 if (generatedNum < sum) {
                     this.addEnemy(k);
                 }
             }
+        }
+    }
+
+    private float generateValue(EnemyType enemyType) {
+        float constant = 0.2f;
+        return (float)Math.pow(constant / enemyType.getDirectorCost() * this.initialCredits, 0.1 * enemyType.getDirectorCost());
+    }
+
+    private void normalizeValues(float[] values, int x) {
+        float sum = 0f;
+        for (int i = 0; i < x; i++) {
+            sum += values[i];
+        }
+        for (int j = 0; j < x; j++) {
+            values[j] *= 1f / sum;
         }
     }
 
