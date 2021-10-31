@@ -22,8 +22,8 @@ public class Summoner extends Enemy {
         this.baseHealth = EnemyTypeData.SUMMONER.getBaseHealth();
         this.baseDamage = EnemyTypeData.SUMMONER.getBaseDamage();
 
-        this.health = baseHealth;
-        this.maxHealth = baseHealth;
+        this.health = baseHealth * (0.8f + 0.2f * this.manager.getLevel());
+        this.maxHealth = this.health;
         this.damage = baseDamage;
     }
 

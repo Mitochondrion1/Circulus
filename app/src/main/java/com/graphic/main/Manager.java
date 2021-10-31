@@ -41,7 +41,7 @@ public class Manager implements Runnable {
     public void run() {
         while (true) {
             // Generate enemies using the director
-            director.setCredits(100);
+            director.setCredits(50 + 50 * level);
             director.generateEnemies();
 
             // While enemies exist, continue running the level
@@ -79,6 +79,7 @@ public class Manager implements Runnable {
             }
 
             // Show prompt to continue to next level
+            this.level++;
         }
     }
 
@@ -132,6 +133,10 @@ public class Manager implements Runnable {
                     0f, beginVertical - distBetweenLines * (j + 1),
                     this.view.getDisplaySize().getY(), bgLinePaint);
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public Player getPlayer() {

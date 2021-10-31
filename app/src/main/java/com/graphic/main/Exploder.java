@@ -32,8 +32,8 @@ public class Exploder extends Enemy {
         this.baseHealth = EnemyTypeData.EXPLODER.getBaseHealth();
 
         this.damage = baseDamage;
-        this.health = baseHealth;
-        this.maxHealth = health;
+        this.health = baseHealth * (0.8f + 0.2f * this.manager.getLevel());
+        this.maxHealth = this.health;
     }
 
     @Override

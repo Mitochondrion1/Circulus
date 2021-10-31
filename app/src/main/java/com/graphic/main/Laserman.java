@@ -3,7 +3,6 @@ package com.graphic.main;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class Laserman extends Enemy {
     private static final int cooldownTicks = 150;
@@ -51,14 +50,13 @@ public class Laserman extends Enemy {
         this.baseHealth = EnemyTypeData.LASERMAN.getBaseHealth();
         this.baseDamage = EnemyTypeData.LASERMAN.getBaseDamage();
 
-        this.health = baseHealth;
-        this.maxHealth = baseHealth;
+        this.health = baseHealth * (0.8f + 0.2f * this.manager.getLevel());
+        this.maxHealth = this.health;
         this.damage = baseDamage;
     }
 
     @Override
     public void draw(Canvas canvas) {
-        Log.d("Draw", "Drawn");
         if (isCharging || isFinalCharging) {
             canvas.drawLine(this.pixelPosition.getX(), this.pixelPosition.getY(),
                     this.pixelPosition.getX() + this.shotDirection.getX() * view.getPixelsPerUnit(),

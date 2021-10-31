@@ -83,7 +83,8 @@ public class MainView extends View {
 
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         canvas.drawText(player.getVelocity().toString(), 5f, 110f, paint);
-        canvas.drawText(String.valueOf(manager.getEnemiesLeft()), 5f, 165f, paint);
+        canvas.drawText("Level: " + manager.getLevel(), 5f ,165f, paint);
+        canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
 
         invalidate();
     }

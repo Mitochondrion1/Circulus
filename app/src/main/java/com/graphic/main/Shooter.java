@@ -31,8 +31,8 @@ public class Shooter extends Enemy {
         this.baseDamage = EnemyTypeData.SHOOTER.getBaseDamage();
 
         this.damage = this.baseDamage;
-        this.health = this.baseHealth;
-        this.maxHealth = this.baseHealth;
+        this.health = this.baseHealth * (0.8f + 0.2f * this.manager.getLevel());
+        this.maxHealth = this.health;
     }
 
     @Override
