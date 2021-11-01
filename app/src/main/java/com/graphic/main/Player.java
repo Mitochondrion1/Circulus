@@ -101,9 +101,8 @@ public class Player extends Entity implements Runnable {
         this.shotEndY = shotEndY;
     }
 
-    @Override
-    public void damage(float damage) {
-        super.damage(damage);
+    public void heal(float hp) {
+        this.health = Math.min(this.health + hp, this.maxHealth);
     }
 
     @Override

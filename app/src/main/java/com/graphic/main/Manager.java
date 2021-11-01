@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Manager implements Runnable {
     private int level;
@@ -12,21 +13,22 @@ public class Manager implements Runnable {
     private ArrayList<Enemy> enemies;
     private ArrayList<Projectile> playerProjectiles;
     private ArrayList<Projectile> enemyProjectiles;
-    private ArrayList<Vector2> arrows;
+    private ArrayList<HealthPack> healthPacks;
     private Director director;
     private MainView view;
     private Paint bgLinePaint;
     private Paint bgPaint;
     private Paint arrowPaint;
     private Thread thread;
+    private Random random;
 
     public Manager(MainView view) {
         level = 1;
         player = new Player(new Vector2(0, 0), view, this);
         enemies = new ArrayList<>();
-        arrows = new ArrayList<>();
         playerProjectiles = new ArrayList<>();
         enemyProjectiles = new ArrayList<>();
+        healthPacks = new ArrayList<>();
         this.view = view;
         this.director = new Director(this);
 
@@ -39,6 +41,8 @@ public class Manager implements Runnable {
 
         this.arrowPaint = new Paint();
         this.arrowPaint.setColor(0xffffffff);
+
+        this.random = new Random();
 
         this.thread = new Thread(this);
         this.thread.start();
@@ -83,6 +87,26 @@ public class Manager implements Runnable {
                         }
                     }
                 }
+                for (int l = 0; l < healthPacks.size(); l++) {
+                    if (healthPacks.get(l) != null) {
+                        if (Vector2.distance(this.player.getPosition(), this.healthPacks.get(l).getPosition()) <=
+                                (this.player.getSize() + this.healthPacks.get(l).getSize()) / 2) {
+                            this.player.heal(this.healthPacks.get(l).getHealAmount());
+                            this.healthPacks.remove(l);
+                            l--;
+                        }
+                    }
+                }
+
+                if (this.random.nextInt(1000) == 0) {
+                    addHealthPack();
+                }
+
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             // Show prompt to continue to next level
@@ -90,14 +114,17 @@ public class Manager implements Runnable {
         }
     }
 
-    public void moveEnemies(Vector2 positionChange) {
-        for (int i = 0; i < this.enemies.size(); i++) {
-            this.enemies.get(i).changePosition(positionChange);
-        }
+    public ArrayList<HealthPack> getHealthPacks() {
+        return healthPacks;
     }
 
     public void addEnemy(Enemy enemy) {
         this.enemies.add(enemy);
+    }
+
+    private void addHealthPack() {
+        Vector2 pos = new Vector2(this.random.nextFloat() * 20 - 10f, this.random.nextFloat() * 15 - 7.5f);
+        this.healthPacks.add(new HealthPack(pos, this.view));
     }
 
     public void drawEnemies(Canvas canvas) {
@@ -112,6 +139,12 @@ public class Manager implements Runnable {
         }
         for (int j = 0; j < enemyProjectiles.size(); j++) {
             enemyProjectiles.get(j).draw(canvas);
+        }
+    }
+
+    public void drawHealthPacks(Canvas canvas) {
+        for (int i = 0; i < healthPacks.size(); i++) {
+            healthPacks.get(i).draw(canvas);
         }
     }
 

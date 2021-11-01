@@ -51,7 +51,7 @@ public class Director {
     }
 
     private float generateValue(EnemyType enemyType) {
-        float constant = 0.2f;
+        float constant = 0.05f;
         return (float)Math.pow(constant / enemyType.getDirectorCost() * this.initialCredits, 0.1 * enemyType.getDirectorCost());
     }
 

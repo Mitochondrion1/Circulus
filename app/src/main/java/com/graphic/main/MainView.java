@@ -8,7 +8,6 @@ import android.view.View;
 
 public class MainView extends View {
     private Player player;
-    private Enemy enemy1, enemy2, enemy3, enemy4, enemy5;
     private Manager manager;
 
     private Vector2 displaySize;
@@ -30,20 +29,6 @@ public class MainView extends View {
 
         manager = new Manager(this);
         player = manager.getPlayer();
-
-        /*
-        enemy1 = new Exploder(new Vector2(1f, 1f), manager, this);
-        enemy2 = new Exploder(new Vector2(-1f, 1.5f), manager, this);
-        enemy3 = new Exploder(new Vector2(-0.5f, 0.5f), manager, this);
-        enemy4 = new Summoner(new Vector2(-3f, 5f), manager, this);
-        enemy5 = new Laserman(new Vector2(3f, 5f), manager, this);
-
-        manager.addEnemy(enemy1);
-        manager.addEnemy(enemy2);
-        manager.addEnemy(enemy3);
-        manager.addEnemy(enemy4);
-        manager.addEnemy(enemy5);
-         */
 
         paint = new Paint();
         paint.setColor(Color.WHITE);
@@ -80,9 +65,10 @@ public class MainView extends View {
         manager.drawProjectiles(canvas);
         player.draw(canvas);
         manager.drawEnemies(canvas);
+        manager.drawHealthPacks(canvas);
 
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
-        canvas.drawText(player.getVelocity().toString(), 5f, 110f, paint);
+        canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
         canvas.drawText("Level: " + manager.getLevel(), 5f ,165f, paint);
         canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
 
