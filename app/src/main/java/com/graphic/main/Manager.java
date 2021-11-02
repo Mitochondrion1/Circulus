@@ -50,6 +50,7 @@ public class Manager implements Runnable {
 
     @Override
     public void run() {
+        int maxHealthPacks = 5;
         while (true) {
             // Generate enemies using the director
             director.setCredits(50 + 50 * level);
@@ -98,7 +99,7 @@ public class Manager implements Runnable {
                     }
                 }
 
-                if (this.random.nextInt(1000) == 0) {
+                if (this.healthPacks.size() < maxHealthPacks && this.random.nextInt(1000) == 0) {
                     addHealthPack();
                 }
 

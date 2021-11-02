@@ -52,7 +52,7 @@ public class Laserman extends Enemy {
 
         this.health = baseHealth * (0.8f + 0.2f * this.manager.getLevel());
         this.maxHealth = this.health;
-        this.damage = baseDamage;
+        this.damage = baseDamage * (0.8f + 0.2f * this.manager.getLevel());
     }
 
     @Override

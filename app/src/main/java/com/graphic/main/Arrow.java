@@ -24,6 +24,10 @@ public class Arrow {
         this.position = position;
     }
 
+    public void setAlpha(int x) {
+        this.paint.setAlpha(x);
+    }
+
     public void draw(Canvas canvas) {
         canvas.drawCircle(this.position.getX(), this.position.getY(),
                 view.getPixelsPerUnit() * 0.05f, this.paint);

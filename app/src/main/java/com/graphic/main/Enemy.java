@@ -22,6 +22,8 @@ public abstract class Enemy extends Entity implements Runnable {
         this.manager = manager;
         this.view = view;
         this.arrow = new Arrow(this.view);
+        this.arrow.setAlpha((int)Math.min(0xff, 0xff / Vector2.distance(
+                this.manager.getPlayer().getPosition(), this.position)));
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
         waitTime = 15;
         this.paint.setColor(Color.CYAN);
@@ -37,6 +39,8 @@ public abstract class Enemy extends Entity implements Runnable {
             arrow.setPosition(view.positionToPixels(view.relativePosition(
                     new Vector2(this.manager.getPlayer().getPosition().getX() + arrowDir.getX(),
                     this.manager.getPlayer().getPosition().getY() + arrowDir.getY()))));
+            this.arrow.setAlpha((int)Math.min(0xff, 4 * 0xff / Vector2.distance(
+                    this.manager.getPlayer().getPosition(), this.position)));
             behave();
 
             try {
