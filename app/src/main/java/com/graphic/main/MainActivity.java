@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (accelerometerMode) {
@@ -236,14 +237,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void returnToMenu() {
-        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
-        restart();
-        startActivity(intent);
-
+        finish();
     }
 
     public void showGameOverDialog() {
-        Log.d("Got here", "yes");
         DialogFragment dialogFragment = new GameOverDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "game_over");
     }
