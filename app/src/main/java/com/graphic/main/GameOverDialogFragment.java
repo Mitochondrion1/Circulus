@@ -24,7 +24,8 @@ public class GameOverDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         ((MainActivity)getActivity()).returnToMenu();
                     }
-                });
+                })
+                .setTitle(R.string.dialog_game_over_title);
         return builder.create();
     }
 }
