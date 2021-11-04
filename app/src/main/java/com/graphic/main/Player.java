@@ -136,4 +136,8 @@ public class Player extends Entity implements Runnable {
         Vector2 projVelocity = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
         this.manager.addPlayerProjectile(new Projectile(this.damage, this.position, projVelocity, true, this.view));
     }
+
+    public boolean isAlive() {
+        return this.health > 0;
+    }
 }

@@ -16,4 +16,7 @@
     <string name="repo_text">GitHub Repository: https://github.com/Mitochondrion1/GameProject</string>
     <string name="button_credits">Credits</string>
     <string name="direction_display_key">display_directions</string>
+    <string name="dialog_game_over">You Ded!</string>
+    <string name="restart">Start Over</string>
+    <string name="to_menu">To Menu</string>
 </resources>

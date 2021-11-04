@@ -51,7 +51,7 @@ public class Manager implements Runnable {
     @Override
     public void run() {
         int maxHealthPacks = 5;
-        while (true) {
+        while (player.isAlive()) {
             // Generate enemies using the director
             director.setCredits(50 + 50 * level);
             director.generateEnemies();
@@ -103,6 +103,10 @@ public class Manager implements Runnable {
                     addHealthPack();
                 }
 
+                if (!player.isAlive()) {
+                    break;
+                }
+
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
@@ -110,9 +114,13 @@ public class Manager implements Runnable {
                 }
             }
 
-            // Show prompt to continue to next level
-            this.level++;
+            // Continue to next level
+            if (player.isAlive()) {
+                this.level++;
+            }
         }
+        Log.d("Got here", "yes");
+        this.view.getActivity().showGameOverDialog();
     }
 
     public ArrayList<HealthPack> getHealthPacks() {

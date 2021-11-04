@@ -1,6 +1,7 @@
 package com.graphic.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -226,5 +228,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public void restart() {
+        this.view = new MainView(this);
+        setContentView(this.view);
+    }
+
+    public void returnToMenu() {
+        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+        restart();
+        startActivity(intent);
+
+    }
+
+    public void showGameOverDialog() {
+        Log.d("Got here", "yes");
+        DialogFragment dialogFragment = new GameOverDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "game_over");
     }
 }

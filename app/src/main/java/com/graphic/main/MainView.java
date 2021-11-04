@@ -9,6 +9,7 @@ import android.view.View;
 public class MainView extends View {
     private Player player;
     private Manager manager;
+    private MainActivity activity;
 
     private Vector2 displaySize;
     private float widthInUnits;
@@ -20,10 +21,10 @@ public class MainView extends View {
     private float dirLength;
     private Paint dirPaint1, dirPaint2;
 
-    public MainView(Context context) {
-        super(context);
+    public MainView(MainActivity activity) {
+        super(activity);
 
-        displaySize = DisplayParams.getDisplaySize(context);
+        displaySize = DisplayParams.getDisplaySize(activity);
         widthInUnits = 5f;
         pixelsPerUnit = displaySize.getX() / widthInUnits;
 
@@ -34,7 +35,7 @@ public class MainView extends View {
         paint.setColor(Color.WHITE);
         paint.setTextSize(50f);
 
-        showDirections = Store.readBool(context.getApplicationContext(), R.string.direction_display_key, false);
+        showDirections = Store.readBool(activity.getApplicationContext(), R.string.direction_display_key, false);
         dirLength = 0.75f * getPixelsPerUnit();
         if (showDirections) {
             dirPaint1 = new Paint();
@@ -45,6 +46,7 @@ public class MainView extends View {
             dirPaint2.setStrokeWidth(3f);
             dirPaint2.setColor(Color.BLUE);
         }
+        this.activity = activity;
     }
 
     @Override
@@ -99,5 +101,9 @@ public class MainView extends View {
 
     public float getPixelsPerUnit() {
         return pixelsPerUnit;
+    }
+
+    public MainActivity getActivity() {
+        return activity;
     }
 }
