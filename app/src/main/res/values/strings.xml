@@ -22,4 +22,9 @@
     <string name="dialog_game_over_title">Game Over</string>
     <string name="dialog_level_end_title">Level Complete</string>
     <string name="button_continue">Continue</string>
+    <string name="highest_level_key">highest_level</string>
+    <string name="most_kills_key">most_kills</string>
+    <string name="high_scores_text">High Scores</string>
+    <string name="highest_level_text">Highest Level</string>
+    <string name="most_kills_text">Most Kills</string>
 </resources>

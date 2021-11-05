@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Manager implements Runnable {
     private int level;
+    private int kills;
     private Player player;
     private ArrayList<Enemy> enemies;
     private ArrayList<Projectile> playerProjectiles;
@@ -24,6 +25,7 @@ public class Manager implements Runnable {
 
     public Manager(MainView view) {
         level = 1;
+        kills = 0;
         player = new Player(new Vector2(0, 0), view, this);
         enemies = new ArrayList<>();
         playerProjectiles = new ArrayList<>();
@@ -74,6 +76,7 @@ public class Manager implements Runnable {
                     if (enemies.get(i) != null && !enemies.get(i).isAlive()) {
                         enemies.remove(i);
                         i--;
+                        this.kills++;
                     }
                 }
                 for (int k = 0; k < enemyProjectiles.size(); k++) {
@@ -122,7 +125,6 @@ public class Manager implements Runnable {
                 this.level++;
             }
         }
-        Log.d("Got here", "yes");
         this.view.getActivity().showGameOverDialog();
     }
 
@@ -189,6 +191,10 @@ public class Manager implements Runnable {
 
     public int getLevel() {
         return level;
+    }
+
+    public int getKills() {
+        return kills;
     }
 
     public Player getPlayer() {

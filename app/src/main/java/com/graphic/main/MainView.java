@@ -106,4 +106,8 @@ public class MainView extends View {
     public MainActivity getActivity() {
         return activity;
     }
+
+    public Manager getManager() {
+        return manager;
+    }
 }

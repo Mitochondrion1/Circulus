@@ -31,4 +31,9 @@ public class MenuActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreditsActivity.class);
         startActivity(intent);
     }
+
+    public void showHighScores(View view) {
+        Intent intent = new Intent(this, HighScoresActivity.class);
+        startActivity(intent);
+    }
 }

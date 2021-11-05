@@ -243,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void showGameOverDialog() {
+        saveHighScores();
         DialogFragment dialogFragment = new GameOverDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "game_over");
     }
@@ -259,5 +260,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void setLevelEndDialogShown(boolean levelEndDialogShown) {
         this.levelEndDialogShown = levelEndDialogShown;
+    }
+
+    private void saveHighScores() {
+        if (this.view.getManager().getLevel() > Store.readInt(getApplicationContext(), R.string.highest_level_key, 0)) {
+            Store.saveInt(getApplicationContext(), R.string.highest_level_key, this.view.getManager().getLevel());
+        }
+        if (this.view.getManager().getKills() > Store.readInt(getApplicationContext(), R.string.most_kills_key, 0)) {
+            Store.saveInt(getApplicationContext(), R.string.most_kills_key, this.view.getManager().getKills());
+        }
     }
 }
