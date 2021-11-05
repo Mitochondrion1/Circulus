@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Debug;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 public class GameOverDialogFragment extends DialogFragment {
@@ -27,5 +28,11 @@ public class GameOverDialogFragment extends DialogFragment {
                 })
                 .setTitle(R.string.dialog_game_over_title);
         return builder.create();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        ((MainActivity)getActivity()).returnToMenu();
     }
 }

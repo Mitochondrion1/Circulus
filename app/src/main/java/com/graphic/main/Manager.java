@@ -116,6 +116,9 @@ public class Manager implements Runnable {
 
             // Continue to next level
             if (player.isAlive()) {
+                this.view.getActivity().showLevelEndDialog();
+                while (this.view.getActivity().isLevelEndDialogShown()) {
+                }
                 this.level++;
             }
         }

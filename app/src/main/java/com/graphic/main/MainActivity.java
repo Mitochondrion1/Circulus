@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Intent musicServiceIntent;
     private Vector2 displaySize;
     private boolean accelerometerMode;
+    private boolean levelEndDialogShown;
 
     private static final int UPDATE_THRESHOLD = 50;
     private SensorManager mSensorManager;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         view = new MainView(this);
         displaySize = DisplayParams.getDisplaySize(this);
         accelerometerMode = Store.readBool(getApplicationContext(), R.string.accelerometer_key, true);
+        levelEndDialogShown = false;
 
         if (accelerometerMode) {
             mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -243,5 +245,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void showGameOverDialog() {
         DialogFragment dialogFragment = new GameOverDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "game_over");
+    }
+
+    public void showLevelEndDialog() {
+        levelEndDialogShown = true;
+        DialogFragment dialogFragment = new LevelEndDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "level_complete");
+    }
+
+    public boolean isLevelEndDialogShown() {
+        return this.levelEndDialogShown;
+    }
+
+    public void setLevelEndDialogShown(boolean levelEndDialogShown) {
+        this.levelEndDialogShown = levelEndDialogShown;
     }
 }
