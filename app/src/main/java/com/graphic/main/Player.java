@@ -12,16 +12,24 @@ public class Player extends Entity implements Runnable {
     private final int projectileTickDelay = 20;
     private int tick;
 
+    private float healthMultiplier;
+    private float damageMultiplier;
+
     private float startX, startY, endX, endY;
     private float shotStartX, shotStartY, shotEndX, shotEndY;
 
     public Player(Vector2 position, MainView view, Manager manager) {
         super(position);
 
+        this.baseHealth = 100f;
+        this.baseDamage = 10f;
+        this.damageMultiplier = 1f;
+        this.healthMultiplier = 1f;
+
         this.speed = 1f;
-        this.damage = 10f;
-        this.maxHealth = 100f;
-        this.health = maxHealth;
+        this.damage = this.damageMultiplier * this.baseDamage;
+        this.maxHealth = this.healthMultiplier * this.baseHealth;
+        this.health = this.maxHealth;
 
         this.view = view;
         this.manager = manager;
@@ -102,7 +110,7 @@ public class Player extends Entity implements Runnable {
     }
 
     public void heal(float hp) {
-        this.health = Math.min(this.health + hp, this.maxHealth);
+        this.health = Math.min(this.health + this.maxHealth * hp / 100f, this.maxHealth);
     }
 
     @Override
@@ -139,5 +147,18 @@ public class Player extends Entity implements Runnable {
 
     public boolean isAlive() {
         return this.health > 0;
+    }
+
+    public void increaseHealth() {
+        float healthPercentage = this.health / this.maxHealth;
+
+        this.healthMultiplier += 0.4f;
+        this.maxHealth = this.healthMultiplier * this.baseHealth;
+        this.health = healthPercentage * this.maxHealth;
+    }
+
+    public void increaseDamage() {
+        this.damageMultiplier += 0.4f;
+        this.damage = this.damageMultiplier * this.baseDamage;
     }
 }

@@ -53,10 +53,12 @@ public class Manager implements Runnable {
     @Override
     public void run() {
         int maxHealthPacks = 5;
+        int rand;
         while (player.isAlive()) {
             // Generate enemies using the director
             director.setCredits(50 + 50 * level);
             director.generateEnemies();
+            rand = random.nextInt(2);
 
             // While enemies exist, continue running the level
             while (!enemies.isEmpty()) {
@@ -119,6 +121,16 @@ public class Manager implements Runnable {
 
             // Continue to next level
             if (player.isAlive()) {
+                switch (rand) {
+                    case 0:
+                        this.player.increaseHealth();
+                        this.view.getActivity().setIncreasedValueString("Your health has increased");
+                        break;
+                    case 1:
+                        this.player.increaseDamage();
+                        this.view.getActivity().setIncreasedValueString("Your damage has increased");
+                        break;
+                }
                 this.view.getActivity().showLevelEndDialog();
                 while (this.view.getActivity().isLevelEndDialogShown()) {
                 }

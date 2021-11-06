@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Vector2 displaySize;
     private boolean accelerometerMode;
     private boolean levelEndDialogShown;
+    private String increasedValueString;
 
     private static final int UPDATE_THRESHOLD = 50;
     private SensorManager mSensorManager;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         displaySize = DisplayParams.getDisplaySize(this);
         accelerometerMode = Store.readBool(getApplicationContext(), R.string.accelerometer_key, true);
         levelEndDialogShown = false;
+        increasedValueString = "";
 
         if (accelerometerMode) {
             mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -269,5 +271,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (this.view.getManager().getKills() > Store.readInt(getApplicationContext(), R.string.most_kills_key, 0)) {
             Store.saveInt(getApplicationContext(), R.string.most_kills_key, this.view.getManager().getKills());
         }
+    }
+
+    public String getIncreasedValueString() {
+        return increasedValueString;
+    }
+
+    public void setIncreasedValueString(String string) {
+        this.increasedValueString = string;
     }
 }
