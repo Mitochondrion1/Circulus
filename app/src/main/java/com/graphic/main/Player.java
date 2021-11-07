@@ -9,11 +9,13 @@ public class Player extends Entity implements Runnable {
     private float displayWidth;
     private float displayHeight;
     private long waitTime;
-    private final int projectileTickDelay = 20;
+    private final int baseProjectileDelay = 20;
+    private int projectileDelay;
     private int tick;
 
     private float healthMultiplier;
     private float damageMultiplier;
+    private float attackSpeedMultiplier;
 
     private float startX, startY, endX, endY;
     private float shotStartX, shotStartY, shotEndX, shotEndY;
@@ -25,11 +27,13 @@ public class Player extends Entity implements Runnable {
         this.baseDamage = 10f;
         this.damageMultiplier = 1f;
         this.healthMultiplier = 1f;
+        this.attackSpeedMultiplier = 1f;
 
         this.speed = 1f;
         this.damage = this.damageMultiplier * this.baseDamage;
         this.maxHealth = this.healthMultiplier * this.baseHealth;
         this.health = this.maxHealth;
+        this.projectileDelay = (int)(this.attackSpeedMultiplier * this.baseProjectileDelay);
 
         this.view = view;
         this.manager = manager;
@@ -127,7 +131,7 @@ public class Player extends Entity implements Runnable {
         }
         position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
         position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
-        tick = (tick + 1) % projectileTickDelay;
+        tick = (tick + 1) % projectileDelay;
     }
 
     public void setTick(int tick) {
@@ -160,5 +164,10 @@ public class Player extends Entity implements Runnable {
     public void increaseDamage() {
         this.damageMultiplier += 0.4f;
         this.damage = this.damageMultiplier * this.baseDamage;
+    }
+
+    public void increaseAttackSpeed() {
+        this.attackSpeedMultiplier *= 0.9f;
+        this.projectileDelay = (int)Math.ceil(this.attackSpeedMultiplier * this.baseProjectileDelay);
     }
 }

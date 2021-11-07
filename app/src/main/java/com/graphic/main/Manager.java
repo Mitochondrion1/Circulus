@@ -58,7 +58,7 @@ public class Manager implements Runnable {
             // Generate enemies using the director
             director.setCredits(50 + 50 * level);
             director.generateEnemies();
-            rand = random.nextInt(2);
+            rand = random.nextInt(3);
 
             // While enemies exist, continue running the level
             while (!enemies.isEmpty()) {
@@ -129,6 +129,10 @@ public class Manager implements Runnable {
                     case 1:
                         this.player.increaseDamage();
                         this.view.getActivity().setIncreasedValueString("Your damage has increased");
+                        break;
+                    case 2:
+                        this.player.increaseAttackSpeed();
+                        this.view.getActivity().setIncreasedValueString("Your attack speed has increased");
                         break;
                 }
                 this.view.getActivity().showLevelEndDialog();
