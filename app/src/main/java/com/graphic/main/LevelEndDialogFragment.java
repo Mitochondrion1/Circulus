@@ -19,7 +19,8 @@ public class LevelEndDialogFragment extends DialogFragment {
                         ((MainActivity)getActivity()).setLevelEndDialogShown(false);
                     }
                 })
-                .setTitle(R.string.dialog_level_end_title);
+                .setTitle(R.string.dialog_level_end_title)
+        .setMessage(((MainActivity)getActivity()).getIncreasedValueString());
         return builder.create();
     }
 

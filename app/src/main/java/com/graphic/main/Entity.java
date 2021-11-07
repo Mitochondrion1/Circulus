@@ -8,6 +8,8 @@ public abstract class Entity implements Runnable {
     protected Vector2 position;
     protected Vector2 velocity;
     protected float speed;
+    protected float baseHealth;
+    protected float baseDamage;
     protected float health;
     protected float maxHealth;
     protected float damage;

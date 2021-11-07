@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Manager implements Runnable {
     private int level;
+    private int kills;
     private Player player;
     private ArrayList<Enemy> enemies;
     private ArrayList<Projectile> playerProjectiles;
@@ -24,6 +25,7 @@ public class Manager implements Runnable {
 
     public Manager(MainView view) {
         level = 1;
+        kills = 0;
         player = new Player(new Vector2(0, 0), view, this);
         enemies = new ArrayList<>();
         playerProjectiles = new ArrayList<>();
@@ -51,10 +53,12 @@ public class Manager implements Runnable {
     @Override
     public void run() {
         int maxHealthPacks = 5;
+        int rand;
         while (player.isAlive()) {
             // Generate enemies using the director
             director.setCredits(50 + 50 * level);
             director.generateEnemies();
+            rand = random.nextInt(2);
 
             // While enemies exist, continue running the level
             while (!enemies.isEmpty()) {
@@ -74,6 +78,7 @@ public class Manager implements Runnable {
                     if (enemies.get(i) != null && !enemies.get(i).isAlive()) {
                         enemies.remove(i);
                         i--;
+                        this.kills++;
                     }
                 }
                 for (int k = 0; k < enemyProjectiles.size(); k++) {
@@ -116,13 +121,22 @@ public class Manager implements Runnable {
 
             // Continue to next level
             if (player.isAlive()) {
+                switch (rand) {
+                    case 0:
+                        this.player.increaseHealth();
+                        this.view.getActivity().setIncreasedValueString("Your health has increased");
+                        break;
+                    case 1:
+                        this.player.increaseDamage();
+                        this.view.getActivity().setIncreasedValueString("Your damage has increased");
+                        break;
+                }
                 this.view.getActivity().showLevelEndDialog();
                 while (this.view.getActivity().isLevelEndDialogShown()) {
                 }
                 this.level++;
             }
         }
-        Log.d("Got here", "yes");
         this.view.getActivity().showGameOverDialog();
     }
 
@@ -189,6 +203,10 @@ public class Manager implements Runnable {
 
     public int getLevel() {
         return level;
+    }
+
+    public int getKills() {
+        return kills;
     }
 
     public Player getPlayer() {
