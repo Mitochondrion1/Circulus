@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+// The game view
 public class MainView extends View {
     private Player player;
     private Manager manager;

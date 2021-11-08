@@ -3,6 +3,7 @@ package com.graphic.main;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+// Defines an AI controlled enemy
 public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;
     protected Vector2 positionChange;
@@ -41,10 +42,6 @@ public abstract class Enemy extends Entity implements Runnable {
             super.run();
         }
         alive = false;
-    }
-
-    public boolean isAlive() {
-        return alive;
     }
 
     protected Vector2 findPixelPosition() {

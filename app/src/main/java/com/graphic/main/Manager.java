@@ -7,10 +7,12 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Random;
 
+// The object that is responsible for running the game world
 public class Manager implements Runnable {
     private int level;
     private int kills;
 
+    // Map bounds parameters
     private float boundLeft;
     private float boundTop;
     private float boundRight;
@@ -136,6 +138,7 @@ public class Manager implements Runnable {
 
             // Continue to next level
             if (player.isAlive()) {
+                // Give the player a random upgrade when finishing a level
                 switch (rand) {
                     case 0:
                         this.player.increaseHealth();
@@ -150,6 +153,8 @@ public class Manager implements Runnable {
                         this.view.getActivity().setIncreasedValueString("Your attack speed has increased");
                         break;
                 }
+
+                // Show the level end dialog, and wait until it's closed before continuing
                 this.view.getActivity().showLevelEndDialog();
                 while (this.view.getActivity().isLevelEndDialogShown()) {
                 }
@@ -167,18 +172,21 @@ public class Manager implements Runnable {
         this.enemies.add(enemy);
     }
 
+    // Add a health pack at a random spot within the map bounds
     private void addHealthPack() {
         Vector2 pos = new Vector2(this.random.nextFloat() * (this.boundRight - this.boundLeft) + this.boundLeft,
                 this.random.nextFloat() * (this.boundBottom - this.boundTop) + this.boundTop);
         this.healthPacks.add(new HealthPack(pos, this.view));
     }
 
+    // Draw all enemies
     public void drawEnemies(Canvas canvas) {
         for (int i = 0; i < this.enemies.size(); i++) {
             this.enemies.get(i).draw(canvas);
         }
     }
 
+    // Draw all projectiles
     public void drawProjectiles(Canvas canvas) {
         for (int i = 0; i < playerProjectiles.size(); i++) {
             playerProjectiles.get(i).draw(canvas);
@@ -188,12 +196,14 @@ public class Manager implements Runnable {
         }
     }
 
+    // Draw all health packs
     public void drawHealthPacks(Canvas canvas) {
         for (int i = 0; i < healthPacks.size(); i++) {
             healthPacks.get(i).draw(canvas);
         }
     }
 
+    // Draw the tiled background
     public void drawBackground(Canvas canvas) {
         float x = player.getPosition().getX(), y = player.getPosition().getY();
         float heightInUnits = this.view.getDisplaySize().getY() / this.view.getDisplaySize().getX() *
@@ -221,6 +231,7 @@ public class Manager implements Runnable {
         }
     }
 
+    // Draw the map bounds
     public void drawBounds(Canvas canvas) {
         float x = player.getPosition().getX(), y = player.getPosition().getY();
         canvas.drawRect(0f, 0f,
@@ -273,10 +284,12 @@ public class Manager implements Runnable {
         return boundBottom;
     }
 
+    // Add a projectile sourced from the player
     public void addPlayerProjectile(Projectile projectile) {
         playerProjectiles.add(projectile);
     }
 
+    // Add a projectile sourced from an enemy
     public void addEnemyProjectile(Projectile projectile) {
         enemyProjectiles.add(projectile);
     }

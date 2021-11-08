@@ -3,6 +3,7 @@ package com.graphic.main;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+// The class that represents the player
 public class Player extends Entity implements Runnable {
     private Manager manager;
 
@@ -12,10 +13,12 @@ public class Player extends Entity implements Runnable {
     private int projectileDelay;
     private int tick;
 
+    // Multipliers for different values, used for upgrades
     private float healthMultiplier;
     private float damageMultiplier;
     private float attackSpeedMultiplier;
 
+    // Touch/accelerometer values for calculating movement velocity and projectile shot direction
     private float startX, startY, endX, endY;
     private float shotStartX, shotStartY, shotEndX, shotEndY;
 
@@ -112,43 +115,52 @@ public class Player extends Entity implements Runnable {
 
     @Override
     protected void behave() {
+        // Calculate the desired velocity of the player
         velocity.setX(endX - startX);
         velocity.setY(endY - startY);
         if (velocity.getLength() != 0) {
             velocity.setLength(1f);
         }
+
+        // Shoot a projectile under right conditions
         if (shotEndX - shotStartX != 0 || shotEndY - shotStartY != 0) {
             if (tick == 0) {
                 summonProjectile();
             }
         }
+
+        // Move the player based on the velocity calculated earlier
         position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
         position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
+
+        // Update the current tick
         tick = (tick + 1) % projectileDelay;
+
+        // Damage the player if they are out of the map bounds
         if (this.isOutOfBounds()) {
             this.damage(this.maxHealth / 300f);
         }
     }
 
+    // Set the current tick, required for shots
     public void setTick(int tick) {
         this.tick = tick;
     }
 
+    // Normalize the projectile velocity
     public Vector2 getProjectileVelocityNormalized() {
         Vector2 vel = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
         vel.setLength(1f);
         return vel;
     }
 
+    // Shoot a projectile
     public void summonProjectile() {
         Vector2 projVelocity = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
         this.manager.addPlayerProjectile(new Projectile(this.damage, this.position, projVelocity, true, this.view));
     }
 
-    public boolean isAlive() {
-        return this.health > 0;
-    }
-
+    // Increase the maximum health of the player
     public void increaseHealth() {
         float healthPercentage = this.health / this.maxHealth;
 
@@ -157,16 +169,19 @@ public class Player extends Entity implements Runnable {
         this.health = healthPercentage * this.maxHealth;
     }
 
+    // Increase the damage of the player
     public void increaseDamage() {
         this.damageMultiplier += 0.4f;
         this.damage = this.damageMultiplier * this.baseDamage;
     }
 
+    // Increase the attack sped of the player
     public void increaseAttackSpeed() {
         this.attackSpeedMultiplier *= 0.9f;
         this.projectileDelay = (int)Math.ceil(this.attackSpeedMultiplier * this.baseProjectileDelay);
     }
 
+    // Is the player out of the bounds of the map
     private boolean isOutOfBounds() {
         return this.position.getX() - this.size / 2 < this.manager.getBoundLeft() ||
                 this.position.getX() + this.size / 2 > this.manager.getBoundRight() ||

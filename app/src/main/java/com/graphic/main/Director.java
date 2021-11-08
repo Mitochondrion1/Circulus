@@ -2,6 +2,7 @@ package com.graphic.main;
 
 import java.util.Random;
 
+// The object responsible for enemy generation at the beginning of each level
 public class Director {
     private Manager manager;
     private EnemyType[] enemyTypes;
@@ -10,17 +11,25 @@ public class Director {
 
     public Director(Manager manager) {
         this.manager = manager;
+
+        // Add all existing enemy types to an array, sorted in ascending order based on director cost
         this.enemyTypes = new EnemyType[]
                 {EnemyTypeData.EXPLODER, EnemyTypeData.SHOOTER,
                 EnemyTypeData.LASERMAN, EnemyTypeData.SUMMONER};
     }
 
+    // Set the amount of credits the director can use for enemy generation
     public void setCredits(int credits) {
         this.credits = credits;
         this.initialCredits = this.credits;
     }
 
+    // The method that generates the enemies
     public void generateEnemies() {
+        /*
+         * Each enemy type gets a values based on its director cost and the initial
+         * amount of director credits, using a mathematical function
+         */
         float[] values = new float[this.enemyTypes.length];
         for (int i = 0; i < values.length; i++) {
             values[i] = generateValue(this.enemyTypes[i]);
@@ -30,6 +39,8 @@ public class Director {
         float sum;
         float generatedNum;
         Random random = new Random();
+
+        // Add a random enemy based on the values generated earlier
         while (mostExpensive >= 0) {
             for (int i = this.enemyTypes.length - 1; i >= 0; i--) {
                 if (mostExpensive >= 0 && this.enemyTypes[i].getDirectorCost() > this.credits) {
@@ -50,11 +61,13 @@ public class Director {
         }
     }
 
+    // Gives each enemy type a value
     private float generateValue(EnemyType enemyType) {
         float constant = 0.05f;
         return (float)Math.pow(constant / enemyType.getDirectorCost() * this.initialCredits, 0.1 * enemyType.getDirectorCost());
     }
 
+    // Changes the values for enemies, so that the sum of all values for enemies that can be spawned is 1
     private void normalizeValues(float[] values, int x) {
         float sum = 0f;
         for (int i = 0; i < x; i++) {
@@ -65,6 +78,7 @@ public class Director {
         }
     }
 
+    // Adds an enemy based on a generated number
     private void addEnemy(int num) {
         Vector2 position;
         Random random = new Random();

@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+// Defines dynamic object, with health and damage
 public abstract class Entity implements Runnable {
     protected Vector2 position;
     protected Vector2 velocity;
@@ -51,44 +52,8 @@ public abstract class Entity implements Runnable {
         return velocity;
     }
 
-    public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        this.health = health;
-    }
-
-    public float getMaxHealth() {
-        return maxHealth;
-    }
-
     public float getSize() {
         return this.size;
-    }
-
-    public void setMaxHealth(float maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public float getDamage() {
-        return damage;
-    }
-
-    public void setDamage(float damage) {
-        this.damage = damage;
     }
 
     public void damage(float damage) {
@@ -99,9 +64,16 @@ public abstract class Entity implements Runnable {
         return Vector2.distance(this.position, projectile.getPosition()) < this.size / 2 + projectile.getSize() / 2;
     }
 
+    // Returns whether the entity is alive or not
+    public boolean isAlive() {
+        return this.health > 0;
+    }
+
+    // A method that defines the behavior of the entity
     protected void behave() {
     }
 
+    // Draw the health bar of the entity
     protected void drawHealthBar(Canvas canvas) {
         float healthBarBottom = this.position.getY() - 0.6f * this.size;
         float height = 15f;

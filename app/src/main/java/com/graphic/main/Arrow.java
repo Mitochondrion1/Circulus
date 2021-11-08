@@ -3,6 +3,7 @@ package com.graphic.main;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+// Defines the arrows around the player which point toward enemies
 public class Arrow {
     private Vector2 position;
     private MainView view;

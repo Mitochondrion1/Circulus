@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 
+// The main game activity
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     private MainView view;
     private Intent musicServiceIntent;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         levelEndDialogShown = false;
         increasedValueString = "";
 
+        // Register the accelerometer if in accelerometer mode
         if (accelerometerMode) {
             mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
             if (null == (mAccelerometer = mSensorManager
@@ -46,7 +48,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 finish();
         }
 
+        // Start the music service
         startService(musicServiceIntent);
+
+        // Set the content view
         setContentView(view);
     }
 
@@ -235,35 +240,42 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    // Restart the game by replacing the view with a new one
     public void restart() {
         this.view = new MainView(this);
         setContentView(this.view);
     }
 
+    // Destroy the activity and return to menu
     public void returnToMenu() {
         finish();
     }
 
+    // Show the game over dialog
     public void showGameOverDialog() {
         saveHighScores();
         DialogFragment dialogFragment = new GameOverDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "game_over");
     }
 
+    // Show the level end dialog
     public void showLevelEndDialog() {
         levelEndDialogShown = true;
         DialogFragment dialogFragment = new LevelEndDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "level_complete");
     }
 
+    // Is the level end dialog still shown
     public boolean isLevelEndDialogShown() {
         return this.levelEndDialogShown;
     }
 
+    // Set the value for the boolean that represents whether the level end dialog is shown
     public void setLevelEndDialogShown(boolean levelEndDialogShown) {
         this.levelEndDialogShown = levelEndDialogShown;
     }
 
+    // Save high scores
     private void saveHighScores() {
         if (this.view.getManager().getLevel() > Store.readInt(getApplicationContext(), R.string.highest_level_key, 0)) {
             Store.saveInt(getApplicationContext(), R.string.highest_level_key, this.view.getManager().getLevel());
