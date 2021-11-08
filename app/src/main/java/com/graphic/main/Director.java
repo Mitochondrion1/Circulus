@@ -68,7 +68,8 @@ public class Director {
     private void addEnemy(int num) {
         Vector2 position;
         Random random = new Random();
-        position = new Vector2(random.nextFloat() * 20 - 10f, random.nextFloat() * 15 - 7.5f);
+        position = new Vector2(random.nextFloat() * (manager.getBoundRight() - manager.getBoundLeft()) + manager.getBoundLeft(),
+                random.nextFloat() * (manager.getBoundBottom() - manager.getBoundTop()) + manager.getBoundTop());
         switch (num) {
             case 0:
                 this.manager.addEnemy(new Exploder(position, this.manager, this.manager.getView()));

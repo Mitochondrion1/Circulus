@@ -8,7 +8,6 @@ public class Player extends Entity implements Runnable {
 
     private float displayWidth;
     private float displayHeight;
-    private long waitTime;
     private final int baseProjectileDelay = 20;
     private int projectileDelay;
     private int tick;
@@ -42,7 +41,6 @@ public class Player extends Entity implements Runnable {
 
         displayWidth = DisplayParams.getDisplaySize(view).getX();
         displayHeight = DisplayParams.getDisplaySize(view).getY();
-        waitTime = 15;
         tick = 0;
 
         startX = 0;
@@ -54,12 +52,7 @@ public class Player extends Entity implements Runnable {
     @Override
     public void run() {
         while (health > 0) {
-            behave();
-            try {
-                Thread.sleep(waitTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            super.run();
         }
     }
 
@@ -132,6 +125,9 @@ public class Player extends Entity implements Runnable {
         position.setX(position.getX() + (waitTime / 1000f) * velocity.getX());
         position.setY(position.getY() + (waitTime / 1000f) * velocity.getY());
         tick = (tick + 1) % projectileDelay;
+        if (this.isOutOfBounds()) {
+            this.damage(this.maxHealth / 300f);
+        }
     }
 
     public void setTick(int tick) {
@@ -169,5 +165,12 @@ public class Player extends Entity implements Runnable {
     public void increaseAttackSpeed() {
         this.attackSpeedMultiplier *= 0.9f;
         this.projectileDelay = (int)Math.ceil(this.attackSpeedMultiplier * this.baseProjectileDelay);
+    }
+
+    private boolean isOutOfBounds() {
+        return this.position.getX() - this.size / 2 < this.manager.getBoundLeft() ||
+                this.position.getX() + this.size / 2 > this.manager.getBoundRight() ||
+                this.position.getY() - this.size / 2 < this.manager.getBoundTop() ||
+                this.position.getY() + this.size / 2 > this.manager.getBoundBottom();
     }
 }

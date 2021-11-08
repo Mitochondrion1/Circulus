@@ -14,6 +14,7 @@ public abstract class Entity implements Runnable {
     protected float maxHealth;
     protected float damage;
     protected float size;
+    protected long waitTime;
     protected Paint paint;
     protected Thread thread;
     protected MainView view;
@@ -22,9 +23,20 @@ public abstract class Entity implements Runnable {
         this.position = position;
         this.velocity = new Vector2(0, 0);
         this.paint = new Paint();
+        this.waitTime = 15;
 
         this.thread = new Thread(this);
         this.thread.start();
+    }
+
+    @Override
+    public void run() {
+        behave();
+        try {
+            Thread.sleep(waitTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public Vector2 getPosition() {

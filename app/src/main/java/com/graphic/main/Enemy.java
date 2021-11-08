@@ -6,7 +6,6 @@ import android.graphics.Color;
 public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 pixelPosition;
     protected Vector2 positionChange;
-    protected long waitTime;
     protected boolean alive;
     protected Manager manager;
     protected Arrow arrow;
@@ -23,7 +22,6 @@ public abstract class Enemy extends Entity implements Runnable {
         this.arrow.setAlpha((int)Math.min(0xff, 0xff / Vector2.distance(
                 this.manager.getPlayer().getPosition(), this.position)));
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
-        waitTime = 15;
         this.paint.setColor(Color.CYAN);
     }
 
@@ -39,13 +37,8 @@ public abstract class Enemy extends Entity implements Runnable {
                     this.manager.getPlayer().getPosition().getY() + arrowDir.getY()))));
             this.arrow.setAlpha((int)Math.min(0xff, 4 * 0xff / Vector2.distance(
                     this.manager.getPlayer().getPosition(), this.position)));
-            behave();
 
-            try {
-                Thread.sleep(waitTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            super.run();
         }
         alive = false;
     }
@@ -56,7 +49,6 @@ public abstract class Enemy extends Entity implements Runnable {
 
     protected Vector2 findPixelPosition() {
         return view.positionToPixels(view.relativePosition(position));
-        //Log.d("px pos", String.valueOf(pixelPosition));
     }
 
     public void draw(Canvas canvas) {
@@ -66,17 +58,7 @@ public abstract class Enemy extends Entity implements Runnable {
         drawHealthBar(canvas);
     }
 
-    public Vector2 getPixelPosition() {
-        return this.pixelPosition;
-    }
-
     public Vector2 getPosition() {
         return this.position;
-    }
-
-    public void changePosition(Vector2 change) {
-        //this.position.setX(this.position.getX() + change.getX());
-        //this.position.setY(this.position.getY() + change.getY());
-        findPixelPosition();
     }
 }

@@ -10,6 +10,13 @@ import java.util.Random;
 public class Manager implements Runnable {
     private int level;
     private int kills;
+
+    private float boundLeft;
+    private float boundTop;
+    private float boundRight;
+    private float boundBottom;
+    private Paint boundPaint;
+
     private Player player;
     private ArrayList<Enemy> enemies;
     private ArrayList<Projectile> playerProjectiles;
@@ -26,6 +33,14 @@ public class Manager implements Runnable {
     public Manager(MainView view) {
         level = 1;
         kills = 0;
+
+        this.boundLeft = -10f;
+        this.boundTop = -7.5f;
+        this.boundRight = 10f;
+        this.boundBottom = 7.5f;
+        this.boundPaint = new Paint();
+        this.boundPaint.setColor(0xa0ff0000);
+
         player = new Player(new Vector2(0, 0), view, this);
         enemies = new ArrayList<>();
         playerProjectiles = new ArrayList<>();
@@ -153,7 +168,8 @@ public class Manager implements Runnable {
     }
 
     private void addHealthPack() {
-        Vector2 pos = new Vector2(this.random.nextFloat() * 20 - 10f, this.random.nextFloat() * 15 - 7.5f);
+        Vector2 pos = new Vector2(this.random.nextFloat() * (this.boundRight - this.boundLeft) + this.boundLeft,
+                this.random.nextFloat() * (this.boundBottom - this.boundTop) + this.boundTop);
         this.healthPacks.add(new HealthPack(pos, this.view));
     }
 
@@ -205,6 +221,22 @@ public class Manager implements Runnable {
         }
     }
 
+    public void drawBounds(Canvas canvas) {
+        float x = player.getPosition().getX(), y = player.getPosition().getY();
+        canvas.drawRect(0f, 0f,
+                view.positionToPixels(view.relativePosition(new Vector2(boundLeft, 0f))).getX(),
+                view.getDisplaySize().getY(), boundPaint);
+        canvas.drawRect(view.positionToPixels(view.relativePosition(new Vector2(boundLeft, 0f))).getX(),
+                0f, view.positionToPixels(view.relativePosition(new Vector2(boundRight, 0f))).getX(),
+                view.positionToPixels(view.relativePosition(new Vector2(0f, boundTop))).getY(), boundPaint);
+        canvas.drawRect(view.positionToPixels(view.relativePosition(new Vector2(boundRight, 0f))).getX(),
+                0f, view.getDisplaySize().getX(), view.getDisplaySize().getY(), boundPaint);
+        canvas.drawRect(view.positionToPixels(view.relativePosition(new Vector2(boundLeft, 0f))).getX(),
+                view.positionToPixels(view.relativePosition(new Vector2(0f, boundBottom))).getY(),
+                view.positionToPixels(view.relativePosition(new Vector2(boundRight, 0f))).getX(),
+                view.getDisplaySize().getY(), boundPaint);
+    }
+
     public int getLevel() {
         return level;
     }
@@ -223,6 +255,22 @@ public class Manager implements Runnable {
 
     public int getEnemiesLeft() {
         return this.enemies.size();
+    }
+
+    public float getBoundLeft() {
+        return boundLeft;
+    }
+
+    public float getBoundTop() {
+        return boundTop;
+    }
+
+    public float getBoundRight() {
+        return boundRight;
+    }
+
+    public float getBoundBottom() {
+        return boundBottom;
     }
 
     public void addPlayerProjectile(Projectile projectile) {
