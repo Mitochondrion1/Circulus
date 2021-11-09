@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private boolean levelEndDialogShown;
     private String increasedValueString;
 
-    private static final int UPDATE_THRESHOLD = 50;
+    // Accelerometer parameters
+    private static final int UPDATE_THRESHOLD = 15;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
 
@@ -70,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private int moveId, shotId;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // Track touch events and react to them respectively
         if (accelerometerMode) {
+            // In accelerometer mode use touch only for shots
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_MOVE:
@@ -88,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
         else {
+            /*
+             * In touch mode use touch in the right side of the screen
+             * to move and on the left side to shoot
+             */
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     if (event.getX() >= displaySize.getX() / 2) {
@@ -208,10 +215,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         stopService(musicServiceIntent);
     }
 
-
-
     @Override
     public void onSensorChanged(SensorEvent event) {
+        // Track changes in accelerometer values and respond respectively
         if (accelerometerMode) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 long actualTime = System.currentTimeMillis();
@@ -285,10 +291,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    // Get the message string for an increased value
     public String getIncreasedValueString() {
         return increasedValueString;
     }
 
+    // Set the message  for an increased value
     public void setIncreasedValueString(String string) {
         this.increasedValueString = string;
     }

@@ -4,14 +4,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+// Defines the Laserman enemy type
 public class Laserman extends Enemy {
-    private static final int cooldownTicks = 150;
-    private static final int chargeTicks = 150;
-    private static final int finalChargeTicks = 75;
-    private static final int shotTickLength = 50;
-    private static final float detectDistance = 2f;
-    private static final float closestMoveDistance = 1.2f;
-    private static final float maxShotDistance = 3f;
+    private static final int cooldownTicks = 150;           // The amount of ticks the attack is on cool down
+    private static final int chargeTicks = 150;             // The amount of ticks it takes to charge the attack
+    private static final int finalChargeTicks = 75;         // The amount of ticks that the attack charges and doesn't change direction
+    private static final int shotTickLength = 50;           // The length of the attack in ticks
+    private static final float detectDistance = 2f;         // The distance from which an enemy detects the player
+    private static final float closestMoveDistance = 1.2f;  // The closest an enemy approaches to the player
+    private static final float maxShotDistance = 3f;        // The maximum distance from the player which can trigger a shot
 
     private Vector2 shotDirection;
     private boolean isCharging;
@@ -57,16 +58,21 @@ public class Laserman extends Enemy {
 
     @Override
     public void draw(Canvas canvas) {
+        // Draw the shot of an enemy while the shot is charging
         if (isCharging || isFinalCharging) {
             canvas.drawLine(this.pixelPosition.getX(), this.pixelPosition.getY(),
                     this.pixelPosition.getX() + this.shotDirection.getX() * view.getPixelsPerUnit(),
                     this.pixelPosition.getY() + this.shotDirection.getY() * view.getPixelsPerUnit(), laserPaint1);
         }
-        if (isShooting) {
+
+        // Draw the shot of an enemy while shooting
+        else if (isShooting) {
             canvas.drawLine(this.pixelPosition.getX(), this.pixelPosition.getY(),
                     this.pixelPosition.getX() + this.shotDirection.getX() * view.getPixelsPerUnit(),
                     this.pixelPosition.getY() + this.shotDirection.getY() * view.getPixelsPerUnit(), laserPaint2);
         }
+
+        // Draw the enemy itself
         super.draw(canvas);
     }
 
@@ -76,10 +82,12 @@ public class Laserman extends Enemy {
 
         float distToPlayer = Vector2.distance(this.position, this.manager.getPlayer().getPosition());
         if (!detectedPlayer && (distToPlayer <= detectDistance || this.health < this.maxHealth)) {
+            // Trigger the enemy if close enough to the player or hit
             detectedPlayer = true;
             isOnCooldown = true;
         }
         if (isOnCooldown) {
+            // What happens when the enemy is on cool down
             this.tick++;
             if (distToPlayer > maxShotDistance) {
                 this.tick = 0;
@@ -94,6 +102,7 @@ public class Laserman extends Enemy {
             }
         }
         else if (isCharging) {
+            // What happens when the enemy is charging the attack
             this.tick++;
             this.shotDirection = Vector2.sub(this.position, this.manager.getPlayer().getPosition());
             if (this.shotDirection.getLength() != 0) {
@@ -106,6 +115,7 @@ public class Laserman extends Enemy {
             }
         }
         else if (isFinalCharging) {
+            // What happens when the enemy final-charges the attack
             this.tick++;
             if (this.tick == finalChargeTicks) {
                 isFinalCharging = false;
@@ -114,10 +124,12 @@ public class Laserman extends Enemy {
             }
         }
         else if (isShooting) {
+            // What happens when the enemy is shooting
             this.tick++;
             Vector2 v = Vector2.sub(this.position, this.manager.getPlayer().getPosition());
             float cos = (v.getX() * shotDirection.getX() + v.getY() * shotDirection.getY()) / (v.getLength() * shotDirection.getLength());
             if (cos > (float)Math.sqrt(1 - Math.pow((this.manager.getPlayer().getSize() / 2) / v.getLength(), 2))) {
+                // Damage the player if they get hit by the laser
                 this.manager.getPlayer().damage(this.damage);
             }
             if (this.tick == shotTickLength) {

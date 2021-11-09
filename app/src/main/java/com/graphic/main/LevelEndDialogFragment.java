@@ -9,9 +9,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+// Defines the dialog that is displayed after clearing a level
 public class LevelEndDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Build the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setPositiveButton(R.string.button_continue, new DialogInterface.OnClickListener() {
                     @Override
@@ -26,6 +28,7 @@ public class LevelEndDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        // Continue if the dialog is dismissed
         super.onDismiss(dialog);
         ((MainActivity)getActivity()).setLevelEndDialogShown(false);
     }

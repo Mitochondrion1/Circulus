@@ -50,11 +50,15 @@ public class MainView extends View {
         this.activity = activity;
     }
 
+    // Draw on screen
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // Draw the background
         manager.drawBackground(canvas);
+
+        // Draw shot and movement directions
         if (showDirections) {
             canvas.drawLine(displaySize.getX() / 2, displaySize.getY() / 2,
                     displaySize.getX() / 2 + player.getVelocity().getX() * dirLength,
@@ -65,12 +69,15 @@ public class MainView extends View {
                     displaySize.getY() / 2 + player.getProjectileVelocityNormalized().getY() * dirLength,
                     dirPaint1);
         }
+
+        // Draw projectiles, enemies, the player, health packs and the map bounds
         manager.drawProjectiles(canvas);
         player.draw(canvas);
         manager.drawEnemies(canvas);
         manager.drawHealthPacks(canvas);
         manager.drawBounds(canvas);
 
+        // Draw text with different values on the top-lef corner of the screen
         canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
         canvas.drawText("Level: " + manager.getLevel(), 5f ,165f, paint);
@@ -83,11 +90,13 @@ public class MainView extends View {
         return manager.getPlayer();
     }
 
+    // Find a vector that represents a vector relative to the player's position
     public Vector2 relativePosition(Vector2 position) {
         return new Vector2(position.getX() - player.getPosition().getX(),
                 position.getY() - player.getPosition().getY());
     }
 
+    // Convert world space relative position vector to pixel position vector
     public Vector2 positionToPixels(Vector2 position) {
         return new Vector2(position.getX() * pixelsPerUnit + displaySize.getX() / 2,
                 position.getY() * pixelsPerUnit + displaySize.getY() / 2);

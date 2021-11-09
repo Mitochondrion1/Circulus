@@ -4,9 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+// Defines the Exploder enemy type
 public class Exploder extends Enemy {
-    private float velocity;
-
     private boolean exploding;
     private int explosionCountdown;
     private float aoeRadius;
@@ -16,7 +15,7 @@ public class Exploder extends Enemy {
         super(position, manager, view);
 
         this.manager = manager;
-        this.velocity = 0.5f;
+        this.speed = 0.5f;
         this.size = 0.3f;
         this.exploding = false;
         this.explosionCountdown = 0;
@@ -43,14 +42,18 @@ public class Exploder extends Enemy {
         super.draw(canvas);
     }
 
+    // Define the behavior of the Exploder
     @Override
     protected void behave() {
+        // Define the movement of the Exploder: homing the player from any distance
         if (Vector2.distance(position, manager.getPlayer().getPosition()) != 0) {
             this.positionChange = Vector2.sub(position, manager.getPlayer().getPosition());
-            this.positionChange.setLength(waitTime / 1000f * velocity);
+            this.positionChange.setLength(waitTime / 1000f * speed);
             this.position.setX(this.position.getX() + this.positionChange.getX());
             this.position.setY(this.position.getY() + this.positionChange.getY());
         }
+
+        // Define what happens after the explosion begins
         if (this.exploding) {
             this.explosionCountdown--;
             if (explosionCountdown > 0) {
@@ -64,6 +67,8 @@ public class Exploder extends Enemy {
                 this.alive = false;
             }
         }
+
+        // Start an explosion
         else if (Vector2.distance(position, manager.getPlayer().getPosition()) <
                     0.75f * (this.size + manager.getPlayer().getSize())) {
             this.exploding = true;

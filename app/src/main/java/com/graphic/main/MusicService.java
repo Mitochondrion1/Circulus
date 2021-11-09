@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.widget.Toast;
 
+// The service that plays music while in MainActivity
 public class MusicService extends Service {
     private final String TAG = "MusicService";
 
@@ -18,14 +19,17 @@ public class MusicService extends Service {
     private MediaPlayer mPlayer;
     private int mStartID;
 
+    // Register the broadcast receiver
     HeadsetIntentReceiver receiver = new HeadsetIntentReceiver();
 
+    // The volume values
     private int headsetVolume, speakerVolume;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        // Register the media player and read the volumes frm shared preferences
         mPlayer = MediaPlayer.create(this, R.raw.project_theme);
         headsetVolume = Store.readInt(getApplicationContext(), R.string.headset_volume_key, 20);
         speakerVolume = Store.readInt(getApplicationContext(), R.string.speaker_volume_key, 100);
@@ -37,31 +41,14 @@ public class MusicService extends Service {
                     Intent.ACTION_HEADSET_PLUG);
             registerReceiver(receiver, receiverFilter);
         }
-
-        // Create a notification area notification so the user
-        // can get back to the MusicServiceClient
-
-        final Intent notificationIntent = new Intent(getApplicationContext(),
-                MainActivity.class);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-
-        final Notification notification = new Notification.Builder(
-                getApplicationContext())
-                .setSmallIcon(android.R.drawable.ic_media_play)
-                .setOngoing(true).setContentTitle("Music Playing")
-                .setContentText("Click to Access Music Player")
-                .setContentIntent(pendingIntent).build();
-
-        // Put this Service in a foreground state, so it won't
-        // readily be killed by the system
-        //startForeground(NOTIFICATION_ID, notification);
     }
 
+    // Set the volume to be the headset volume
     public void setVolumeHeadset(){
         mPlayer.setVolume(headsetVolume / 100f, headsetVolume / 100f);
     }
 
+    // Set the volume to be the speaker volume
     public void setVolumeSpeaker(){
         mPlayer.setVolume(speakerVolume / 100f, speakerVolume / 100f);
     }
@@ -94,14 +81,16 @@ public class MusicService extends Service {
 
     @Override
     public void onDestroy() {
+        // Stop playing music
         super.onDestroy();
         mPlayer.stop();
         stopForeground(true);
     }
 
     private void updateState(String state) {
+        // Update the state fo the volume (for when a headset is plugged/unplugged)
         Toast.makeText(this, state, Toast.LENGTH_LONG).show();
-        if(state.equals("Plugged")) {
+        if (state.equals("Plugged")) {
             setVolumeHeadset();
         }
         else {
@@ -109,6 +98,7 @@ public class MusicService extends Service {
         }
     }
 
+    // The broadcast receiver that receives a headset plug/unplug broadcast
     public class HeadsetIntentReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

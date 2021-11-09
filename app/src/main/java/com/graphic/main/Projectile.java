@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+// Represents a projectile
 public class Projectile implements Runnable {
     private float damage;
     private Vector2 position;
