@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+// Contains methods to retrieve the display metrics based on a view or context
 public class DisplayParams {
     public static Vector2 getDisplaySize(View view) {
         DisplayMetrics dm = new DisplayMetrics();

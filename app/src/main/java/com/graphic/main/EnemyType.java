@@ -1,5 +1,6 @@
 package com.graphic.main;
 
+// An object of this class contains the basic values of an enemy type
 public class EnemyType {
     private int directorCost;
     private float baseHealth;

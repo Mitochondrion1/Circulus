@@ -4,10 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 public class Shooter extends Enemy {
-    private static final int shotTickDelay = 60;
-    private static final int ticksToForget = 100;
-    private static final float detectDistance = 3f;
-    private static final float stopDistance = 1f;
+    private static final int shotTickDelay = 60;        // The delay in ticks between shots
+    private static final int ticksToForget = 100;       // The time it takes the enemy to forget the player if out of detection range
+    private static final float detectDistance = 3f;     // The distance from which the enemy detects the player
+    private static final float stopDistance = 1f;       // The closest approach distance to the player
 
     private boolean shooting;
     private boolean detectedPlayer;
@@ -47,6 +47,7 @@ public class Shooter extends Enemy {
         float distToPlayer = Vector2.distance(position, manager.getPlayer().getPosition());
         boolean moved = false;
         if (distToPlayer <= detectDistance) {
+            // Detect the player if close enough
             this.detectedPlayer = true;
             this.forgetTick = ticksToForget;
             if (!shooting) {
@@ -59,6 +60,7 @@ public class Shooter extends Enemy {
             }
         }
         else if (distToPlayer > detectDistance) {
+            // Start forgetting about the player if too far
             if (this.forgetTick > 0) {
                 this.forgetTick--;
             }
@@ -69,6 +71,7 @@ public class Shooter extends Enemy {
             }
         }
         if (this.detectedPlayer) {
+            // Move and charge shots while the player is detected
             if (!moved && distToPlayer >= stopDistance) {
                 move();
             }
@@ -86,6 +89,7 @@ public class Shooter extends Enemy {
         this.position.setY(this.position.getY() + this.positionChange.getY());
     }
 
+    // Shoot a projectile
     private void shoot() {
         this.manager.addEnemyProjectile(new Projectile(this.damage, this.position,
                 Vector2.sub(position, manager.getPlayer().getPosition()), false, this.view));

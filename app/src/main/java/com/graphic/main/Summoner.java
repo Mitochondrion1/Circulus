@@ -2,9 +2,10 @@ package com.graphic.main;
 
 import android.graphics.Color;
 
+// Represents the Summoner enemy type
 public class Summoner extends Enemy {
-    private static final int summonTickDelay = 800;
-    private static final float summonDistance = 1f;
+    private static final int summonTickDelay = 800;     // The delay in ticks between summons
+    private static final float summonDistance = 1f;     // The distance from the Summoner that Shooters spawn
 
     private boolean detectedPlayer;
     private int tick;
@@ -32,6 +33,7 @@ public class Summoner extends Enemy {
         super.behave();
 
         if (detectedPlayer) {
+            // Move and occasionally summon a Shooter
             move();
             tick = (tick + 1) % summonTickDelay;
             if (tick == 0) {
@@ -40,6 +42,7 @@ public class Summoner extends Enemy {
             }
         }
         else if (Vector2.distance(this.manager.getPlayer().getPosition(), this.position) <= 2 || health < maxHealth) {
+            // Trigger if the player is close or the enemy is hit
             detectedPlayer = true;
         }
     }

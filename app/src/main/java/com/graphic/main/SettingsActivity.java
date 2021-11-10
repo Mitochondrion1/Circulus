@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
+// The settings activity
 public class SettingsActivity extends AppCompatActivity {
     private SeekBar headsetVolume, speakerVolume;
     private Switch accSwitch, dirSwitch;
@@ -30,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
+    // Save settings when the activity is stopped, destroyed or paused
     @Override
     protected void onStop() {
         super.onStop();
@@ -48,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         saveSettings();
     }
 
+    // Save all settings to shared preferences
     private void saveSettings() {
         Store.saveInt(getApplicationContext(), R.string.headset_volume_key, headsetVolume.getProgress());
         Store.saveInt(getApplicationContext(), R.string.speaker_volume_key, speakerVolume.getProgress());
