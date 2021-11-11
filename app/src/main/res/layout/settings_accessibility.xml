@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <Switch
+        android:id="@+id/direction_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        app:layout_constraintStart_toEndOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/accelerometer_switch" />
+
+    <Switch
+        android:id="@+id/accelerometer_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        app:layout_constraintStart_toEndOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/directions_text"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/accelerometer_text"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView16"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="340dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/accessibility_text"
+        android:textColor="#00BCD4"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

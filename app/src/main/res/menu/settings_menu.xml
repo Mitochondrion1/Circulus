@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/volume_option"
+        android:title="@string/volume_text" />
+    <item
+        android:id="@+id/accessibility_option"
+        android:title="@string/accessibility_text" />
+</menu>

@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 // The service that plays music while in MainActivity
@@ -19,8 +21,8 @@ public class MusicService extends Service {
     private MediaPlayer mPlayer;
     private int mStartID;
 
-    // Register the broadcast receiver
-    HeadsetIntentReceiver receiver = new HeadsetIntentReceiver();
+    // Declare the broadcast receiver
+    HeadsetIntentReceiver receiver;
 
     // The volume values
     private int headsetVolume, speakerVolume;
@@ -29,7 +31,8 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        // Register the media player and read the volumes frm shared preferences
+        // Create the broadcast receiver, Register the media player and read the volumes from shared preferences
+        receiver = new HeadsetIntentReceiver();
         mPlayer = MediaPlayer.create(this, R.raw.project_theme);
         headsetVolume = Store.readInt(getApplicationContext(), R.string.headset_volume_key, 20);
         speakerVolume = Store.readInt(getApplicationContext(), R.string.speaker_volume_key, 100);
@@ -37,8 +40,8 @@ public class MusicService extends Service {
         if (null != mPlayer) {
             mPlayer.setLooping(true);
 
-            IntentFilter receiverFilter = new IntentFilter(
-                    Intent.ACTION_HEADSET_PLUG);
+            IntentFilter receiverFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            receiverFilter.addAction(Intent.ACTION_HEADSET_PLUG);
             registerReceiver(receiver, receiverFilter);
         }
     }
@@ -84,11 +87,12 @@ public class MusicService extends Service {
         // Stop playing music
         super.onDestroy();
         mPlayer.stop();
+        unregisterReceiver(receiver);
         stopForeground(true);
     }
 
     private void updateState(String state) {
-        // Update the state fo the volume (for when a headset is plugged/unplugged)
+        // Update the state for the volume (for when a headset is plugged/unplugged)
         Toast.makeText(this, state, Toast.LENGTH_LONG).show();
         if (state.equals("Plugged")) {
             setVolumeHeadset();
@@ -102,6 +106,7 @@ public class MusicService extends Service {
     public class HeadsetIntentReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("Receiver", "received broadcast");
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
                 switch (state) {
