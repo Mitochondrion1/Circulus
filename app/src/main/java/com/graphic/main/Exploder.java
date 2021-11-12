@@ -9,12 +9,12 @@ public class Exploder extends Enemy {
     private boolean exploding;
     private int explosionCountdown;
     private float aoeRadius;
+
     private Paint aoePaint;
 
     public Exploder(Vector2 position, Manager manager, MainView view) {
         super(position, manager, view);
 
-        this.manager = manager;
         this.speed = 0.5f;
         this.size = 0.3f;
         this.exploding = false;
@@ -40,6 +40,11 @@ public class Exploder extends Enemy {
         canvas.drawCircle(this.findPixelPosition().getX(), this.findPixelPosition().getY(),
                 aoeRadius * view.getPixelsPerUnit(), aoePaint);
         super.draw(canvas);
+    }
+
+    @Override
+    public boolean isAlive() {
+        return this.alive;
     }
 
     // Define the behavior of the Exploder

@@ -23,7 +23,6 @@ public abstract class Enemy extends Entity implements Runnable {
         this.arrow.setAlpha((int)Math.min(0xff, 0xff / Vector2.distance(
                 this.manager.getPlayer().getPosition(), this.position)));
         pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
-        this.paint.setColor(Color.CYAN);
     }
 
     @Override
@@ -57,5 +56,9 @@ public abstract class Enemy extends Entity implements Runnable {
 
     public Vector2 getPosition() {
         return this.position;
+    }
+
+    public int getDirectorCost() {
+        return directorCost;
     }
 }

@@ -2,6 +2,7 @@ package com.graphic.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -201,18 +202,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mSensorManager.unregisterListener(this);
         }
         stopService(musicServiceIntent);
+        finish();
+        view = null;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         stopService(musicServiceIntent);
+        finish();
+        view = null;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         stopService(musicServiceIntent);
+        finish();
+        view = null;
     }
 
     @Override
@@ -261,14 +268,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void showGameOverDialog() {
         saveHighScores();
         DialogFragment dialogFragment = new GameOverDialogFragment();
-        dialogFragment.show(getSupportFragmentManager(), "game_over");
+        try {
+            dialogFragment.show(getSupportFragmentManager(), "game_over");
+        }
+        finally {
+        }
     }
 
     // Show the level end dialog
     public void showLevelEndDialog() {
         levelEndDialogShown = true;
         DialogFragment dialogFragment = new LevelEndDialogFragment();
-        dialogFragment.show(getSupportFragmentManager(), "level_complete");
+        try {
+            dialogFragment.show(getSupportFragmentManager(), "level_complete");
+        }
+        finally {
+        }
     }
 
     // Is the level end dialog still shown

@@ -86,7 +86,8 @@ public class Director {
                 random.nextFloat() * (manager.getBoundBottom() - manager.getBoundTop()) + manager.getBoundTop());
         switch (num) {
             case 0:
-                this.manager.addEnemy(new Exploder(position, this.manager, this.manager.getView()));
+                Exploder exploder = new Exploder(position, this.manager, this.manager.getView());
+                this.manager.addEnemy(exploder);
                 this.credits -= enemyTypes[0].getDirectorCost();
                 break;
             case 1:

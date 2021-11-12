@@ -161,7 +161,9 @@ public class Manager implements Runnable {
                 this.level++;
             }
         }
-        this.view.getActivity().showGameOverDialog();
+        if (!this.view.getActivity().isDestroyed()) {
+            this.view.getActivity().showGameOverDialog();
+        }
     }
 
     public ArrayList<HealthPack> getHealthPacks() {
@@ -262,6 +264,10 @@ public class Manager implements Runnable {
 
     public MainView getView() {
         return view;
+    }
+
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
     }
 
     public int getEnemiesLeft() {
