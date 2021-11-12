@@ -317,4 +317,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void setIncreasedValueString(String string) {
         this.increasedValueString = string;
     }
+
+    public String stringFromJni() {
+        return "";
+    }
 }

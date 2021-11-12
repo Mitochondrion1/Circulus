@@ -2,6 +2,11 @@ package com.graphic.main;
 
 // Represents a 2-dimensional vector
 public class Vector2 {
+    // Load native-lib.cpp
+    static {
+        System.loadLibrary("native-lib");
+    }
+
     private float x;
     private float y;
 
@@ -33,9 +38,10 @@ public class Vector2 {
 
     // Change the length of the vector to a specific value while the direction is kept
     public void setLength(float length) {
-        float l = this.getLength();
-        this.x *= length / l;
-        this.y *= length / l;
+        // New length calculation uses the algorithm from native-lib
+        float multiplier = length * quickInvSqrt(this.x * this.x + this.y * this.y);
+        this.x *= multiplier;
+        this.y *= multiplier;
     }
 
     // Find the distance between tow points
@@ -52,4 +58,7 @@ public class Vector2 {
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
+
+    // Implement the fast inverse square root from native-lib.cpp
+    public native float quickInvSqrt(float length);
 }

@@ -38,7 +38,9 @@ public class Summoner extends Enemy {
             tick = (tick + 1) % summonTickDelay;
             if (tick == 0) {
                 Vector2 summonPos = new Vector2(this.position.getX(), this.position.getY() - summonDistance);
-                this.manager.addEnemy(new Shooter(summonPos, this.manager, this.view));
+                Shooter shooter = new Shooter(summonPos, this.manager, this.view);
+                shooter.startThread();
+                this.manager.addEnemy(shooter);
             }
         }
         else if (Vector2.distance(this.manager.getPlayer().getPosition(), this.position) <= 2 || health < maxHealth) {
