@@ -27,7 +27,7 @@ public abstract class Entity implements Runnable {
         this.waitTime = 15;
 
         this.thread = new Thread(this);
-        this.thread.start();
+        //this.thread.start();
     }
 
     @Override

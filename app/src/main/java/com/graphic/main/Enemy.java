@@ -61,4 +61,8 @@ public abstract class Enemy extends Entity implements Runnable {
     public int getDirectorCost() {
         return directorCost;
     }
+
+    public void startThread() {
+        thread.start();
+    }
 }

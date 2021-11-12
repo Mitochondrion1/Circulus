@@ -75,6 +75,11 @@ public class Manager implements Runnable {
             // Generate enemies using the director
             director.setCredits(50 + 50 * level);
             director.generateEnemies();
+            for (int i = 0; i < enemies.size(); i++) {
+                if (enemies.get(i) != null) {
+                    enemies.get(i).startThread();
+                }
+            }
             rand = random.nextInt(3);
 
             // While enemies exist, continue running the level

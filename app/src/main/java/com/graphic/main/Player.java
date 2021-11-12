@@ -25,6 +25,8 @@ public class Player extends Entity implements Runnable {
     public Player(Vector2 position, MainView view, Manager manager) {
         super(position);
 
+        thread.start();
+
         this.baseHealth = 100f;
         this.baseDamage = 10f;
         this.damageMultiplier = 1f;
