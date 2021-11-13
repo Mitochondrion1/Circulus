@@ -25,17 +25,18 @@ public class Player extends Entity implements Runnable {
     public Player(Vector2 position, MainView view, Manager manager) {
         super(position);
 
-        thread.start();
-
         this.baseHealth = 100f;
         this.baseDamage = 10f;
+
+        thread.start();
+
         this.damageMultiplier = 1f;
         this.healthMultiplier = 1f;
         this.attackSpeedMultiplier = 1f;
 
         this.speed = 1f;
-        this.damage = this.damageMultiplier * this.baseDamage;
-        this.maxHealth = this.healthMultiplier * this.baseHealth;
+        this.damage = this.damageMultiplier * baseDamage;
+        this.maxHealth = this.healthMultiplier * baseHealth;
         this.health = this.maxHealth;
         this.projectileDelay = (int)(this.attackSpeedMultiplier * this.baseProjectileDelay);
 

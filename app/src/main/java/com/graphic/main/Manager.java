@@ -73,7 +73,7 @@ public class Manager implements Runnable {
         int rand;
         while (player.isAlive()) {
             // Generate enemies using the director
-            director.setCredits(50 + 50 * level);
+            director.setCredits(30 + 30 * level);
             director.generateEnemies();
             for (int i = 0; i < enemies.size(); i++) {
                 if (enemies.get(i) != null) {
@@ -303,5 +303,13 @@ public class Manager implements Runnable {
     // Add a projectile sourced from an enemy
     public void addEnemyProjectile(Projectile projectile) {
         enemyProjectiles.add(projectile);
+    }
+
+    public int directorCostSum() {
+        int sum = 0;
+        for (int i = 0; i < enemies.size(); i++) {
+            sum += enemies.get(i).getDirectorCost();
+        }
+        return sum;
     }
 }

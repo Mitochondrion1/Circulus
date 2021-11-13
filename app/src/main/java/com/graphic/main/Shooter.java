@@ -2,6 +2,7 @@ package com.graphic.main;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 
 public class Shooter extends Enemy {
     private static final int shotTickDelay = 60;        // The delay in ticks between shots
@@ -26,12 +27,10 @@ public class Shooter extends Enemy {
         this.shootingTick = 0;
         this.forgetTick = 0;
 
-        this.directorCost = EnemyTypeData.SHOOTER.getDirectorCost();
-        this.baseHealth = EnemyTypeData.SHOOTER.getBaseHealth();
-        this.baseDamage = EnemyTypeData.SHOOTER.getBaseDamage();
+        this.assignBasicValues(5, 60f, 5f);
 
         this.damage = baseDamage * (0.5f + 0.5f * this.manager.getLevel());
-        this.health = this.baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
+        this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;
     }
 

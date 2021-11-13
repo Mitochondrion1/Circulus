@@ -1,21 +1,19 @@
 package com.graphic.main;
 
+import android.util.Log;
+
 import java.util.Random;
 
 // The object responsible for enemy generation at the beginning of each level
 public class Director {
     private Manager manager;
-    private EnemyType[] enemyTypes;
+    private final int[] costs = {5, 10, 15, 20};
     private int credits;
     private int initialCredits;
 
     public Director(Manager manager) {
         this.manager = manager;
-
-        // Add all existing enemy types to an array, sorted in ascending order based on director cost
-        this.enemyTypes = new EnemyType[]
-                {EnemyTypeData.EXPLODER, EnemyTypeData.SHOOTER,
-                EnemyTypeData.LASERMAN, EnemyTypeData.SUMMONER};
+        Log.d("Costs", String.valueOf(costs[0]) + costs[1] + costs[2] + costs[3]);
     }
 
     // Set the amount of credits the director can use for enemy generation
@@ -30,20 +28,20 @@ public class Director {
          * Each enemy type gets a values based on its director cost and the initial
          * amount of director credits, using a mathematical function
          */
-        float[] values = new float[this.enemyTypes.length];
+        float[] values = new float[this.costs.length];
         for (int i = 0; i < values.length; i++) {
-            values[i] = generateValue(this.enemyTypes[i]);
+            values[i] = generateValue(this.costs[i]);
         }
 
-        int mostExpensive = this.enemyTypes.length - 1;
+        int mostExpensive = this.costs.length - 1;
         float sum;
         float generatedNum;
         Random random = new Random();
 
         // Add a random enemy based on the values generated earlier
         while (mostExpensive >= 0) {
-            for (int i = this.enemyTypes.length - 1; i >= 0; i--) {
-                if (mostExpensive >= 0 && this.enemyTypes[i].getDirectorCost() > this.credits) {
+            for (int i = this.costs.length - 1; i >= 0; i--) {
+                if (mostExpensive >= 0 && this.costs[i] > this.credits) {
                     mostExpensive--;
                 }
             }
@@ -56,15 +54,16 @@ public class Director {
                 sum += values[k];
                 if (generatedNum < sum) {
                     this.addEnemy(k);
+                    break;
                 }
             }
         }
     }
 
     // Gives each enemy type a value
-    private float generateValue(EnemyType enemyType) {
+    private float generateValue(int cost) {
         float constant = 0.05f;
-        return (float)Math.pow(constant / enemyType.getDirectorCost() * this.initialCredits, 0.1 * enemyType.getDirectorCost());
+        return (float)Math.pow(constant / cost * this.initialCredits, 0.1 * cost);
     }
 
     // Changes the values for enemies, so that the sum of all values for enemies that can be spawned is 1
@@ -86,21 +85,21 @@ public class Director {
                 random.nextFloat() * (manager.getBoundBottom() - manager.getBoundTop()) + manager.getBoundTop());
         switch (num) {
             case 0:
-                Exploder exploder = new Exploder(position, this.manager, this.manager.getView());
-                this.manager.addEnemy(exploder);
-                this.credits -= enemyTypes[0].getDirectorCost();
+                this.manager.addEnemy(new Shooter(position, this.manager, this.manager.getView()));
+                this.credits -= costs[0];
                 break;
             case 1:
-                this.manager.addEnemy(new Shooter(position, this.manager, this.manager.getView()));
-                this.credits -= enemyTypes[1].getDirectorCost();
+                Exploder exploder = new Exploder(position, this.manager, this.manager.getView());
+                this.manager.addEnemy(exploder);
+                this.credits -= costs[1];
                 break;
             case 2:
                 this.manager.addEnemy(new Laserman(position, this.manager, this.manager.getView()));
-                this.credits -= enemyTypes[2].getDirectorCost();
+                this.credits -= costs[2];
                 break;
             case 3:
                 this.manager.addEnemy(new Summoner(position, this.manager, this.manager.getView()));
-                this.credits -= enemyTypes[3].getDirectorCost();
+                this.credits -= costs[3];
                 break;
         }
     }

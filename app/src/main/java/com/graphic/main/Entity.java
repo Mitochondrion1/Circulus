@@ -6,11 +6,12 @@ import android.graphics.Paint;
 
 // Defines dynamic object, with health and damage
 public abstract class Entity implements Runnable {
+    protected float baseHealth;
+    protected float baseDamage;
+
     protected Vector2 position;
     protected Vector2 velocity;
     protected float speed;
-    protected float baseHealth;
-    protected float baseDamage;
     protected float health;
     protected float maxHealth;
     protected float damage;
@@ -27,7 +28,6 @@ public abstract class Entity implements Runnable {
         this.waitTime = 15;
 
         this.thread = new Thread(this);
-        //this.thread.start();
     }
 
     @Override

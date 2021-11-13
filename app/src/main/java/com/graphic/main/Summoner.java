@@ -1,6 +1,7 @@
 package com.graphic.main;
 
 import android.graphics.Color;
+import android.util.Log;
 
 // Represents the Summoner enemy type
 public class Summoner extends Enemy {
@@ -19,11 +20,9 @@ public class Summoner extends Enemy {
         this.tick = 600;
         this.paint.setColor(Color.MAGENTA);
 
-        this.directorCost = EnemyTypeData.SUMMONER.getDirectorCost();
-        this.baseHealth = EnemyTypeData.SUMMONER.getBaseHealth();
-        this.baseDamage = EnemyTypeData.SUMMONER.getBaseDamage();
+        this.assignBasicValues(20, 100f, 0f);
 
-        this.health = baseHealth * (0.8f + 0.2f * this.manager.getLevel());
+        this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;
         this.damage = baseDamage * (0.8f + 0.2f * this.manager.getLevel());
     }

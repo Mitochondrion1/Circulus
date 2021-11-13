@@ -82,9 +82,6 @@ public class MainView extends View {
         canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
         canvas.drawText("Level: " + manager.getLevel(), 5f ,165f, paint);
         canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
-        if (manager.getEnemiesLeft() == 1) {
-            canvas.drawText(manager.getEnemies().get(0).getPosition().toString() + ", " + manager.getEnemies().get(0).getDirectorCost(), 5f, 275f, paint);
-        }
 
         invalidate();
     }

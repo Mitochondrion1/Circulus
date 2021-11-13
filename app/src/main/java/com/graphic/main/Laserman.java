@@ -3,6 +3,7 @@ package com.graphic.main;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 // Defines the Laserman enemy type
 public class Laserman extends Enemy {
@@ -47,11 +48,9 @@ public class Laserman extends Enemy {
         this.laserPaint2.setColor(Color.RED);
         this.laserPaint2.setStrokeWidth(10f);
 
-        this.directorCost = EnemyTypeData.LASERMAN.getDirectorCost();
-        this.baseHealth = EnemyTypeData.LASERMAN.getBaseHealth();
-        this.baseDamage = EnemyTypeData.LASERMAN.getBaseDamage();
+        this.assignBasicValues(15, 80f, 1f);
 
-        this.health = baseHealth * (0.8f + 0.2f * this.manager.getLevel());
+        this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;
         this.damage = baseDamage * (0.8f + 0.2f * this.manager.getLevel());
     }

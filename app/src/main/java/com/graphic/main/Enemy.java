@@ -58,11 +58,17 @@ public abstract class Enemy extends Entity implements Runnable {
         return this.position;
     }
 
-    public int getDirectorCost() {
+    public  int getDirectorCost() {
         return directorCost;
     }
 
     public void startThread() {
         thread.start();
+    }
+
+    protected void assignBasicValues(int cost, float health, float damage) {
+        this.directorCost = cost;
+        this.baseHealth = health;
+        this.baseDamage = damage;
     }
 }
