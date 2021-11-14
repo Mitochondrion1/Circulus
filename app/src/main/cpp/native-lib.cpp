@@ -1,7 +1,3 @@
-//
-// Created by richa on 12/11/2021.
-//
-
 #include <jni.h>
 
 extern "C" JNIEXPORT jfloat JNICALL

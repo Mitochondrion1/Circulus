@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
     // Declare settings widgets
     private SeekBar headsetVolume, speakerVolume;
     private Switch accSwitch, dirSwitch;
+    private SeekBar accSensitivity;
 
     // A numeric value for the current view: 0 = volume_settings, 1 = accessibility_settings
     private int currentView;
@@ -66,10 +68,15 @@ public class SettingsActivity extends AppCompatActivity {
                     currentView = 1;
                     accSwitch = findViewById(R.id.accelerometer_switch);
                     dirSwitch = findViewById(R.id.direction_switch);
+                    accSensitivity = findViewById(R.id.accSensitivity);
                     accSwitch.setChecked(Store.readBool(getApplicationContext(), R.string.accelerometer_key, true));
                     dirSwitch.setChecked(Store.readBool(getApplicationContext(), R.string.direction_display_key, false));
+                    accSensitivity.setMax(3);
+                    accSensitivity.setProgress(Store.readInt(getApplicationContext(), R.string.sensitivity_key, 2) - 1);
                 }
                 return true;
+            case R.id.to_menu_option:
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -103,6 +110,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (currentView == 1) {
             Store.saveBool(getApplicationContext(), R.string.accelerometer_key, accSwitch.isChecked());
             Store.saveBool(getApplicationContext(), R.string.direction_display_key, dirSwitch.isChecked());
+            Store.saveInt(getApplicationContext(), R.string.sensitivity_key, accSensitivity.getProgress() + 1);
         }
     }
 }

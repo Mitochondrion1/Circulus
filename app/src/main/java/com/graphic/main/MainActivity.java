@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private String increasedValueString;
 
     // Accelerometer parameters
+    int accSensitivity;
     private static final int UPDATE_THRESHOLD = 15;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         accelerometerMode = Store.readBool(getApplicationContext(), R.string.accelerometer_key, true);
         levelEndDialogShown = false;
         increasedValueString = "";
+        accSensitivity = Store.readInt(getApplicationContext(), R.string.sensitivity_key, 2);
 
         // Register the accelerometer if in accelerometer mode
         if (accelerometerMode) {
@@ -236,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     float x = event.values[0], y = event.values[1];
 
-                    if (Math.abs(x) > 2 || Math.abs(y) > 2) {
+                    if (Math.abs(x) > accSensitivity || Math.abs(y) > accSensitivity) {
                         view.getPlayer().setStartX(0);
                         view.getPlayer().setStartY(0);
                         view.getPlayer().setEndY(x);
