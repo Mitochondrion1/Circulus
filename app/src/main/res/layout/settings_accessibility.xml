@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/accessibilitySettingsView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000">
@@ -10,21 +11,20 @@
         android:id="@+id/direction_switch"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:layout_marginStart="80dp"
-        app:layout_constraintStart_toEndOf="@+id/textView18"
+        android:layout_marginEnd="199dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accelerometer_switch" />
 
     <Switch
         android:id="@+id/accelerometer_switch"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        app:layout_constraintStart_toEndOf="@+id/textView18"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+        android:layout_marginEnd="199dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accessibilityTitle" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/directionsTextView"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
@@ -35,11 +35,11 @@
         android:textStyle="normal"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17"
+        app:layout_constraintTop_toBottomOf="@+id/accelerometerTextView"
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/accelerometerTextView"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
@@ -51,11 +51,11 @@
         android:textStyle="normal"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/accessibilityTitle"
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/accSensitivityTextView"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
@@ -66,15 +66,14 @@
         android:textStyle="normal"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/directionsTextView"
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/textView16"
-        android:layout_width="340dp"
+        android:id="@+id/accessibilityTitle"
+        android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="14dp"
         android:text="@string/accessibility_text"
         android:textColor="#00BCD4"
@@ -92,6 +91,6 @@
         android:max="3"
         android:progress="3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/accSensitivityTextView"
         app:layout_constraintTop_toBottomOf="@+id/direction_switch" />
 </androidx.constraintlayout.widget.ConstraintLayout>
