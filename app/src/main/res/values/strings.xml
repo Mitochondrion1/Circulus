@@ -29,32 +29,5 @@
     <string name="high_scores_text">High Scores</string>
     <string name="highest_level_text">Highest Level</string>
     <string name="most_kills_text">Most Kills</string>
-    <string name="button_play_he">שחק</string>
-    <string name="button_settings_he">הגדרות</string>
-    <string name="button_credits_he">אודות</string>
-    <string name="high_scores_text_he">שיאים</string>
-    <string name="volume_text_he">עוצמה</string>
-    <string name="accessibility_text_he">נגישות</string>
-    <string name="to_menu_he">לתפריט הראשי</string>
-    <string name="headset_volume_he">עוצמת אוזניות</string>
-    <string name="speaker_volume_he">עוצמת רמקולים</string>
-    <string name="accelerometer_text_he">השתמש באקסלרומטר</string>
-    <string name="directions_text_he">הצג כיווני תנוע וירייה</string>
-    <string name="acc_sensitivity_text_he">רגישות אקסלרומטר</string>
-    <string name="dialog_game_over_he">אתה ז\"ל!</string>
-    <string name="dialog_game_over_title_he">המשחק נגמר</string>
-    <string name="restart_he">שחק מחדש</string>
-    <string name="button_continue_he">המשך</string>
-    <string name="dialog_level_end_title_he">סיימת שלב</string>
-    <string name="language_text">Language</string>
-    <string name="language_text_he">שפה</string>
-    <string-array name="languages_array">
-        <item>English</item>
-        <item>Hebrew</item>
-    </string-array>
-    <string-array name="languages_array_he">
-        <item>אנגלית</item>
-        <item>עברית</item>
-    </string-array>
-    <string name="language_key">language</string>
+
 </resources>

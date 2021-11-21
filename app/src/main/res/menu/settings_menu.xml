@@ -7,9 +7,6 @@
         android:id="@+id/accessibility_option"
         android:title="@string/accessibility_text" />
     <item
-        android:id="@+id/language_option"
-        android:title="@string/language_text" />
-    <item
         android:id="@+id/to_menu_option"
         android:title="Back to Menu" />
 </menu>

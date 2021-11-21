@@ -18,25 +18,11 @@ public class MenuActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_menu);
-        language = Store.readString(getApplicationContext(), R.string.language_key, "en");
-        if (language.equals("he")) {
-            ((Button)findViewById(R.id.play_button)).setText(R.string.button_play_he);
-            ((Button)findViewById(R.id.settings_button)).setText(R.string.button_settings_he);
-            ((Button)findViewById(R.id.credits_button)).setText(R.string.button_credits_he);
-            ((Button)findViewById(R.id.high_scores_button)).setText(R.string.high_scores_text_he);
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        language = Store.readString(getApplicationContext(), R.string.language_key, "en");
-        if (language.equals("he")) {
-            ((Button) findViewById(R.id.play_button)).setText(R.string.button_play_he);
-            ((Button) findViewById(R.id.settings_button)).setText(R.string.button_settings_he);
-            ((Button) findViewById(R.id.credits_button)).setText(R.string.button_credits_he);
-            ((Button) findViewById(R.id.high_scores_button)).setText(R.string.high_scores_text_he);
-        }
     }
 
     // Start game (go to MainActivity)
