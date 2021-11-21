@@ -13,13 +13,12 @@ public class Projectile implements Runnable {
     private float size;
     private int waitTime;
     private int lifetime;
-    private boolean isFromPlayer;
     private boolean hitTarget;
     private Paint paint;
     private MainView view;
     private Thread thread;
 
-    public Projectile(float damage, Vector2 position, Vector2 velocity, boolean isFromPlayer, MainView view) {
+    public Projectile(float damage, Vector2 position, Vector2 velocity, MainView view) {
         this.damage = damage;
         this.position = new Vector2(position.getX(), position.getY());
         this.velocity = velocity;
@@ -28,7 +27,6 @@ public class Projectile implements Runnable {
         waitTime = 15;
         lifetime = 200;
         this.velocity.setLength(speed);
-        this.isFromPlayer = isFromPlayer;
         hitTarget = false;
         this.view = view;
 
@@ -55,10 +53,6 @@ public class Projectile implements Runnable {
         if (lifetime == 0) {
             hitTarget = true;
         }
-    }
-
-    public boolean isFromPlayer() {
-        return isFromPlayer;
     }
 
     public float getDamage() {

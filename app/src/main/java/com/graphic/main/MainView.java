@@ -78,10 +78,10 @@ public class MainView extends View {
         manager.drawBounds(canvas);
 
         // Draw text with different values on the top-lef corner of the screen
-        canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
-        canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
-        canvas.drawText("Level: " + manager.getLevel(), 5f ,165f, paint);
-        canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
+        //canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
+        //canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
+        canvas.drawText("Level: " + manager.getLevel(), 5f ,55f, paint);
+        //canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
 
         invalidate();
     }

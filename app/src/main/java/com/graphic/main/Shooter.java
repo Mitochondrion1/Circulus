@@ -91,6 +91,6 @@ public class Shooter extends Enemy {
     // Shoot a projectile
     private void shoot() {
         this.manager.addEnemyProjectile(new Projectile(this.damage, this.position,
-                Vector2.sub(position, manager.getPlayer().getPosition()), false, this.view));
+                Vector2.sub(position, manager.getPlayer().getPosition()), this.view));
     }
 }

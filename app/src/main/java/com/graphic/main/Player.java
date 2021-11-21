@@ -160,7 +160,7 @@ public class Player extends Entity implements Runnable {
     // Shoot a projectile
     public void summonProjectile() {
         Vector2 projVelocity = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
-        this.manager.addPlayerProjectile(new Projectile(this.damage, this.position, projVelocity, true, this.view));
+        this.manager.addPlayerProjectile(new Projectile(this.damage, this.position, projVelocity, this.view));
     }
 
     // Increase the maximum health of the player
@@ -178,7 +178,7 @@ public class Player extends Entity implements Runnable {
         this.damage = this.damageMultiplier * this.baseDamage;
     }
 
-    // Increase the attack sped of the player
+    // Increase the attack speed of the player
     public void increaseAttackSpeed() {
         this.attackSpeedMultiplier *= 0.9f;
         this.projectileDelay = (int)Math.ceil(this.attackSpeedMultiplier * this.baseProjectileDelay);
