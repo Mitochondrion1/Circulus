@@ -22,6 +22,16 @@ public class LevelEndDialogFragment extends DialogFragment {
                 ((MainActivity)getActivity()).setLevelEndDialogShown(false);
             }
         })
+                .setNegativeButton(R.string.to_menu, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Store.saveInt(getActivity().getApplicationContext(), R.string.level_key,
+                                ((MainActivity)getActivity()).getManager().getLevel() + 1);
+                        Store.saveInt(getActivity().getApplicationContext(), R.string.kills_key,
+                                ((MainActivity)getActivity()).getManager().getKills());
+                        getActivity().finish();
+                    }
+                })
                 .setTitle(R.string.dialog_level_end_title)
                 .setMessage(((MainActivity)getActivity()).getIncreasedValueString());
         AlertDialog alertDialog = builder.create();

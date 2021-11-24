@@ -29,7 +29,13 @@ public class MainView extends View {
         widthInUnits = 5f;
         pixelsPerUnit = displaySize.getX() / widthInUnits;
 
-        manager = new Manager(this);
+        if (MainActivity.getNewGame()) {
+            manager = new Manager(this, 1, 0);
+        }
+        else {
+            manager = new Manager(this, Store.readInt(activity.getApplicationContext(), R.string.level_key, 1),
+                    Store.readInt(activity.getApplicationContext(), R.string.kills_key, 0));
+        }
         player = manager.getPlayer();
 
         paint = new Paint();

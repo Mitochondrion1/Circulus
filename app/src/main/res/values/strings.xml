@@ -29,5 +29,6 @@
     <string name="high_scores_text">High Scores</string>
     <string name="highest_level_text">Highest Level</string>
     <string name="most_kills_text">Most Kills</string>
-
+    <string name="level_key">level</string>
+    <string name="kills_key">kills</string>
 </resources>

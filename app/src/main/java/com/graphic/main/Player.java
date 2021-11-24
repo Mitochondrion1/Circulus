@@ -116,6 +116,10 @@ public class Player extends Entity implements Runnable {
         this.health = Math.min(this.health + this.maxHealth * hp / 100f, this.maxHealth);
     }
 
+    public void healToFull() {
+        this.health = this.maxHealth;
+    }
+
     @Override
     protected void behave() {
         // Calculate the desired velocity of the player

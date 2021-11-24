@@ -32,9 +32,9 @@ public class Manager implements Runnable {
     private Thread thread;
     private Random random;
 
-    public Manager(MainView view) {
-        level = 1;
-        kills = 0;
+    public Manager(MainView view, int level, int kills) {
+        this.level = level;
+        this.kills = kills;
 
         this.boundLeft = -10f;
         this.boundTop = -7.5f;
@@ -164,8 +164,11 @@ public class Manager implements Runnable {
                 while (this.view.getActivity().isLevelEndDialogShown()) {
                 }
                 this.level++;
+                player.healToFull();
             }
         }
+        Store.saveInt(view.getActivity().getApplicationContext(), R.string.level_key, 1);
+        Store.saveInt(view.getActivity().getApplicationContext(), R.string.kills_key, 0);
         if (!this.view.getActivity().isDestroyed()) {
             this.view.getActivity().showGameOverDialog();
         }

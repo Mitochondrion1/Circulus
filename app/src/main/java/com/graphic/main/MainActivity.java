@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private long mLastUpdate;
 
+    private static boolean newGame = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -318,5 +320,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // Set the message  for an increased value
     public void setIncreasedValueString(String string) {
         this.increasedValueString = string;
+    }
+
+    public Manager getManager() {
+        return this.view.getManager();
+    }
+
+    public static void setNewGame(boolean bool) {
+        newGame = bool;
+    }
+
+    public static boolean getNewGame() {
+        return newGame;
     }
 }
