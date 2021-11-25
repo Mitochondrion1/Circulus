@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onDestroy() {
         super.onDestroy();
         stopService(musicServiceIntent);
-        finish();
         view = null;
     }
 
@@ -260,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     // Restart the game by replacing the view with a new one
-    public void restart() {
+    public void restartGame() {
         this.view = new MainView(this);
         setContentView(this.view);
     }
