@@ -1,7 +1,7 @@
 #include <jni.h>
 
 extern "C" JNIEXPORT jfloat JNICALL
-Java_com_graphic_main_Vector2_quickInvSqrt(JNIEnv *env, jobject vct, jfloat l) {
+Java_com_game_main_Vector2_quickInvSqrt(JNIEnv *env, jobject vct, jfloat l) {
     /*
      * This is the fast inverse square root algorithm.
      * Calculates the value of 1 / sqrt(l) for a given float l in a more efficient way
