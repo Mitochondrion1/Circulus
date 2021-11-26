@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.graphic.main">
+    package="com.game.main">
 
     <application
         android:allowBackup="true"
@@ -9,23 +9,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.GameProject">
-        <activity android:name=".HighScoresActivity"></activity>
-        <activity android:name=".CreditsActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name="com.game.main.HighScoresActivity"></activity>
+        <activity android:name="com.game.main.CreditsActivity" />
+        <activity android:name="com.game.main.SettingsActivity" />
 
         <service
-            android:name=".MusicService"
+            android:name="com.game.main.MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MenuActivity">
+        <activity android:name="com.game.main.MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name="com.game.main.MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
