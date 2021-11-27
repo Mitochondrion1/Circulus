@@ -12,8 +12,6 @@ import android.widget.PopupMenu;
 
 // The menu activity
 public class MenuActivity extends AppCompatActivity {
-    private String language;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

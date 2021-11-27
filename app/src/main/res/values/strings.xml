@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GameProject</string>
+    <string name="app_name">Circulus</string>
     <string name="button_play">Play</string>
     <string name="headset_volume">Headset Volume</string>
     <string name="speaker_volume">Speaker Volume</string>
