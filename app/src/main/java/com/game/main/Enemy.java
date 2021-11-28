@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 
 // Defines an AI controlled enemy
 public abstract class Enemy extends Entity implements Runnable {
-    protected Vector2 pixelPosition;
     protected Vector2 positionChange;
     protected boolean alive;
     protected Manager manager;
@@ -13,11 +12,10 @@ public abstract class Enemy extends Entity implements Runnable {
     protected int directorCost;
 
     public Enemy(Vector2 position, Manager manager, MainView view) {
-        super(position);
+        super(position, view);
 
         alive = true;
         this.manager = manager;
-        this.view = view;
         this.arrow = new Arrow(this.view);
         this.arrow.setAlpha((int)Math.min(0xff, 0xff / Vector2.distance(
                 this.manager.getPlayer().getPosition(), this.position)));
@@ -46,11 +44,10 @@ public abstract class Enemy extends Entity implements Runnable {
         return view.positionToPixels(view.relativePosition(position));
     }
 
+    @Override
     public void draw(Canvas canvas) {
-        canvas.drawCircle(pixelPosition.getX(), pixelPosition.getY(),
-                this.view.getPixelsPerUnit() * this.size / 2, paint);
         this.arrow.draw(canvas);
-        drawHealthBar(canvas);
+        super.draw(canvas);
     }
 
     public Vector2 getPosition() {

@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 // Represents a projectile
-public class Projectile implements Runnable {
+public class Projectile implements Runnable, Drawable {
     private float damage;
     private Vector2 position;
     private Vector2 velocity;
@@ -75,6 +75,7 @@ public class Projectile implements Runnable {
         this.hitTarget = hasHitTarget;
     }
 
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawCircle(findPixelPosition().getX(), findPixelPosition().getY(),
                 this.view.getPixelsPerUnit() * this.size / 2, paint);

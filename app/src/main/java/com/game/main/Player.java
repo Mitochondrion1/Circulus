@@ -1,14 +1,11 @@
 package com.game.main;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 
 // The class that represents the player
 public class Player extends Entity implements Runnable {
     private Manager manager;
 
-    private float displayWidth;
-    private float displayHeight;
     private final int baseProjectileDelay = 20;
     private int projectileDelay;
     private int tick;
@@ -23,7 +20,10 @@ public class Player extends Entity implements Runnable {
     private float shotStartX, shotStartY, shotEndX, shotEndY;
 
     public Player(Vector2 position, MainView view, Manager manager) {
-        super(position);
+        super(position, view);
+
+        this.pixelPosition = new Vector2(this.view.getDisplaySize().getX() / 2,
+                this.view.getDisplaySize().getY() / 2);
 
         this.baseHealth = 100f;
         this.baseDamage = 10f;
@@ -40,13 +40,10 @@ public class Player extends Entity implements Runnable {
         this.health = this.maxHealth;
         this.projectileDelay = (int)(this.attackSpeedMultiplier * this.baseProjectileDelay);
 
-        this.view = view;
         this.manager = manager;
         this.size = 0.3f;
         this.paint.setColor(Color.WHITE);
 
-        displayWidth = DisplayParams.getDisplaySize(view).getX();
-        displayHeight = DisplayParams.getDisplaySize(view).getY();
         tick = 0;
 
         startX = 0;
@@ -60,12 +57,6 @@ public class Player extends Entity implements Runnable {
         while (health > 0) {
             super.run();
         }
-    }
-
-    public void draw(Canvas canvas) {
-        canvas.drawCircle(displayWidth / 2, displayHeight / 2,
-                this.view.getPixelsPerUnit() * this.size / 2, paint);
-        drawHealthBar(canvas);
     }
 
     public Vector2 getVelocity() {

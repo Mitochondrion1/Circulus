@@ -3,13 +3,15 @@ package com.game.main;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 // Defines dynamic object, with health and damage
-public abstract class Entity implements Runnable {
+public abstract class Entity implements Runnable, Drawable {
     protected float baseHealth;
     protected float baseDamage;
 
     protected Vector2 position;
+    protected Vector2 pixelPosition;
     protected Vector2 velocity;
     protected float speed;
     protected float health;
@@ -21,8 +23,9 @@ public abstract class Entity implements Runnable {
     protected Thread thread;
     protected MainView view;
 
-    public Entity(Vector2 position) {
+    public Entity(Vector2 position, MainView view) {
         this.position = position;
+        this.view = view;
         this.velocity = new Vector2(0, 0);
         this.paint = new Paint();
         this.waitTime = 15;
@@ -71,6 +74,13 @@ public abstract class Entity implements Runnable {
 
     // A method that defines the behavior of the entity
     protected void behave() {
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        canvas.drawCircle(pixelPosition.getX(), pixelPosition.getY(),
+                this.view.getPixelsPerUnit() * this.size / 2, paint);
+        drawHealthBar(canvas);
     }
 
     // Draw the health bar of the entity

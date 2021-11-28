@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 // Defines the health pack
-public class HealthPack {
+public class HealthPack implements Drawable {
     private float size;
     private float healAmount;
     private Vector2 position;
@@ -37,6 +37,7 @@ public class HealthPack {
     }
 
     // Draw the health pack
+    @Override
     public void draw(Canvas canvas) {
         Vector2 pixelPosition = this.view.positionToPixels(this.view.relativePosition(this.position));
         float pixelSize = this.size * this.view.getPixelsPerUnit();
