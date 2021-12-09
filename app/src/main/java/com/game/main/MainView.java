@@ -86,6 +86,7 @@ public class MainView extends View {
         //canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         //canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
         canvas.drawText("Level: " + manager.getLevel(), 5f ,55f, paint);
+        canvas.drawText(manager.getTime(), 5f, 110f, paint);
         //canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
 
         invalidate();

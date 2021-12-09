@@ -24,6 +24,7 @@ public class Manager implements Runnable {
     private ArrayList<Projectile> enemyProjectiles;
     private ArrayList<HealthPack> healthPacks;
     private Director director;
+    private Timer timer;
     private MainView view;
     private Paint bgLinePaint;
     private Paint bgPaint;
@@ -32,6 +33,8 @@ public class Manager implements Runnable {
     private Random random;
 
     public Manager(MainView view, int level, int kills) {
+        timer = new Timer(Store.readLong(view.getContext().getApplicationContext(), R.string.time_key, 0));
+
         this.level = level;
         this.kills = kills;
 
@@ -159,13 +162,17 @@ public class Manager implements Runnable {
                 }
 
                 // Show the level end dialog, and wait until it's closed before continuing
+                timer.setPaused(true);
                 this.view.getActivity().showLevelEndDialog();
                 while (this.view.getActivity().isLevelEndDialogShown()) {
                 }
                 this.level++;
                 player.healToFull();
+                timer.setPaused(false);
             }
         }
+        timer.setPaused(true);
+        Store.saveLong(view.getActivity().getApplicationContext(), R.string.time_key, 0);
         Store.saveInt(view.getActivity().getApplicationContext(), R.string.level_key, 1);
         Store.saveInt(view.getActivity().getApplicationContext(), R.string.kills_key, 0);
         if (!this.view.getActivity().isDestroyed()) {
@@ -313,5 +320,13 @@ public class Manager implements Runnable {
             sum += enemies.get(i).getDirectorCost();
         }
         return sum;
+    }
+
+    public String getTime() {
+        return timer.toString();
+    }
+
+    public long getTimeMilis() {
+        return timer.getMilis();
     }
 }

@@ -19,6 +19,18 @@ public class Store {
         return sharedPref.getInt(context.getString(key), defaultValue);
     }
 
+    public static void saveLong(Context context, int key, long value) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(context.getString(key), value);
+        editor.commit();
+    }
+
+    public static long readLong(Context context, int key, long defaultValue) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
+        return sharedPref.getLong(context.getString(key), defaultValue);
+    }
+
     // Save a boolean
     public static void saveBool(Context context, int key, boolean value) {
         SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
