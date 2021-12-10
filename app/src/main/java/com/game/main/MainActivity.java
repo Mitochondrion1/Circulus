@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private String increasedValueString;
 
     // Accelerometer parameters
-    int accSensitivity;
+    private int accSensitivity;
     private static final int UPDATE_THRESHOLD = 15;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;

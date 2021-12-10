@@ -33,7 +33,12 @@ public class Manager implements Runnable {
     private Random random;
 
     public Manager(MainView view, int level, int kills) {
-        timer = new Timer(Store.readLong(view.getContext().getApplicationContext(), R.string.time_key, 0));
+        if (MainActivity.getNewGame()) {
+            timer = new Timer(0);
+        }
+        else {
+            timer = new Timer(Store.readLong(view.getContext().getApplicationContext(), R.string.time_key, 0));
+        }
 
         this.level = level;
         this.kills = kills;

@@ -30,6 +30,9 @@ public class MainView extends View {
 
         if (MainActivity.getNewGame()) {
             manager = new Manager(this, 1, 0);
+            //Store.saveLong(activity.getApplicationContext(), R.string.time_key, 0);
+            //Store.saveInt(activity.getApplicationContext(), R.string.level_key, 1);
+            //Store.saveInt(activity.getApplicationContext(), R.string.kills_key, 0);
         }
         else {
             manager = new Manager(this, Store.readInt(activity.getApplicationContext(), R.string.level_key, 1),
