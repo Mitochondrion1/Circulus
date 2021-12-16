@@ -5,12 +5,15 @@ import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MotionEvent;
+import android.view.View;
 
 // The main game activity
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -36,9 +39,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        hideNavigation();
+
         musicServiceIntent = new Intent(getApplicationContext(), MusicService.class);
         view = new MainView(this);
-        displaySize = DisplayParams.getDisplaySize(this);
+        displaySize = getRealDisplaySize();
         accelerometerMode = Store.readBool(getApplicationContext(), R.string.accelerometer_key, true);
         levelEndDialogShown = false;
         increasedValueString = "";
@@ -329,5 +335,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public static boolean getNewGame() {
         return newGame;
+    }
+
+    private void hideNavigation() {
+        View decorView = getWindow().getDecorView();
+        int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(flags);
+    }
+
+    public Vector2 getRealDisplaySize() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getRealSize(size);
+        return new Vector2(size.x, size.y);
     }
 }

@@ -24,7 +24,8 @@ public class MainView extends View {
     public MainView(MainActivity activity) {
         super(activity);
 
-        displaySize = DisplayParams.getDisplaySize(activity);
+        //displaySize = DisplayParams.getDisplaySize(activity);
+        displaySize = activity.getRealDisplaySize();
         widthInUnits = 5f;
         pixelsPerUnit = displaySize.getX() / widthInUnits;
 
@@ -42,7 +43,7 @@ public class MainView extends View {
 
         paint = new Paint();
         paint.setColor(Color.WHITE);
-        paint.setTextSize(50f);
+        paint.setTextSize(displaySize.getY() / 20);
 
         showDirections = Store.readBool(activity.getApplicationContext(), R.string.direction_display_key, false);
         dirLength = 0.75f * getPixelsPerUnit();
@@ -88,8 +89,8 @@ public class MainView extends View {
         // Draw text with different values on the top-lef corner of the screen
         //canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
         //canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
-        canvas.drawText("Level: " + manager.getLevel(), 5f ,55f, paint);
-        canvas.drawText(manager.getTime(), 5f, 110f, paint);
+        canvas.drawText("Level: " + manager.getLevel(), 0.01f * displaySize.getX() ,0.06f * displaySize.getY(), paint);
+        canvas.drawText(manager.getTime(), 0.01f * displaySize.getX(), 0.12f * displaySize.getY(), paint);
         //canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
 
         invalidate();
