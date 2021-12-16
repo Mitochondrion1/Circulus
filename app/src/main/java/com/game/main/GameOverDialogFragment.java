@@ -23,6 +23,7 @@ public class GameOverDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         dismissed = false;
                         ((MainActivity)getActivity()).restartGame();
+                        ((MainActivity)getActivity()).hideNavigation();
                     }
                 })
                 .setNegativeButton(R.string.to_menu, new DialogInterface.OnClickListener() {

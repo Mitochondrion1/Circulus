@@ -18,6 +18,7 @@ public class LevelEndDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ((MainActivity)getActivity()).setLevelEndDialogShown(false);
+                ((MainActivity)getActivity()).hideNavigation();
             }
         })
                 .setNegativeButton(R.string.to_menu, new DialogInterface.OnClickListener() {

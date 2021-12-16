@@ -19,11 +19,14 @@ public class Player extends Entity implements Runnable {
     private float startX, startY, endX, endY;
     private float shotStartX, shotStartY, shotEndX, shotEndY;
 
+    private Vector2 trueVelocity;
+
     public Player(Vector2 position, MainView view, Manager manager) {
         super(position, view);
 
         this.pixelPosition = new Vector2(this.view.getDisplaySize().getX() / 2,
                 this.view.getDisplaySize().getY() / 2);
+        trueVelocity = new Vector2(0f, 0f);
 
         this.baseHealth = 100f;
         this.baseDamage = 10f;
@@ -119,6 +122,7 @@ public class Player extends Entity implements Runnable {
         if (velocity.getLength() != 0) {
             velocity.setLength(1f);
         }
+        trueVelocity = new Vector2(velocity.getX(), velocity.getY());
 
         // Shoot a projectile under right conditions
         if (shotEndX - shotStartX != 0 || shotEndY - shotStartY != 0) {
@@ -185,5 +189,9 @@ public class Player extends Entity implements Runnable {
                 this.position.getX() + this.size / 2 > this.manager.getBoundRight() ||
                 this.position.getY() - this.size / 2 < this.manager.getBoundTop() ||
                 this.position.getY() + this.size / 2 > this.manager.getBoundBottom();
+    }
+
+    public Vector2 getTrueVelocity() {
+        return trueVelocity;
     }
 }

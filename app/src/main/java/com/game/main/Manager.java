@@ -173,6 +173,7 @@ public class Manager implements Runnable {
                 }
                 this.level++;
                 player.healToFull();
+                healthPacks.clear();
                 timer.setPaused(false);
             }
         }
@@ -229,8 +230,8 @@ public class Manager implements Runnable {
         float x = player.getPosition().getX(), y = player.getPosition().getY();
         float heightInUnits = this.view.getDisplaySize().getY() / this.view.getDisplaySize().getX() *
                 this.view.getWidthInUnits();
-        int horizontalLines = (int)Math.ceil(heightInUnits * 2);
-        int verticalLines = (int)Math.ceil(this.view.getWidthInUnits() * 2);
+        int horizontalLines = (int)Math.ceil(heightInUnits * 2 + 1);
+        int verticalLines = (int)Math.ceil(this.view.getWidthInUnits() * 2 + 1);
         float distBetweenLines = 0.5f * this.view.getPixelsPerUnit();
         float beginHorizontal = this.view.getDisplaySize().getY() / 2 + (0.5f - y % 0.5f) * (distBetweenLines * 2);
         float beginVertical = this.view.getDisplaySize().getX() / 2 + (0.5f - x % 0.5f) * (distBetweenLines * 2);

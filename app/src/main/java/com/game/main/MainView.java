@@ -31,9 +31,6 @@ public class MainView extends View {
 
         if (MainActivity.getNewGame()) {
             manager = new Manager(this, 1, 0);
-            //Store.saveLong(activity.getApplicationContext(), R.string.time_key, 0);
-            //Store.saveInt(activity.getApplicationContext(), R.string.level_key, 1);
-            //Store.saveInt(activity.getApplicationContext(), R.string.kills_key, 0);
         }
         else {
             manager = new Manager(this, Store.readInt(activity.getApplicationContext(), R.string.level_key, 1),
@@ -70,8 +67,8 @@ public class MainView extends View {
         // Draw shot and movement directions
         if (showDirections) {
             canvas.drawLine(displaySize.getX() / 2, displaySize.getY() / 2,
-                    displaySize.getX() / 2 + player.getVelocity().getX() * dirLength,
-                    displaySize.getY() / 2 + player.getVelocity().getY() * dirLength,
+                    displaySize.getX() / 2 + player.getTrueVelocity().getX() * dirLength,
+                    displaySize.getY() / 2 + player.getTrueVelocity().getY() * dirLength,
                     dirPaint2);
             canvas.drawLine(displaySize.getX() / 2, displaySize.getY() / 2,
                     displaySize.getX() / 2 + player.getProjectileVelocityNormalized().getX() * dirLength,
@@ -87,11 +84,8 @@ public class MainView extends View {
         manager.drawBounds(canvas);
 
         // Draw text with different values on the top-lef corner of the screen
-        //canvas.drawText(player.getPosition().toString(), 5f, 55f, paint);
-        //canvas.drawText("Health Packs: " + manager.getHealthPacks().size(), 5f, 110f, paint);
         canvas.drawText("Level: " + manager.getLevel(), 0.01f * displaySize.getX() ,0.06f * displaySize.getY(), paint);
         canvas.drawText(manager.getTime(), 0.01f * displaySize.getX(), 0.12f * displaySize.getY(), paint);
-        //canvas.drawText("Enemies left: " + manager.getEnemiesLeft(), 5f, 220f, paint);
 
         invalidate();
     }
