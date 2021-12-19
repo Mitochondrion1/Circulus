@@ -29,10 +29,6 @@
             </intent-filter>
         </activity>
         <activity android:name="com.game.main.MainActivity" />
-
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
