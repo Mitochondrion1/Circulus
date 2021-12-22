@@ -1,6 +1,7 @@
 package com.game.main;
 
 import android.graphics.Color;
+import android.util.Log;
 
 // The class that represents the player
 public class Player extends Entity implements Runnable {
@@ -31,11 +32,13 @@ public class Player extends Entity implements Runnable {
         this.baseHealth = 100f;
         this.baseDamage = 10f;
 
-        thread.start();
+        this.damageMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.damage_key, 1f);
+        this.healthMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.health_key, 1f);
+        this.attackSpeedMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.attack_speed_key, 1f);
 
-        this.damageMultiplier = 1f;
-        this.healthMultiplier = 1f;
-        this.attackSpeedMultiplier = 1f;
+        Log.d("dmg", "" + damageMultiplier);
+        Log.d("hp", "" + healthMultiplier);
+        Log.d("atk", "" + attackSpeedMultiplier);
 
         this.speed = 1f;
         this.damage = this.damageMultiplier * baseDamage;
@@ -53,6 +56,8 @@ public class Player extends Entity implements Runnable {
         startY = 0;
         endX = 0;
         endY = 0;
+
+        thread.start();
     }
 
     @Override
@@ -181,6 +186,18 @@ public class Player extends Entity implements Runnable {
     public void increaseAttackSpeed() {
         this.attackSpeedMultiplier *= 0.9f;
         this.projectileDelay = (int)Math.ceil(this.attackSpeedMultiplier * this.baseProjectileDelay);
+    }
+
+    public void saveMultipliers() {
+        Store.saveFloat(view.getActivity().getApplicationContext(), R.string.damage_key, this.damageMultiplier);
+        Store.saveFloat(view.getActivity().getApplicationContext(), R.string.health_key, this.healthMultiplier);
+        Store.saveFloat(view.getActivity().getApplicationContext(), R.string.attack_speed_key, this.attackSpeedMultiplier);
+    }
+
+    public void loadMultipliers() {
+        this.damageMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.damage_key, 1f);
+        this.healthMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.health_key, 1f);
+        this.attackSpeedMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.attack_speed_key, 1f);
     }
 
     // Is the player out of the bounds of the map

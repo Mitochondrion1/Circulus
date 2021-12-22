@@ -24,6 +24,8 @@ public class MainView extends View {
     public MainView(MainActivity activity) {
         super(activity);
 
+        this.activity = activity;
+
         //displaySize = DisplayParams.getDisplaySize(activity);
         displaySize = activity.getRealDisplaySize();
         widthInUnits = 5f;
@@ -53,7 +55,6 @@ public class MainView extends View {
             dirPaint2.setStrokeWidth(3f);
             dirPaint2.setColor(Color.BLUE);
         }
-        this.activity = activity;
     }
 
     // Draw on screen

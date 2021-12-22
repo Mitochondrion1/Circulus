@@ -32,4 +32,7 @@
     <string name="level_key">level</string>
     <string name="kills_key">kills</string>
     <string name="time_key">time</string>
+    <string name="damage_key">damage</string>
+    <string name="health_key">health</string>
+    <string name="attack_speed_key">attack_speed</string>
 </resources>

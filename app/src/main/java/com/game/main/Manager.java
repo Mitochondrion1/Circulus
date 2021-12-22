@@ -181,6 +181,9 @@ public class Manager implements Runnable {
         Store.saveLong(view.getActivity().getApplicationContext(), R.string.time_key, 0);
         Store.saveInt(view.getActivity().getApplicationContext(), R.string.level_key, 1);
         Store.saveInt(view.getActivity().getApplicationContext(), R.string.kills_key, 0);
+        Store.saveFloat(view.getActivity().getApplicationContext(), R.string.damage_key, 1f);
+        Store.saveFloat(view.getActivity().getApplicationContext(), R.string.health_key, 1f);
+        Store.saveFloat(view.getActivity().getApplicationContext(), R.string.attack_speed_key, 1f);
         if (!this.view.getActivity().isDestroyed()) {
             this.view.getActivity().showGameOverDialog();
         }

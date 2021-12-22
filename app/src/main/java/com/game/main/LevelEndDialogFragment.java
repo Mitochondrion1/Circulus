@@ -24,13 +24,13 @@ public class LevelEndDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.to_menu, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         Store.saveLong(getActivity().getApplicationContext(), R.string.time_key,
                                 ((MainActivity)getActivity()).getManager().getTimeMilis());
                         Store.saveInt(getActivity().getApplicationContext(), R.string.level_key,
                                 ((MainActivity)getActivity()).getManager().getLevel() + 1);
                         Store.saveInt(getActivity().getApplicationContext(), R.string.kills_key,
                                 ((MainActivity)getActivity()).getManager().getKills());
+                        ((MainActivity)getActivity()).getManager().getPlayer().saveMultipliers();
                         getActivity().finish();
                     }
                 })

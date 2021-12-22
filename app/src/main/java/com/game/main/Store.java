@@ -58,4 +58,16 @@ public class Store {
         SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
         return sharedPref.getString(context.getString(key), defaultValue);
     }
+
+    public static void saveFloat(Context context, int key, float value) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putFloat(context.getString(key), value);
+        editor.commit();
+    }
+
+    public static float readFloat(Context context, int key, float defaultValue) {
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
+        return sharedPref.getFloat(context.getString(key), defaultValue);
+    }
 }
