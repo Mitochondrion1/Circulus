@@ -30,6 +30,8 @@ public class LevelEndDialogFragment extends DialogFragment {
                                 ((MainActivity)getActivity()).getManager().getLevel() + 1);
                         Store.saveInt(getActivity().getApplicationContext(), R.string.kills_key,
                                 ((MainActivity)getActivity()).getManager().getKills());
+                        Store.saveInt(getActivity().getApplicationContext(), R.string.score_key,
+                                ((MainActivity)getActivity()).getManager().getScore());
                         ((MainActivity)getActivity()).getManager().getPlayer().saveMultipliers();
                         getActivity().finish();
                     }

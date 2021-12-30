@@ -21,5 +21,7 @@ public class HighScoresActivity extends AppCompatActivity {
         highestLevelValue.setText(String.valueOf(Store.readInt(getApplicationContext(), R.string.highest_level_key, 0)));
         TextView mostKillsValue = findViewById(R.id.mostKillsValue);
         mostKillsValue.setText(String.valueOf(Store.readInt(getApplicationContext(), R.string.most_kills_key, 0)));
+        TextView highestScoreValue = findViewById(R.id.highestScoreValue);
+        highestScoreValue.setText(String.valueOf(Store.readInt(getApplicationContext(), R.string.highest_score_key, 0)));
     }
 }

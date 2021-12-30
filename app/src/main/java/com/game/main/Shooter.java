@@ -26,7 +26,7 @@ public class Shooter extends Enemy {
         this.shootingTick = 0;
         this.forgetTick = 0;
 
-        this.assignBasicValues(5, 60f, 5f);
+        this.assignBasicValues(5, 60f, 5f, 2);
 
         this.damage = baseDamage * (0.5f + 0.5f * this.manager.getLevel());
         this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());

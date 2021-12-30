@@ -26,7 +26,7 @@ public class Exploder extends Enemy {
         this.aoePaint.setColor(Color.CYAN);
         this.aoePaint.setAlpha(0);
 
-        this.assignBasicValues(10, 40f, 20f);
+        this.assignBasicValues(10, 40f, 20f, 2);
 
         this.damage = baseDamage * (0.8f + 0.2f * this.manager.getLevel());
         this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());

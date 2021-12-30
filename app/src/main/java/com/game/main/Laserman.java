@@ -47,7 +47,7 @@ public class Laserman extends Enemy {
         this.laserPaint2.setColor(Color.RED);
         this.laserPaint2.setStrokeWidth(10f);
 
-        this.assignBasicValues(15, 80f, 1f);
+        this.assignBasicValues(15, 80f, 1f, 5);
 
         this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;

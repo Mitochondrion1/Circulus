@@ -313,6 +313,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (this.view.getManager().getKills() > Store.readInt(getApplicationContext(), R.string.most_kills_key, 0)) {
             Store.saveInt(getApplicationContext(), R.string.most_kills_key, this.view.getManager().getKills());
         }
+        if (this.view.getManager().getScore() > Store.readInt(getApplicationContext(), R.string.highest_score_key, 0)) {
+            Store.saveInt(getApplicationContext(), R.string.highest_score_key, this.view.getManager().getScore());
+        }
     }
 
     // Get the message string for an increased value

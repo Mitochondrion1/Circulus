@@ -26,11 +26,14 @@
     <string name="button_continue">Continue</string>
     <string name="highest_level_key">highest_level</string>
     <string name="most_kills_key">most_kills</string>
+    <string name="highest_score_key">highest_score</string>
     <string name="high_scores_text">High Scores</string>
     <string name="highest_level_text">Highest Level</string>
     <string name="most_kills_text">Most Kills</string>
+    <string name="highest_score_text">Highest Score</string>
     <string name="level_key">level</string>
     <string name="kills_key">kills</string>
+    <string name="score_key">score</string>
     <string name="time_key">time</string>
     <string name="damage_key">damage</string>
     <string name="health_key">health</string>

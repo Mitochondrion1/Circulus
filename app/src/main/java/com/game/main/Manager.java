@@ -10,6 +10,7 @@ import java.util.Random;
 public class Manager implements Runnable {
     private int level;
     private int kills;
+    private int score;
 
     // Map bounds parameters
     private float boundLeft;
@@ -32,7 +33,7 @@ public class Manager implements Runnable {
     private Thread thread;
     private Random random;
 
-    public Manager(MainView view, int level, int kills) {
+    public Manager(MainView view, int level, int kills, int score) {
         if (MainActivity.getNewGame()) {
             timer = new Timer(0);
         }
@@ -42,6 +43,7 @@ public class Manager implements Runnable {
 
         this.level = level;
         this.kills = kills;
+        this.score = score;
 
         this.boundLeft = -10f;
         this.boundTop = -7.5f;
@@ -105,6 +107,7 @@ public class Manager implements Runnable {
                         }
                     }
                     if (enemies.get(i) != null && !enemies.get(i).isAlive()) {
+                        score += enemies.get(i).getScorePoints();
                         enemies.remove(i);
                         i--;
                         this.kills++;
@@ -279,6 +282,10 @@ public class Manager implements Runnable {
 
     public int getKills() {
         return kills;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public Player getPlayer() {

@@ -19,7 +19,7 @@ public class Summoner extends Enemy {
         this.tick = 600;
         this.paint.setColor(Color.MAGENTA);
 
-        this.assignBasicValues(20, 100f, 0f);
+        this.assignBasicValues(20, 100f, 0f, 15);
 
         this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;

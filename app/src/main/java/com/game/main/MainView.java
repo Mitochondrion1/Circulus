@@ -32,11 +32,12 @@ public class MainView extends View {
         pixelsPerUnit = displaySize.getX() / widthInUnits;
 
         if (MainActivity.getNewGame()) {
-            manager = new Manager(this, 1, 0);
+            manager = new Manager(this, 1, 0, 0);
         }
         else {
             manager = new Manager(this, Store.readInt(activity.getApplicationContext(), R.string.level_key, 1),
-                    Store.readInt(activity.getApplicationContext(), R.string.kills_key, 0));
+                    Store.readInt(activity.getApplicationContext(), R.string.kills_key, 0),
+                    Store.readInt(activity.getApplicationContext(), R.string.score_key, 0));
         }
         player = manager.getPlayer();
 
@@ -87,6 +88,7 @@ public class MainView extends View {
         // Draw text with different values on the top-lef corner of the screen
         canvas.drawText("Level: " + manager.getLevel(), 0.01f * displaySize.getX() ,0.06f * displaySize.getY(), paint);
         canvas.drawText(manager.getTime(), 0.01f * displaySize.getX(), 0.12f * displaySize.getY(), paint);
+        canvas.drawText("Score: " + manager.getScore(), 0.01f * displaySize.getX(), 0.98f * displaySize.getY(), paint);
 
         invalidate();
     }

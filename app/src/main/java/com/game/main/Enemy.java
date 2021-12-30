@@ -10,6 +10,7 @@ public abstract class Enemy extends Entity implements Runnable {
     protected Arrow arrow;
 
     protected int directorCost;
+    protected int scorePoints;
 
     public Enemy(Vector2 position, Manager manager, MainView view) {
         super(position, view);
@@ -54,17 +55,22 @@ public abstract class Enemy extends Entity implements Runnable {
         return this.position;
     }
 
-    public  int getDirectorCost() {
+    public int getDirectorCost() {
         return directorCost;
+    }
+
+    public int getScorePoints() {
+        return scorePoints;
     }
 
     public void startThread() {
         thread.start();
     }
 
-    protected void assignBasicValues(int cost, float health, float damage) {
+    protected void assignBasicValues(int cost, float health, float damage, int scorePoints) {
         this.directorCost = cost;
         this.baseHealth = health;
         this.baseDamage = damage;
+        this.scorePoints = scorePoints;
     }
 }
