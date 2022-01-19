@@ -45,20 +45,6 @@ public class Store {
         return sharedPref.getBoolean(context.getString(key), defaultValue);
     }
 
-    // Save a string
-    public static void saveString(Context context, int key, String value) {
-        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(context.getString(key), value);
-        editor.commit();
-    }
-
-    // Retrieve a string
-    public static String readString(Context context, int key, String defaultValue) {
-        SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
-        return sharedPref.getString(context.getString(key), defaultValue);
-    }
-
     public static void saveFloat(Context context, int key, float value) {
         SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

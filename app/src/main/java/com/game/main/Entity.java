@@ -51,10 +51,6 @@ public abstract class Entity implements Runnable, Drawable {
         this.position = position;
     }
 
-    public Vector2 getVelocity() {
-        return velocity;
-    }
-
     public float getSize() {
         return this.size;
     }

@@ -50,10 +50,7 @@ public class Exploder extends Enemy {
     protected void behave() {
         // Define the movement of the Exploder: homing the player from any distance
         if (Vector2.distance(position, manager.getPlayer().getPosition()) != 0) {
-            this.positionChange = Vector2.sub(position, manager.getPlayer().getPosition());
-            this.positionChange.setLength(waitTime / 1000f * speed);
-            this.position.setX(this.position.getX() + this.positionChange.getX());
-            this.position.setY(this.position.getY() + this.positionChange.getY());
+            move();
         }
 
         // Define what happens after the explosion begins

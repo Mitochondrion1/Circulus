@@ -46,11 +46,4 @@ public class Summoner extends Enemy {
             detectedPlayer = true;
         }
     }
-
-    private void move() {
-        this.positionChange = Vector2.sub(position, manager.getPlayer().getPosition());
-        this.positionChange.setLength(waitTime / 1000f * this.speed);
-        this.position.setX(this.position.getX() + this.positionChange.getX());
-        this.position.setY(this.position.getY() + this.positionChange.getY());
-    }
 }

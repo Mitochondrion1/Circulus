@@ -36,10 +36,6 @@ public class Player extends Entity implements Runnable {
         this.healthMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.health_key, 1f);
         this.attackSpeedMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.attack_speed_key, 1f);
 
-        Log.d("dmg", "" + damageMultiplier);
-        Log.d("hp", "" + healthMultiplier);
-        Log.d("atk", "" + attackSpeedMultiplier);
-
         this.speed = 1f;
         this.damage = this.damageMultiplier * baseDamage;
         this.maxHealth = this.healthMultiplier * baseHealth;

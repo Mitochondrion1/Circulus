@@ -300,10 +300,6 @@ public class Manager implements Runnable {
         return enemies;
     }
 
-    public int getEnemiesLeft() {
-        return this.enemies.size();
-    }
-
     public float getBoundLeft() {
         return boundLeft;
     }
@@ -328,14 +324,6 @@ public class Manager implements Runnable {
     // Add a projectile sourced from an enemy
     public void addEnemyProjectile(Projectile projectile) {
         enemyProjectiles.add(projectile);
-    }
-
-    public int directorCostSum() {
-        int sum = 0;
-        for (int i = 0; i < enemies.size(); i++) {
-            sum += enemies.get(i).getDirectorCost();
-        }
-        return sum;
     }
 
     public String getTime() {

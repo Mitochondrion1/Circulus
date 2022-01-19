@@ -55,10 +55,6 @@ public abstract class Enemy extends Entity implements Runnable {
         return this.position;
     }
 
-    public int getDirectorCost() {
-        return directorCost;
-    }
-
     public int getScorePoints() {
         return scorePoints;
     }
@@ -72,5 +68,12 @@ public abstract class Enemy extends Entity implements Runnable {
         this.baseHealth = health;
         this.baseDamage = damage;
         this.scorePoints = scorePoints;
+    }
+
+    protected void move() {
+        this.positionChange = Vector2.sub(position, manager.getPlayer().getPosition());
+        this.positionChange.setLength(waitTime / 1000f * this.speed);
+        this.position.setX(this.position.getX() + this.positionChange.getX());
+        this.position.setY(this.position.getY() + this.positionChange.getY());
     }
 }

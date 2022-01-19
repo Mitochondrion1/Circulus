@@ -48,5 +48,6 @@ public class LevelEndDialogFragment extends DialogFragment {
         // Continue if the dialog is dismissed
         super.onDismiss(dialog);
         ((MainActivity)getActivity()).setLevelEndDialogShown(false);
+        ((MainActivity)getActivity()).hideNavigation();
     }
 }
