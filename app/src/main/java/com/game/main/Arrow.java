@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 // Defines the arrows around the player which point toward enemies
-public class Arrow {
+public class Arrow implements Drawable {
     private Vector2 position;
     private MainView view;
     private Paint paint;
@@ -29,6 +29,7 @@ public class Arrow {
         this.paint.setAlpha(x);
     }
 
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawCircle(this.position.getX(), this.position.getY(),
                 view.getPixelsPerUnit() * 0.05f, this.paint);

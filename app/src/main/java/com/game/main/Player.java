@@ -5,8 +5,6 @@ import android.util.Log;
 
 // The class that represents the player
 public class Player extends Entity implements Runnable {
-    private Manager manager;
-
     private final int baseProjectileDelay = 20;
     private int projectileDelay;
     private int tick;

@@ -192,10 +192,6 @@ public class Manager implements Runnable {
         }
     }
 
-    public ArrayList<HealthPack> getHealthPacks() {
-        return healthPacks;
-    }
-
     public void addEnemy(Enemy enemy) {
         this.enemies.add(enemy);
     }

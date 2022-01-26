@@ -22,6 +22,7 @@ public abstract class Entity implements Runnable, Drawable {
     protected Paint paint;
     protected Thread thread;
     protected MainView view;
+    protected Manager manager;
 
     public Entity(Vector2 position, MainView view) {
         this.position = position;

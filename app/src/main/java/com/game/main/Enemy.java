@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 public abstract class Enemy extends Entity implements Runnable {
     protected Vector2 positionChange;
     protected boolean alive;
-    protected Manager manager;
     protected Arrow arrow;
 
     protected int directorCost;
