@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.settings_volume);
+        getSupportActionBar().setTitle(R.string.button_settings);
         currentView = 0;
         headsetVolume = findViewById(R.id.headsetVol);
         speakerVolume = findViewById(R.id.speakerVol);

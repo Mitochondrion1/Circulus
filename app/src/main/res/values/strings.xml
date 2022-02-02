@@ -15,7 +15,7 @@
     <string name="acc_sensitivity_text">Accelerometer Sensitivity</string>
     <string name="directions_text">Show movement and shot directions</string>
     <string name="credits_text">Created by Richard \"Mitochondrion\" Stroev</string>
-    <string name="repo_text">GitHub Repository: https://github.com/Mitochondrion1/GameProject</string>
+    <string name="repo_text">GitHub Repository: https://github.com/Mitochondrion1/Circulus</string>
     <string name="button_credits">Credits</string>
     <string name="direction_display_key">display_directions</string>
     <string name="dialog_game_over">You Ded!</string>
