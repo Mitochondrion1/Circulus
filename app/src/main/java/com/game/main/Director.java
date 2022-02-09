@@ -13,7 +13,6 @@ public class Director {
 
     public Director(Manager manager) {
         this.manager = manager;
-        Log.d("Costs", String.valueOf(costs[0]) + costs[1] + costs[2] + costs[3]);
     }
 
     // Set the amount of credits the director can use for enemy generation
@@ -62,17 +61,17 @@ public class Director {
 
     // Gives each enemy type a value
     private float generateValue(int cost) {
-        float constant = 0.05f;
-        return (float)Math.pow(constant / cost * this.initialCredits, 0.1 * cost);
+        float constant = 0.3f;
+        return (float)Math.pow(constant / cost * this.initialCredits, 0.05 * cost);
     }
 
     // Changes the values for enemies, so that the sum of all values for enemies that can be spawned is 1
     private void normalizeValues(float[] values, int x) {
         float sum = 0f;
-        for (int i = 0; i < x; i++) {
+        for (int i = 0; i <= x; i++) {
             sum += values[i];
         }
-        for (int j = 0; j < x; j++) {
+        for (int j = 0; j <= x; j++) {
             values[j] *= 1f / sum;
         }
     }
