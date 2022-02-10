@@ -36,6 +36,9 @@
         android:text="@string/repo_text"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
+        android:linksClickable="true"
+        android:autoLink="web"
+        android:textColorLink="#0000ff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
