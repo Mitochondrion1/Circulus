@@ -1,27 +1,47 @@
 package com.game.main;
 
-import android.util.Log;
-
 import java.util.Random;
 
-// The object responsible for enemy generation at the beginning of each level
+/**
+ * The object responsible for enemy generation at the beginning of each level
+ */
 public class Director {
+    /** The manager object associated with the director. */
     private Manager manager;
+    /**
+     * Costs of each enemy:
+     * costs[0] - The cost of a Shooter enemy.
+     * costs[1] - The cost of an Exploder enemy.
+     * costs[2] - The cost of a Laserman enemy.
+     * costs[3] - The cost of a Summoner enemy.
+     */
     private final int[] costs = {5, 10, 15, 20};
+    /** The amount of credits the director can use. */
     private int credits;
+    /** The amount of credits given to the director initially. Updates each level. */
     private int initialCredits;
 
+    /**
+     * Constructs a Director object.
+     * @param manager The manager to associate with the director.
+     */
     public Director(Manager manager) {
         this.manager = manager;
     }
 
-    // Set the amount of credits the director can use for enemy generation
+    /**
+     * Set the amount of credits the director can use for enemy generation.
+     * <p>
+     * @param credits The amount of credits to give the director.
+     */
     public void setCredits(int credits) {
         this.credits = credits;
         this.initialCredits = this.credits;
     }
 
-    // The method that generates the enemies
+    /**
+     * The method that generates the enemies.
+     */
     public void generateEnemies() {
         /*
          * Each enemy type gets a values based on its director cost and the initial
@@ -59,13 +79,23 @@ public class Director {
         }
     }
 
-    // Gives each enemy type a value
+    /**
+     * Gives each enemy type a value
+     * <p>
+     * @param cost  The cost of the enemy.
+     * @return      A value for a given enemy.
+     */
     private float generateValue(int cost) {
         float constant = 0.3f;
         return (float)Math.pow(constant / cost * this.initialCredits, 0.05 * cost);
     }
 
-    // Changes the values for enemies, so that the sum of all values for enemies that can be spawned is 1
+    /**
+     * Changes the values for enemies, so that the sum of all values for enemies that can be spawned is 1.
+     * <p>
+     * @param values    The values generated for each enemy type by the {@link #generateValue(int)} method.
+     * @param x         The index of the last enemy to normalize the values for.
+     */
     private void normalizeValues(float[] values, int x) {
         float sum = 0f;
         for (int i = 0; i <= x; i++) {
@@ -76,7 +106,11 @@ public class Director {
         }
     }
 
-    // Adds an enemy based on a generated number
+    /**
+     * Adds an enemy based on a generated number.
+     * <p>
+     * @param num The number of the enemy: 0 - Shooter; 1 - Exploder; 2 - Laserman; 3 - Summoner.
+     */
     private void addEnemy(int num) {
         Vector2 position;
         Random random = new Random();

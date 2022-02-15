@@ -3,23 +3,51 @@ package com.game.main;
 import android.graphics.Color;
 import android.util.Log;
 
-// The class that represents the player
+/**
+ * The player class.
+ */
 public class Player extends Entity implements Runnable {
+    /** The base tick delay between shots. */
     private final int baseProjectileDelay = 20;
+    /** The real tick delay between shots. */
     private int projectileDelay;
+    /** The current tick in the attack cycle. */
     private int tick;
 
-    // Multipliers for different values, used for upgrades
+    /** The health multiplier. */
     private float healthMultiplier;
+    /** The damage multiplier. */
     private float damageMultiplier;
+    /** The attack speed multiplier. */
     private float attackSpeedMultiplier;
 
-    // Touch/accelerometer values for calculating movement velocity and projectile shot direction
-    private float startX, startY, endX, endY;
-    private float shotStartX, shotStartY, shotEndX, shotEndY;
+    /** The start x of the movement touch gesture. */
+    private float startX;
+    /** The start y of the movement touch gesture. */
+    private float startY;
+    /** The end x of the movement touch gesture. */
+    private float endX;
+    /** The end y of the movement touch gesture. */
+    private float endY;
+    /** The start x of the shot touch gesture. */
+    private float shotStartX;
+    /** The start y of the shot touch gesture. */
+    private float shotStartY;
+    /** The end x of the shot touch gesture. */
+    private float shotEndX;
+    /** The end y of the shot touch gesture. */
+    private float shotEndY;
 
+    /** The real velocity of the player at a certain time, unaffected during velocity calculations in values. */
     private Vector2 trueVelocity;
 
+    /**
+     * Constructs a player object.
+     * <p>
+     * @param position  The initial position of the player.
+     * @param view      The main game view.
+     * @param manager   The manager object associated with the player.
+     */
     public Player(Vector2 position, MainView view, Manager manager) {
         super(position, view);
 
@@ -61,58 +89,106 @@ public class Player extends Entity implements Runnable {
         }
     }
 
-    public Vector2 getVelocity() {
-        return velocity;
-    }
-
-    public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
-    }
-
+    /**
+     * Get the position of the player.
+     * <p>
+     * @return Player's position.
+     */
     public Vector2 getPosition() {
         return position;
     }
 
+    /**
+     * Set the start x of the movement touch gesture.
+     * <p>
+     * @param startX The new value.
+     */
     public void setStartX(float startX) {
         this.startX = startX;
     }
 
+    /**
+     * Set the start y of the movement touch gesture.
+     * <p>
+     * @param startY The new value.
+     */
     public void setStartY(float startY) {
         this.startY = startY;
     }
 
+    /**
+     * Set the end x of the movement touch gesture.
+     * <p>
+     * @param endX The new value.
+     */
     public void setEndX(float endX) {
         this.endX = endX;
     }
 
+    /**
+     * Set the end y of the movement touch gesture.
+     * <p>
+     * @param endY The new value.
+     */
     public void setEndY(float endY) {
         this.endY = endY;
     }
 
+    /**
+     * Set the start x of the shot touch gesture.
+     * <p>
+     * @param shotStartX The new value.
+     */
     public void setShotStartX(float shotStartX) {
         this.shotStartX = shotStartX;
     }
 
+    /**
+     * Set the start y of the shot touch gesture.
+     * <p>
+     * @param shotStartY The new value.
+     */
     public void setShotStartY(float shotStartY) {
         this.shotStartY = shotStartY;
     }
 
+    /**
+     * Set the end x of the shot touch gesture.
+     * <p>
+     * @param shotEndX The new value.
+     */
     public void setShotEndX(float shotEndX) {
         this.shotEndX = shotEndX;
     }
 
+    /**
+     * Set the end y of the shot touch gesture.
+     * <p>
+     * @param shotEndY The new value.
+     */
     public void setShotEndY(float shotEndY) {
         this.shotEndY = shotEndY;
     }
 
+    /**
+     * Heals the player.
+     * <p>
+     * @param hp The amount of health to heal.
+     */
     public void heal(float hp) {
         this.health = Math.min(this.health + this.maxHealth * hp / 100f, this.maxHealth);
     }
 
+    /**
+     * Heals the player to full health.
+     */
     public void healToFull() {
         this.health = this.maxHealth;
     }
 
+    /**
+     * Defines the Player's behaviour
+     */
     @Override
     protected void behave() {
         // Calculate the desired velocity of the player
@@ -143,25 +219,37 @@ public class Player extends Entity implements Runnable {
         }
     }
 
-    // Set the current tick, required for shots
+    /**
+     * Sets the current tick int the attack cycle.
+     * <p>
+     * @param tick The new value.
+     */
     public void setTick(int tick) {
         this.tick = tick;
     }
 
-    // Normalize the projectile velocity
+    /**
+     * Returns a normalized projectile velocity vector.
+     * <p>
+     * @return The normalized vector.
+     */
     public Vector2 getProjectileVelocityNormalized() {
         Vector2 vel = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
         vel.setLength(1f);
         return vel;
     }
 
-    // Shoot a projectile
+    /**
+     * Shoots a projectile.
+     */
     public void summonProjectile() {
         Vector2 projVelocity = new Vector2(shotEndX - shotStartX, shotEndY - shotStartY);
         this.manager.addPlayerProjectile(new Projectile(this.damage, this.position, projVelocity, this.view));
     }
 
-    // Increase the maximum health of the player
+    /**
+     * Increases the maximum health of the player.
+     */
     public void increaseHealth() {
         float healthPercentage = this.health / this.maxHealth;
 
@@ -170,31 +258,36 @@ public class Player extends Entity implements Runnable {
         this.health = healthPercentage * this.maxHealth;
     }
 
-    // Increase the damage of the player
+    /**
+     * Increases the damage of the player.
+     */
     public void increaseDamage() {
         this.damageMultiplier += 0.4f;
         this.damage = this.damageMultiplier * this.baseDamage;
     }
 
-    // Increase the attack speed of the player
+    /**
+     * Increases the attack speed of the player.
+     */
     public void increaseAttackSpeed() {
         this.attackSpeedMultiplier *= 0.9f;
         this.projectileDelay = (int)Math.ceil(this.attackSpeedMultiplier * this.baseProjectileDelay);
     }
 
+    /**
+     * Stores the multipliers for a loaded game.
+     */
     public void saveMultipliers() {
         Store.saveFloat(view.getActivity().getApplicationContext(), R.string.damage_key, this.damageMultiplier);
         Store.saveFloat(view.getActivity().getApplicationContext(), R.string.health_key, this.healthMultiplier);
         Store.saveFloat(view.getActivity().getApplicationContext(), R.string.attack_speed_key, this.attackSpeedMultiplier);
     }
 
-    public void loadMultipliers() {
-        this.damageMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.damage_key, 1f);
-        this.healthMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.health_key, 1f);
-        this.attackSpeedMultiplier = Store.readFloat(this.view.getActivity().getApplicationContext(), R.string.attack_speed_key, 1f);
-    }
-
-    // Is the player out of the bounds of the map
+    /**
+     * Checks if the player is out of the map bounds.
+     * <p>
+     * @return True if out of bounds, otherwise false.
+     */
     private boolean isOutOfBounds() {
         return this.position.getX() - this.size / 2 < this.manager.getBoundLeft() ||
                 this.position.getX() + this.size / 2 > this.manager.getBoundRight() ||
@@ -202,6 +295,11 @@ public class Player extends Entity implements Runnable {
                 this.position.getY() + this.size / 2 > this.manager.getBoundBottom();
     }
 
+    /**
+     * Get the true velocity vector.
+     * <p>
+     * @return The true velocity vector.
+     */
     public Vector2 getTrueVelocity() {
         return trueVelocity;
     }

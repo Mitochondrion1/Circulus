@@ -4,26 +4,52 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-// Defines the Laserman enemy type
+/**
+ * Defines the Laserman enemy type. Shoots a beam that damages the player over time.
+ */
 public class Laserman extends Enemy {
-    private static final int cooldownTicks = 150;           // The amount of ticks the attack is on cool down
-    private static final int chargeTicks = 150;             // The amount of ticks it takes to charge the attack
-    private static final int finalChargeTicks = 75;         // The amount of ticks that the attack charges and doesn't change direction
-    private static final int shotTickLength = 50;           // The length of the attack in ticks
-    private static final float detectDistance = 2f;         // The distance from which an enemy detects the player
-    private static final float closestMoveDistance = 1.2f;  // The closest an enemy approaches to the player
-    private static final float maxShotDistance = 3f;        // The maximum distance from the player which can trigger a shot
+    /** The amount of ticks the attack is on cool down. */
+    private static final int cooldownTicks = 150;
+    /** The amount of ticks it takes to charge the attack. */
+    private static final int chargeTicks = 150;
+    /** The amount of ticks that the attack charges and doesn't change direction. */
+    private static final int finalChargeTicks = 75;
+    /** The length of the attack in ticks. */
+    private static final int shotTickLength = 50;
+    /** The distance from which an enemy detects the player. */
+    private static final float detectDistance = 2f;
+    /** The closest an enemy approaches to the player. */
+    private static final float closestMoveDistance = 1.2f;
+    /** The maximum distance from the player which can trigger a shot. */
+    private static final float maxShotDistance = 3f;
 
+    /** The direction of the shot. */
     private Vector2 shotDirection;
+    /** True if the enemy is charging the beam, otherwise false. */
     private boolean isCharging;
+    /** True if the enemy is in the final stage of charging the beam, otherwise false. */
     private boolean isFinalCharging;
+    /** True if the enemy is shooting the beam, otherwise false. */
     private boolean isShooting;
-    private boolean isOnCooldown;
+    /** True if the attack is on cool down, otherwise false. */
+    private boolean isOnCoolDown;
+    /** True if the enemy has detected the player, otherwise false. */
     private boolean detectedPlayer;
+    /** The current tick in the attack cycle. */
     private int tick;
 
-    private Paint laserPaint1, laserPaint2;
+    /** The paint of the beam if the enemy is charging the attack. */
+    private Paint laserPaint1;
+    /** The paint of the beam when the enemy shoots. */
+    private Paint laserPaint2;
 
+    /**
+     * Constructs a Laserman enemy.
+     * <p>
+     * @param position  The position of the enemy.
+     * @param manager   The manager associated with the enemy.
+     * @param view      The main game view.
+     */
     public Laserman(Vector2 position, Manager manager, MainView view) {
         super(position, manager, view);
 
@@ -34,7 +60,7 @@ public class Laserman extends Enemy {
         this.isCharging = false;
         this.isFinalCharging = false;
         this.isShooting = false;
-        this.isOnCooldown = false;
+        this.isOnCoolDown = false;
         this.tick = 0;
         this.paint.setColor(0xffa0a0a0);
 
@@ -47,13 +73,18 @@ public class Laserman extends Enemy {
         this.laserPaint2.setColor(Color.RED);
         this.laserPaint2.setStrokeWidth(10f);
 
-        this.assignBasicValues(15, 80f, 1f, 5);
+        this.assignBasicValues(80f, 1f, 5);
 
         this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;
         this.damage = baseDamage * (0.8f + 0.2f * this.manager.getLevel());
     }
 
+    /**
+     * Draw the enemy and its beam.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     @Override
     public void draw(Canvas canvas) {
         // Draw the shot of an enemy while the shot is charging
@@ -74,6 +105,9 @@ public class Laserman extends Enemy {
         super.draw(canvas);
     }
 
+    /**
+     * Defines the behavior of the Laserman.
+     */
     @Override
     protected void behave() {
         super.behave();
@@ -82,9 +116,9 @@ public class Laserman extends Enemy {
         if (!detectedPlayer && (distToPlayer <= detectDistance || this.health < this.maxHealth)) {
             // Trigger the enemy if close enough to the player or hit
             detectedPlayer = true;
-            isOnCooldown = true;
+            isOnCoolDown = true;
         }
-        if (isOnCooldown) {
+        if (isOnCoolDown) {
             // What happens when the enemy is on cool down
             this.tick++;
             if (distToPlayer > maxShotDistance) {
@@ -94,7 +128,7 @@ public class Laserman extends Enemy {
                 move();
             }
             if (this.tick == cooldownTicks && distToPlayer <= maxShotDistance) {
-                isOnCooldown = false;
+                isOnCoolDown = false;
                 isCharging = true;
                 this.tick = 0;
             }
@@ -132,7 +166,7 @@ public class Laserman extends Enemy {
             }
             if (this.tick == shotTickLength) {
                 isShooting = false;
-                isOnCooldown = true;
+                isOnCoolDown = true;
                 this.tick = 0;
             }
         }

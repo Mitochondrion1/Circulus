@@ -11,19 +11,20 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-// The service that plays music while in MainActivity
+/**
+ * A service that plays music during gameplay.
+ */
 public class MusicService extends Service {
-    private final String TAG = "MusicService";
-
-    private static final int NOTIFICATION_ID = 1;
+    /** The media player object. */
     private MediaPlayer mPlayer;
-    private int mStartID;
 
-    // Declare the broadcast receiver
+    /** The broadcast receiver. */
     HeadsetIntentReceiver receiver;
 
-    // The volume values
-    private int headsetVolume, speakerVolume;
+    /** The headset volume value. */
+    private int headsetVolume;
+    /** The speaker volume value. */
+    private int speakerVolume;
 
     @Override
     public void onCreate() {
@@ -44,12 +45,16 @@ public class MusicService extends Service {
         }
     }
 
-    // Set the volume to be the headset volume
+    /**
+     * Set the volume to be the headset volume.
+     */
     public void setVolumeHeadset(){
         mPlayer.setVolume(headsetVolume / 100f, headsetVolume / 100f);
     }
 
-    // Set the volume to be the speaker volume
+    /**
+     * Set the volume to be the speaker volume.
+     */
     public void setVolumeSpeaker(){
         mPlayer.setVolume(speakerVolume / 100f, speakerVolume / 100f);
     }
@@ -58,9 +63,6 @@ public class MusicService extends Service {
     public int onStartCommand(Intent intent, int flags, int startid) {
 
         if (null != mPlayer) {
-            // ID for this start command
-            mStartID = startid;
-
             if (mPlayer.isPlaying()) {
                 // Rewind to beginning of song
                 mPlayer.seekTo(0);
@@ -89,8 +91,12 @@ public class MusicService extends Service {
         stopForeground(true);
     }
 
+    /**
+     * Update the state for the volume (for when a headset is plugged/unplugged).
+     * <p>
+     * @param state The state as it is received from the broadcast receiver.
+     */
     private void updateState(String state) {
-        // Update the state for the volume (for when a headset is plugged/unplugged)
         Toast.makeText(this, state, Toast.LENGTH_LONG).show();
         if (state.equals("Plugged")) {
             setVolumeHeadset();
@@ -100,7 +106,9 @@ public class MusicService extends Service {
         }
     }
 
-    // The broadcast receiver that receives a headset plug/unplug broadcast
+    /**
+     * The broadcast receiver that receives a headset plug/unplug broadcast.
+     */
     public class HeadsetIntentReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

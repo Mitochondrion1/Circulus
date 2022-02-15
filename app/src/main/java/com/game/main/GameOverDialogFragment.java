@@ -8,13 +8,18 @@ import android.view.View;
 
 import androidx.fragment.app.DialogFragment;
 
-// Defines the dialog that pops up when the game is over
+/**
+ * The dialog that is shown when the game is over.
+ */
 public class GameOverDialogFragment extends DialogFragment {
+    /** True if the dialog has been dismissed, otherwise false. */
     private boolean dismissed;
 
+    /**
+     * Builds the dialog.
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Build the dialog
         dismissed = true;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_game_over)
@@ -39,7 +44,9 @@ public class GameOverDialogFragment extends DialogFragment {
         return alertDialog;
     }
 
-    // Return to menu when the dialog is dismissed
+    /**
+     * Return to menu when the dialog is dismissed.
+     */
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);

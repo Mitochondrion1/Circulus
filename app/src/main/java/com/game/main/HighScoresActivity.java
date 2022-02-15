@@ -6,7 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.TextView;
 
-// The activity that displays high scores
+/**
+ * An activity that displays high scores.
+ */
 public class HighScoresActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

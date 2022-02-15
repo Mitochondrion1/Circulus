@@ -15,23 +15,36 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
-// The main game activity
+/**
+ * The main game activity, where the game itself runs.
+ */
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
+    /** The main game view. */
     private MainView view;
+    /** The intent to activate the music service. */
     private Intent musicServiceIntent;
+    /** The resolution of the display. */
     private Vector2 displaySize;
+    /** True if accelerometer mode is activated, otherwise false. */
     private boolean accelerometerMode;
+    /** True if the level end dialog is displayed, otherwise false. */
     private boolean levelEndDialogShown;
+    /** A string that represents the text displayed in the level end dialog. */
     private String increasedValueString;
 
-    // Accelerometer parameters
+    /** The accelerometer sensitivity, as it was selected in the settings. */
     private int accSensitivity;
+    /** The time between accelerometer updates. */
     private static final int UPDATE_THRESHOLD = 15;
+    /** The sensor manager. */
     private SensorManager mSensorManager;
+    /** The accelerometer sensor. */
     private Sensor mAccelerometer;
 
+    /** The time of the last accelerometer update. */
     private long mLastUpdate;
 
+    /** True if the user selected to begin a new game, otherwise false. */
     private static boolean newGame = false;
 
     @Override
@@ -76,8 +89,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    private boolean move = false, shoot = false;
-    private int moveId, shotId;
+    /** True if a touch gesture was detected and the player should move, otherwise false. */
+    private boolean move = false;
+    /** True if a touch gesture was detected and the player should shoot, otherwise false. */
+    private boolean shoot = false;
+    /** The id of the move gesture. */
+    private int moveId;
+    /** The id of the shot gesture. */
+    private int shotId;
+
+    /**
+     * Manages touch events.
+     * <p>
+     * @param event The touch event.
+     * @return Returned value has no meaning.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isDestroyed()) {
@@ -231,6 +257,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         view = null;
     }
 
+    /**
+     * Detects accelerometer changes, and acts respectively.
+     * <p>
+     * @param event The sensor event.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         // Track changes in accelerometer values and respond respectively
@@ -262,18 +293,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    // Restart the game by replacing the view with a new one
+    /**
+     * Restarts the game.
+     */
     public void restartGame() {
         this.view = new MainView(this);
         setContentView(this.view);
     }
 
-    // Destroy the activity and return to menu
+
+    /**
+     * Returns to main menu by destroying the activity.
+     */
     public void returnToMenu() {
         finish();
     }
 
-    // Show the game over dialog
+
+    /**
+     * Displays the game over dialog.
+     */
     public void showGameOverDialog() {
         saveHighScores();
         DialogFragment dialogFragment = new GameOverDialogFragment();
@@ -284,7 +323,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    // Show the level end dialog
+    /**
+     * Displays the level end dialog.
+     */
     public void showLevelEndDialog() {
         levelEndDialogShown = true;
         DialogFragment dialogFragment = new LevelEndDialogFragment();
@@ -295,17 +336,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    // Is the level end dialog still shown
+    /**
+     * Returns whether the level end dialog is shown.
+     * <p>
+     * @return True if the level end dialog is shown, otherwise false.
+     */
     public boolean isLevelEndDialogShown() {
         return this.levelEndDialogShown;
     }
 
-    // Set the value for the boolean that represents whether the level end dialog is shown
+    /**
+     * Set the value for the boolean that represents whether the level end dialog is shown.
+     * <p>
+     * @param levelEndDialogShown True if the level end dialog is shown, false otherwise.
+     */
     public void setLevelEndDialogShown(boolean levelEndDialogShown) {
         this.levelEndDialogShown = levelEndDialogShown;
     }
 
-    // Save high scores
+    /**
+     * Save high scores.
+     */
     private void saveHighScores() {
         if (this.view.getManager().getLevel() > Store.readInt(getApplicationContext(), R.string.highest_level_key, 0)) {
             Store.saveInt(getApplicationContext(), R.string.highest_level_key, this.view.getManager().getLevel());
@@ -318,28 +369,54 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    // Get the message string for an increased value
+    /**
+     * Get the message string for an increased value.
+     * <p>
+     * @return The string for increased value.
+     */
     public String getIncreasedValueString() {
         return increasedValueString;
     }
 
-    // Set the message  for an increased value
+    /**
+     * Set the message for an increased value.
+     * <p>
+     * @param string The desire message.
+     */
     public void setIncreasedValueString(String string) {
         this.increasedValueString = string;
     }
 
+    /**
+     * Gets the game manager object.
+     * <p>
+     * @return The manager object associated with the view.
+     */
     public Manager getManager() {
         return this.view.getManager();
     }
 
+    /**
+     * Set the value for the new game field.
+     * <p>
+     * @param bool True if it is a new game, false if it is a loaded game.
+     */
     public static void setNewGame(boolean bool) {
         newGame = bool;
     }
 
+    /**
+     * Get the value of the new game field.
+     * <p>
+     * @return True if new game, false if loaded game.
+     */
     public static boolean getNewGame() {
         return newGame;
     }
 
+    /**
+     * Hides the navigation bar.
+     */
     public void hideNavigation() {
         View decorView = getWindow().getDecorView();
         int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -351,6 +428,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         decorView.setSystemUiVisibility(flags);
     }
 
+    /**
+     * Find the real display size (when navigation is hidden).
+     * <p>
+     * @return The display size when the navigation bar is hidden.
+     */
     public Vector2 getRealDisplaySize() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();

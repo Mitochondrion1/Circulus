@@ -6,33 +6,64 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 import java.util.Random;
 
-// The object that is responsible for running the game world
+/**
+ * The object that is responsible for running the main thread of the game world.
+ */
 public class Manager implements Runnable {
+    /** The current level. */
     private int level;
+    /** The current amount of kills the player has in the current game. */
     private int kills;
+    /** The current player score. */
     private int score;
 
     // Map bounds parameters
+    /** The left bound of the map. */
     private float boundLeft;
+    /** The upper bound of the map. */
     private float boundTop;
+    /** The right bound of the map */
     private float boundRight;
+    /** The bottom bound of the map.  */
     private float boundBottom;
+    /** The paint of the map bounds. */
     private Paint boundPaint;
 
+    /** The player object. */
     private Player player;
+    /** A list of the enemies currently alive. */
     private ArrayList<Enemy> enemies;
+    /** A list of all player projectiles currently on the map. */
     private ArrayList<Projectile> playerProjectiles;
+    /** A list of all enemy projectiles currently on the map. */
     private ArrayList<Projectile> enemyProjectiles;
+    /** A list of all health pack currently on the map. */
     private ArrayList<HealthPack> healthPacks;
+    /** The director object that generates the enemies. */
     private Director director;
+    /** The timer object. */
     private Timer timer;
+    /** The main view of the game. */
     private MainView view;
+    /** The paint of the lines in the background. */
     private Paint bgLinePaint;
+    /** The paint of the background. */
     private Paint bgPaint;
+    /** The paint of the arrows. */
     private Paint arrowPaint;
+    /** The thread of the Manager object. */
     private Thread thread;
+    /** A Random object used for generating random values. */
     private Random random;
 
+    /**
+     * Constructor for the manager object.
+     * <p>
+     * @param view  The view to associate with the manager.
+     * @param level The initial level obtained from the view.
+     * @param kills The initial kills obtained from the view.
+     * @param score The initial score obtained from the view.
+     */
     public Manager(MainView view, int level, int kills, int score) {
         if (MainActivity.getNewGame()) {
             timer = new Timer(0);
@@ -76,6 +107,9 @@ public class Manager implements Runnable {
         this.thread.start();
     }
 
+    /**
+     * The code executed by the thread.
+     */
     @Override
     public void run() {
         int maxHealthPacks = 5;
@@ -192,25 +226,40 @@ public class Manager implements Runnable {
         }
     }
 
+    /**
+     * Adds an enemy to the enemy list.
+     * <p>
+     * @param enemy The enemy to add the the list.
+     */
     public void addEnemy(Enemy enemy) {
         this.enemies.add(enemy);
     }
 
-    // Add a health pack at a random spot within the map bounds
+    /**
+     * Add a health pack at a random spot within the map bounds.
+     */
     private void addHealthPack() {
         Vector2 pos = new Vector2(this.random.nextFloat() * (this.boundRight - this.boundLeft) + this.boundLeft,
                 this.random.nextFloat() * (this.boundBottom - this.boundTop) + this.boundTop);
         this.healthPacks.add(new HealthPack(pos, this.view));
     }
 
-    // Draw all enemies
+    /**
+     * Draw all enemies.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     public void drawEnemies(Canvas canvas) {
         for (int i = 0; i < this.enemies.size(); i++) {
             this.enemies.get(i).draw(canvas);
         }
     }
 
-    // Draw all projectiles
+    /**
+     * Draw all projectiles.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     public void drawProjectiles(Canvas canvas) {
         for (int i = 0; i < playerProjectiles.size(); i++) {
             playerProjectiles.get(i).draw(canvas);
@@ -220,14 +269,22 @@ public class Manager implements Runnable {
         }
     }
 
-    // Draw all health packs
+    /**
+     * Draw all health packs.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     public void drawHealthPacks(Canvas canvas) {
         for (int i = 0; i < healthPacks.size(); i++) {
             healthPacks.get(i).draw(canvas);
         }
     }
 
-    // Draw the tiled background
+    /**
+     * Draw the tiled background.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     public void drawBackground(Canvas canvas) {
         float x = player.getPosition().getX(), y = player.getPosition().getY();
         float heightInUnits = this.view.getDisplaySize().getY() / this.view.getDisplaySize().getX() *
@@ -255,7 +312,11 @@ public class Manager implements Runnable {
         }
     }
 
-    // Draw the map bounds
+    /**
+     * Draw the map bounds.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     public void drawBounds(Canvas canvas) {
         float x = player.getPosition().getX(), y = player.getPosition().getY();
         canvas.drawRect(0f, 0f,
@@ -272,61 +333,127 @@ public class Manager implements Runnable {
                 view.getDisplaySize().getY(), boundPaint);
     }
 
+    /**
+     * Get the current level.
+     * <p>
+     * @return The current level.
+     */
     public int getLevel() {
         return level;
     }
 
+    /**
+     * Get the current amount of kills.
+     * <p>
+     * @return The current kills.
+     */
     public int getKills() {
         return kills;
     }
 
+    /**
+     * Get the current score.
+     * <p>
+     * @return The current score.
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Get the player object.
+     * <p>
+     * @return The player object.
+     */
     public Player getPlayer() {
         return this.player;
     }
 
+    /**
+     * Get the main view of the game.
+     * <p>
+     * @return The main game view.
+     */
     public MainView getView() {
         return view;
     }
 
+    /**
+     * Get the list of all enemies.
+     * <p>
+     * @return The list of all enemies.
+     */
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
+    /**
+     * Get the left bound of the map.
+     * <p>
+     * @return The left map bound.
+     */
     public float getBoundLeft() {
         return boundLeft;
     }
 
+    /**
+     * Get the upper bound of the map.
+     * <p>
+     * @return The upper map bound.
+     */
     public float getBoundTop() {
         return boundTop;
     }
 
+    /**
+     * Get the right bound of the map.
+     * <p>
+     * @return The right map bound.
+     */
     public float getBoundRight() {
         return boundRight;
     }
 
+    /**
+     * Get the bottom bound of the map.
+     * <p>
+     * @return The bottom map bound.
+     */
     public float getBoundBottom() {
         return boundBottom;
     }
 
-    // Add a projectile sourced from the player
+    /**
+     * Add a projectile to the player projectile list.
+     * <p>
+     * @param projectile The projectile to add.
+     */
     public void addPlayerProjectile(Projectile projectile) {
         playerProjectiles.add(projectile);
     }
 
-    // Add a projectile sourced from an enemy
+    /**
+     * Add a projectile to the enemy projectile list.
+     * <p>
+     * @param projectile The projectile to add.
+     */
     public void addEnemyProjectile(Projectile projectile) {
         enemyProjectiles.add(projectile);
     }
 
+    /**
+     *
+     * @return The current time of the timer in string format.
+     */
     public String getTime() {
         return timer.toString();
     }
 
-    public long getTimeMilis() {
-        return timer.getMilis();
+    /**
+     *
+     * @return The current time of the timer in milliseconds.
+     */
+    public long getTimeMillis() {
+        return timer.getMillis();
     }
 }

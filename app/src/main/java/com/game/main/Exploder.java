@@ -4,14 +4,27 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-// Defines the Exploder enemy type
+/**
+ * Defines the Exploder enemy type. Explodes when close to the player. Damages the player are in the explosion AoE.
+ */
 public class Exploder extends Enemy {
+    /** True if the explosion has been triggered already, otherwise false. */
     private boolean exploding;
+    /** The amount of ticks left until the explosion. */
     private int explosionCountdown;
+    /** The radius of the explosion AoE. */
     private float aoeRadius;
 
+    /** The paint of the AoE. */
     private Paint aoePaint;
 
+    /**
+     * Constructs an Exploder enemy.
+     * <p>
+     * @param position  The position of the enemy.
+     * @param manager   The manager associated with the enemy.
+     * @param view      The main game view.
+     */
     public Exploder(Vector2 position, Manager manager, MainView view) {
         super(position, manager, view);
 
@@ -26,13 +39,18 @@ public class Exploder extends Enemy {
         this.aoePaint.setColor(Color.CYAN);
         this.aoePaint.setAlpha(0);
 
-        this.assignBasicValues(10, 40f, 20f, 2);
+        this.assignBasicValues(40f, 20f, 2);
 
         this.damage = baseDamage * (0.8f + 0.2f * this.manager.getLevel());
         this.health = baseHealth * (0.9f + 0.1f * this.manager.getLevel() * this.manager.getLevel());
         this.maxHealth = this.health;
     }
 
+    /**
+     * Draws the enemy.
+     * <p>
+     * @param canvas The canvas used for drawing.
+     */
     @Override
     public void draw(Canvas canvas) {
         canvas.drawCircle(this.findPixelPosition().getX(), this.findPixelPosition().getY(),
@@ -40,12 +58,17 @@ public class Exploder extends Enemy {
         super.draw(canvas);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAlive() {
         return this.alive;
     }
 
-    // Define the behavior of the Exploder
+    /**
+     * Defines the behavior of the Exploder.
+     */
     @Override
     protected void behave() {
         // Define the movement of the Exploder: homing the player from any distance

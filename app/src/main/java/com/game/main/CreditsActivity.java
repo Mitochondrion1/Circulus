@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
-// The activity that displays credits
+/**
+ * The activity that displays credits.
+ */
 public class CreditsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

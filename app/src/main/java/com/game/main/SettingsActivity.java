@@ -10,14 +10,22 @@ import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
-// The settings activity
+/**
+ * The activity that allows to change settings.
+ */
 public class SettingsActivity extends AppCompatActivity {
-    // Declare settings widgets
-    private SeekBar headsetVolume, speakerVolume;
-    private Switch accSwitch, dirSwitch;
+    /** Headset volume slider. */
+    private SeekBar headsetVolume;
+    /** Speaker volume slider. */
+    private SeekBar speakerVolume;
+    /** Accelerometer mode switch. */
+    private Switch accSwitch;
+    /** Direction display switch. */
+    private Switch dirSwitch;
+    /** Accelerometer sensitivity slider. */
     private SeekBar accSensitivity;
 
-    // A numeric value for the current view: 0 = volume_settings, 1 = accessibility_settings
+    /** A value representing the current layout: 0 - volume, 1 - accessibility. */
     private int currentView;
 
     @Override
@@ -35,6 +43,12 @@ public class SettingsActivity extends AppCompatActivity {
         speakerVolume.setProgress(Store.readInt(getApplicationContext(), R.string.speaker_volume_key, 100));
     }
 
+    /**
+     * Inflates the options menu.
+     * <p>
+     * @param menu  The menu to inflate.
+     * @return      true (has no meaning).
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu
@@ -43,6 +57,12 @@ public class SettingsActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Defines what happens when an options menu item is selected.
+     * <p>
+     * @param item  The menu item that is selected.
+     * @return      Returned value has no meaning.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle menu item selection
@@ -100,7 +120,10 @@ public class SettingsActivity extends AppCompatActivity {
         saveSettings();
     }
 
-    // Save settings to shared preferences
+
+    /**
+     * Saves the settings.
+     */
     private void saveSettings() {
         if (currentView == 0) {
             Store.saveInt(getApplicationContext(), R.string.headset_volume_key, headsetVolume.getProgress());

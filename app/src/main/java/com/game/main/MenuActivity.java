@@ -10,7 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-// The menu activity
+/**
+ * The main menu activity.
+ */
 public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +22,11 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    // Start game (go to MainActivity)
+    /**
+     * Start the game.
+     * <p>
+     * @param view The "Play" button.
+     */
     public void play(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         PopupMenu popup = new PopupMenu(this, findViewById(R.id.play_button));
@@ -51,20 +52,31 @@ public class MenuActivity extends AppCompatActivity {
     }
 
 
-
-    // Open game settings (go to SettingsActivity)
+    /**
+     * Open settings.
+     * <p>
+     * @param view The "Settings" button.
+     */
     public void openSettings(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    // Show game credits (go to CreditsActivity)
+    /**
+     * Show credits.
+     * <p>
+     * @param view The "Credits" button.
+     */
     public void showCredits(View view) {
         Intent intent = new Intent(this, CreditsActivity.class);
         startActivity(intent);
     }
 
-    // Show high scores (go to HighScoreActivity)
+    /**
+     * Show high scores.
+     * <p>
+     * @param view The "High Scores" button.
+     */
     public void showHighScores(View view) {
         Intent intent = new Intent(this, HighScoresActivity.class);
         startActivity(intent);
