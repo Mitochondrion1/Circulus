@@ -1,0 +1,80 @@
+package com.game.main.database;
+
+public class GameModel {
+    private int id;
+    private String date;
+    private String time;
+    private int level;
+    private int kills;
+    private int score;
+
+    public GameModel(int id, String date, String time, int level, int kills, int score) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.level = level;
+        this.kills = kills;
+        this.score = score;
+    }
+
+    public GameModel() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return "Game #" + id + ":\n" +
+                "Played on " + date + '\n' +
+                "Length: " + time + "\n" +
+                "Level reached: " + level + "\n" +
+                "Total kills: " + kills + "\n" +
+                "Score: " + score;
+    }
+}

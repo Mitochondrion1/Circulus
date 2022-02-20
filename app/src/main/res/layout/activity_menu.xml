@@ -9,57 +9,82 @@
     tools:context=".MenuActivity">
 
     <Button
+        android:id="@+id/high_scores_button2"
+        android:layout_width="163dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginEnd="284dp"
+        android:layout_marginBottom="80dp"
+        android:onClick="openGamesHistory"
+        android:text="@string/button_games_history"
+        android:textColor="#ffffff"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/credits_button" />
+
+    <Button
         android:id="@+id/settings_button"
         android:layout_width="163dp"
         android:layout_height="46dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="197dp"
         android:onClick="openSettings"
         android:text="@string/button_settings"
         android:textColor="#ffffff"
         app:backgroundTint="#2196F3"
-        app:layout_constraintBottom_toTopOf="@+id/credits_button"
-        app:layout_constraintEnd_toEndOf="@+id/play_button"
-        app:layout_constraintStart_toStartOf="@+id/play_button"
-        app:layout_constraintTop_toBottomOf="@+id/play_button" />
+        app:layout_constraintBottom_toTopOf="@+id/high_scores_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/play_button"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
         android:id="@+id/credits_button"
         android:layout_width="163dp"
         android:layout_height="46dp"
+        android:layout_marginStart="197dp"
+        android:layout_marginEnd="11dp"
         android:onClick="showCredits"
         android:text="@string/button_credits"
         android:textColor="#ffffff"
         app:backgroundTint="#2196F3"
-        app:layout_constraintBottom_toTopOf="@+id/high_scores_button"
-        app:layout_constraintEnd_toEndOf="@+id/settings_button"
-        app:layout_constraintStart_toStartOf="@+id/settings_button"
-        app:layout_constraintTop_toBottomOf="@+id/settings_button" />
+        app:layout_constraintBottom_toTopOf="@+id/high_scores_button2"
+        app:layout_constraintEnd_toStartOf="@+id/high_scores_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_button" />
 
     <Button
         android:id="@+id/high_scores_button"
         android:layout_width="163dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginEnd="197dp"
         android:onClick="showHighScores"
         android:text="@string/high_scores_text"
         android:textColor="#ffffff"
         app:backgroundTint="#2196F3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/credits_button"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/credits_button"
-        app:layout_constraintTop_toBottomOf="@+id/credits_button" />
+        app:layout_constraintBottom_toTopOf="@+id/high_scores_button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/credits_button"
+        app:layout_constraintTop_toBottomOf="@+id/settings_button" />
 
     <Button
         android:id="@+id/play_button"
         android:layout_width="163dp"
         android:layout_height="46dp"
+        android:layout_marginStart="197dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="11dp"
         android:onClick="play"
         android:text="@string/button_play"
         android:textColor="#FFFFFF"
         app:backgroundTint="#2196F3"
-        app:layout_constraintBottom_toTopOf="@+id/settings_button"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintBottom_toTopOf="@+id/credits_button"
+        app:layout_constraintEnd_toStartOf="@+id/settings_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <ImageView

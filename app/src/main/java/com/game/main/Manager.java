@@ -3,7 +3,12 @@ package com.game.main;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.game.main.database.DatabaseHelper;
+import com.game.main.database.GameModel;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -222,6 +227,11 @@ public class Manager implements Runnable {
         Store.saveFloat(view.getActivity().getApplicationContext(), R.string.health_key, 1f);
         Store.saveFloat(view.getActivity().getApplicationContext(), R.string.attack_speed_key, 1f);
         if (!this.view.getActivity().isDestroyed()) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            GameModel model = new GameModel(-1, dateFormat.format(date), timer.toString(), level, kills, score);
+            DatabaseHelper databaseHelper = new DatabaseHelper(view.getActivity().getApplicationContext());
+            databaseHelper.addOne(model);
             this.view.getActivity().showGameOverDialog();
         }
     }

@@ -81,4 +81,9 @@ public class MenuActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HighScoresActivity.class);
         startActivity(intent);
     }
+
+    public void openGamesHistory(View view) {
+        Intent intent = new Intent(this, GameHistoryActivity.class);
+        startActivity(intent);
+    }
 }

@@ -9,26 +9,24 @@
         android:roundIcon="@mipmap/project_icon_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.GameProject">
-        <activity
-            android:name="com.game.main.HighScoresActivity" />
-        <activity
-            android:name="com.game.main.CreditsActivity" />
-        <activity
-            android:name="com.game.main.SettingsActivity" />
+        <activity android:name=".GameHistoryActivity"></activity>
+        <activity android:name=".HighScoresActivity" />
+        <activity android:name=".CreditsActivity" />
+        <activity android:name=".SettingsActivity" />
 
         <service
-            android:name="com.game.main.MusicService"
+            android:name=".MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name="com.game.main.MenuActivity">
+        <activity android:name=".MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.game.main.MainActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
