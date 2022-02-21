@@ -7,14 +7,16 @@ public class GameModel {
     private int level;
     private int kills;
     private int score;
+    private boolean favorite;
 
-    public GameModel(int id, String date, String time, int level, int kills, int score) {
+    public GameModel(int id, String date, String time, int level, int kills, int score, boolean favorite) {
         this.id = id;
         this.date = date;
         this.time = time;
         this.level = level;
         this.kills = kills;
         this.score = score;
+        this.favorite = favorite;
     }
 
     public GameModel() {
@@ -66,6 +68,14 @@ public class GameModel {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     @Override

@@ -229,7 +229,7 @@ public class Manager implements Runnable {
         if (!this.view.getActivity().isDestroyed()) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
-            GameModel model = new GameModel(-1, dateFormat.format(date), timer.toString(), level, kills, score);
+            GameModel model = new GameModel(-1, dateFormat.format(date), timer.toString(), level, kills, score, false);
             DatabaseHelper databaseHelper = new DatabaseHelper(view.getActivity().getApplicationContext());
             databaseHelper.addOne(model);
             this.view.getActivity().showGameOverDialog();
