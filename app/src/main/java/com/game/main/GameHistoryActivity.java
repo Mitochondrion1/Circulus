@@ -1,6 +1,5 @@
 package com.game.main;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -83,11 +82,11 @@ public class GameHistoryActivity extends AppCompatActivity {
     private void showGamesOnListView(DatabaseHelper databaseHelper) {
         if (favoritesSwitch.isChecked()) {
             gameArrayAdapter = new ArrayAdapter<>(GameHistoryActivity.this,
-                    android.R.layout.simple_list_item_1, databaseHelper.getFavorites());
+                    android.R.layout.simple_list_item_1, databaseHelper.getGames(1));
         }
         else {
             gameArrayAdapter = new ArrayAdapter<>(GameHistoryActivity.this,
-                    android.R.layout.simple_list_item_1, databaseHelper.getEverything());
+                    android.R.layout.simple_list_item_1, databaseHelper.getGames(0));
         }
         lvGames.setAdapter(gameArrayAdapter);
     }

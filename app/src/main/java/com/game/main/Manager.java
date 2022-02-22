@@ -145,8 +145,12 @@ public class Manager implements Runnable {
                             }
                         }
                     }
+                    // If an enemy is killed, remove it and increase score
                     if (enemies.get(i) != null && !enemies.get(i).isAlive()) {
-                        score += enemies.get(i).getScorePoints();
+                        // Check that the enemy isn't an Exploder that exploded to increase score
+                        if (!(enemies.get(i) instanceof Exploder && enemies.get(i).getHealth() > 0)) {
+                            score += enemies.get(i).getScorePoints();
+                        }
                         enemies.remove(i);
                         i--;
                         this.kills++;
@@ -466,4 +470,5 @@ public class Manager implements Runnable {
     public long getTimeMillis() {
         return timer.getMillis();
     }
+
 }

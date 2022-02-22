@@ -22,7 +22,7 @@ public abstract class Entity implements Runnable, Drawable {
     protected Vector2 velocity;
     /** The speed of the entity (scalar). */
     protected float speed;
-    /** The real health of the entity. */
+    /** The current health of the entity. */
     protected float health;
     /** The maximum health of the entity. */
     protected float maxHealth;
@@ -95,6 +95,15 @@ public abstract class Entity implements Runnable, Drawable {
      */
     public float getSize() {
         return this.size;
+    }
+
+    /**
+     * Get the current health of the entity.
+     * <p>
+     * @return Entity's current health.
+     */
+    public float getHealth() {
+        return health;
     }
 
     /**
