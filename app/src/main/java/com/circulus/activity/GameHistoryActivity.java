@@ -18,11 +18,18 @@ import androidx.appcompat.widget.PopupMenu;
 import com.circulus.main.R;
 import com.circulus.database.*;
 
+/**
+ * Displays finished games that are stored in a database
+ */
 public class GameHistoryActivity extends AppCompatActivity {
+    /** Toggle to display favorite games. */
     private Switch favoritesSwitch;
+    /** The list view that displays games. */
     private ListView lvGames;
 
+    /** The database helper object. */
     private DatabaseHelper databaseHelper;
+    /** The array adapter for the list view. */
     private ArrayAdapter<GameModel> gameArrayAdapter;
 
     @Override
@@ -80,6 +87,11 @@ public class GameHistoryActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows games on the list view.
+     * <p>
+     * @param databaseHelper The database helper object.
+     */
     private void showGamesOnListView(DatabaseHelper databaseHelper) {
         if (favoritesSwitch.isChecked()) {
             gameArrayAdapter = new ArrayAdapter<>(GameHistoryActivity.this,
