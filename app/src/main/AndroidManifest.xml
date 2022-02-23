@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.game.main">
+    package="com.circulus.main">
 
     <application
         android:allowBackup="true"
@@ -9,26 +9,26 @@
         android:roundIcon="@mipmap/project_icon_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat.DayNight">
-        <activity android:name=".GameHistoryActivity"
+        <activity android:name="com.circulus.activity.GameHistoryActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity android:name=".HighScoresActivity" />
-        <activity android:name=".CreditsActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name="com.circulus.activity.HighScoresActivity" />
+        <activity android:name="com.circulus.activity.CreditsActivity" />
+        <activity android:name="com.circulus.activity.SettingsActivity" />
 
         <service
-            android:name=".MusicService"
+            android:name="com.circulus.playtime.MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MenuActivity">
+        <activity android:name="com.circulus.activity.MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name="com.circulus.activity.MainActivity" />
     </application>
 
 </manifest>

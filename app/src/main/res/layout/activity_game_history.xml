@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:orientation="horizontal"
-    tools:context=".GameHistoryActivity">
+    tools:context="com.circulus.activity.GameHistoryActivity">
 
     <ListView
         android:id="@+id/lvGames"
