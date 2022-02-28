@@ -1,7 +1,6 @@
 package com.circulus.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,7 +62,6 @@ public class GameHistoryActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.favorite_game:
-                                Log.d("Favorite", String.valueOf(clickedGame.isFavorite()));
                                 databaseHelper.toggleFavorite(clickedGame);
                                 if (clickedGame.isFavorite()) {
                                     Toast.makeText(GameHistoryActivity.this, "Added to favorites", Toast.LENGTH_SHORT).show();

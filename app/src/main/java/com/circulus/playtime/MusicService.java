@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.circulus.main.R;
@@ -115,7 +114,6 @@ public class MusicService extends Service {
     public class HeadsetIntentReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Receiver", "received broadcast");
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
                 switch (state) {
