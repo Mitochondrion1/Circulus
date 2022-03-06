@@ -1,0 +1,155 @@
+<html>
+<head>
+<title>MusicService.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+.s5 { color: #77b767; font-style: italic;}
+.s6 { color: #629755; font-weight: bold; font-style: italic;}
+.s7 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MusicService.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.playtime</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.app.Service</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.BroadcastReceiver</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.IntentFilter</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.media.MediaPlayer</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.net.ConnectivityManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.IBinder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Store</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* A service that plays music during gameplay.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">MusicService </span><span class="s0">extends </span><span class="s1">Service {</span>
+    <span class="s2">/** The media player object. */</span>
+    <span class="s0">private </span><span class="s1">MediaPlayer mPlayer</span><span class="s0">;</span>
+
+    <span class="s2">/** The broadcast receiver. */</span>
+    <span class="s1">HeadsetIntentReceiver receiver</span><span class="s0">;</span>
+
+    <span class="s2">/** The headset volume value. */</span>
+    <span class="s0">private int </span><span class="s1">headsetVolume</span><span class="s0">;</span>
+    <span class="s2">/** The speaker volume value. */</span>
+    <span class="s0">private int </span><span class="s1">speakerVolume</span><span class="s0">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onCreate() {</span>
+        <span class="s0">super</span><span class="s1">.onCreate()</span><span class="s0">;</span>
+
+        <span class="s3">// Create the broadcast receiver, Register the media player and read the volumes from shared preferences</span>
+        <span class="s1">receiver = </span><span class="s0">new </span><span class="s1">HeadsetIntentReceiver()</span><span class="s0">;</span>
+        <span class="s1">mPlayer = MediaPlayer.create(</span><span class="s0">this, </span><span class="s1">R.raw.project_theme)</span><span class="s0">;</span>
+        <span class="s1">headsetVolume = Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.headset_volume_key</span><span class="s0">, </span><span class="s4">20</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">speakerVolume = Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.speaker_volume_key</span><span class="s0">, </span><span class="s4">100</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">null </span><span class="s1">!= mPlayer) {</span>
+            <span class="s1">mPlayer.setLooping(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+
+            <span class="s1">IntentFilter receiverFilter = </span><span class="s0">new </span><span class="s1">IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)</span><span class="s0">;</span>
+            <span class="s1">receiverFilter.addAction(Intent.ACTION_HEADSET_PLUG)</span><span class="s0">;</span>
+            <span class="s1">registerReceiver(receiver</span><span class="s0">, </span><span class="s1">receiverFilter)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the volume to be the headset volume.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setVolumeHeadset(){</span>
+        <span class="s1">mPlayer.setVolume(headsetVolume / </span><span class="s4">100f</span><span class="s0">, </span><span class="s1">headsetVolume / </span><span class="s4">100f</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the volume to be the speaker volume.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setVolumeSpeaker(){</span>
+        <span class="s1">mPlayer.setVolume(speakerVolume / </span><span class="s4">100f</span><span class="s0">, </span><span class="s1">speakerVolume / </span><span class="s4">100f</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public int </span><span class="s1">onStartCommand(Intent intent</span><span class="s0">, int </span><span class="s1">flags</span><span class="s0">, int </span><span class="s1">startid) {</span>
+
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">null </span><span class="s1">!= mPlayer) {</span>
+            <span class="s0">if </span><span class="s1">(mPlayer.isPlaying()) {</span>
+                <span class="s3">// Rewind to beginning of song</span>
+                <span class="s1">mPlayer.seekTo(</span><span class="s4">0</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">else </span><span class="s1">{</span>
+                <span class="s3">// Start playing song</span>
+                <span class="s1">mPlayer.start()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s3">// Don't automatically restart this Service if it is killed</span>
+        <span class="s0">return </span><span class="s1">START_NOT_STICKY</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">IBinder onBind(Intent intent) {</span>
+        <span class="s0">return null;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onDestroy() {</span>
+        <span class="s3">// Stop playing music</span>
+        <span class="s0">super</span><span class="s1">.onDestroy()</span><span class="s0">;</span>
+        <span class="s1">mPlayer.stop()</span><span class="s0">;</span>
+        <span class="s1">unregisterReceiver(receiver)</span><span class="s0">;</span>
+        <span class="s1">stopForeground(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Update the state for the volume (for when a headset is plugged/unplugged).</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">state The state as it is received from the broadcast receiver.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">updateState(String state) {</span>
+        <span class="s1">Toast.makeText(</span><span class="s0">this, </span><span class="s1">state</span><span class="s0">, </span><span class="s1">Toast.LENGTH_LONG).show()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(state.equals(</span><span class="s7">&quot;Plugged&quot;</span><span class="s1">)) {</span>
+            <span class="s1">setVolumeHeadset()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">setVolumeSpeaker()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* The broadcast receiver that receives a headset plug/unplug broadcast.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public class </span><span class="s1">HeadsetIntentReceiver </span><span class="s0">extends </span><span class="s1">BroadcastReceiver {</span>
+        <span class="s1">@Override</span>
+        <span class="s0">public void </span><span class="s1">onReceive(Context context</span><span class="s0">, </span><span class="s1">Intent intent) {</span>
+            <span class="s0">if </span><span class="s1">(intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {</span>
+                <span class="s0">int </span><span class="s1">state = intent.getIntExtra(</span><span class="s7">&quot;state&quot;</span><span class="s0">, </span><span class="s1">-</span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">switch </span><span class="s1">(state) {</span>
+                    <span class="s0">case </span><span class="s1">(</span><span class="s4">0</span><span class="s1">):</span>
+                        <span class="s1">updateState(</span><span class="s7">&quot;Unplugged&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">(</span><span class="s4">1</span><span class="s1">):</span>
+                        <span class="s1">updateState(</span><span class="s7">&quot;Plugged&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">default</span><span class="s1">:</span>
+                        <span class="s1">updateState(</span><span class="s7">&quot;Error&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>HighScoresActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HighScoresActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.activity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.pm.ActivityInfo</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Store</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* An activity that displays high scores.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">HighScoresActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+
+        <span class="s1">getSupportActionBar().hide()</span><span class="s0">;</span>
+        <span class="s1">setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_high_scores)</span><span class="s0">;</span>
+
+        <span class="s3">// Set the text for the value text views</span>
+        <span class="s1">TextView highestLevelValue = findViewById(R.id.highestLevelValue)</span><span class="s0">;</span>
+        <span class="s1">highestLevelValue.setText(String.valueOf(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.highest_level_key</span><span class="s0">, </span><span class="s4">0</span><span class="s1">)))</span><span class="s0">;</span>
+        <span class="s1">TextView mostKillsValue = findViewById(R.id.mostKillsValue)</span><span class="s0">;</span>
+        <span class="s1">mostKillsValue.setText(String.valueOf(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.most_kills_key</span><span class="s0">, </span><span class="s4">0</span><span class="s1">)))</span><span class="s0">;</span>
+        <span class="s1">TextView highestScoreValue = findViewById(R.id.highestScoreValue)</span><span class="s0">;</span>
+        <span class="s1">highestScoreValue.setText(String.valueOf(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.highest_score_key</span><span class="s0">, </span><span class="s4">0</span><span class="s1">)))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

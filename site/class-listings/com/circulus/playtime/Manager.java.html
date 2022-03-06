@@ -1,0 +1,505 @@
+<html>
+<head>
+<title>Manager.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #808080;}
+.s4 { color: #77b767; font-style: italic;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #6897bb;}
+.s7 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Manager.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.playtime</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.activity.MainActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.database.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Enemy</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Exploder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.HealthPack</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Player</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Projectile</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.*</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.text.SimpleDateFormat</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Date</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Random</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The object that is responsible for running the main thread of the game world.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Manager </span><span class="s0">implements </span><span class="s1">Runnable {</span>
+    <span class="s2">/** The current level. */</span>
+    <span class="s0">private int </span><span class="s1">level</span><span class="s0">;</span>
+    <span class="s2">/** The current amount of kills the player has in the current game. */</span>
+    <span class="s0">private int </span><span class="s1">kills</span><span class="s0">;</span>
+    <span class="s2">/** The current player score. */</span>
+    <span class="s0">private int </span><span class="s1">score</span><span class="s0">;</span>
+
+    <span class="s3">// Map bounds parameters</span>
+    <span class="s2">/** The left bound of the map. */</span>
+    <span class="s0">private float </span><span class="s1">boundLeft</span><span class="s0">;</span>
+    <span class="s2">/** The upper bound of the map. */</span>
+    <span class="s0">private float </span><span class="s1">boundTop</span><span class="s0">;</span>
+    <span class="s2">/** The right bound of the map */</span>
+    <span class="s0">private float </span><span class="s1">boundRight</span><span class="s0">;</span>
+    <span class="s2">/** The bottom bound of the map.  */</span>
+    <span class="s0">private float </span><span class="s1">boundBottom</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the map bounds. */</span>
+    <span class="s0">private </span><span class="s1">Paint boundPaint</span><span class="s0">;</span>
+
+    <span class="s2">/** The player object. */</span>
+    <span class="s0">private </span><span class="s1">Player player</span><span class="s0">;</span>
+    <span class="s2">/** A list of the enemies currently alive. */</span>
+    <span class="s0">private </span><span class="s1">ArrayList&lt;Enemy&gt; enemies</span><span class="s0">;</span>
+    <span class="s2">/** A list of all player projectiles currently on the map. */</span>
+    <span class="s0">private </span><span class="s1">ArrayList&lt;Projectile&gt; playerProjectiles</span><span class="s0">;</span>
+    <span class="s2">/** A list of all enemy projectiles currently on the map. */</span>
+    <span class="s0">private </span><span class="s1">ArrayList&lt;Projectile&gt; enemyProjectiles</span><span class="s0">;</span>
+    <span class="s2">/** A list of all health pack currently on the map. */</span>
+    <span class="s0">private </span><span class="s1">ArrayList&lt;HealthPack&gt; healthPacks</span><span class="s0">;</span>
+    <span class="s2">/** The director object that generates the enemies. */</span>
+    <span class="s0">private </span><span class="s1">Director director</span><span class="s0">;</span>
+    <span class="s2">/** The timer object. */</span>
+    <span class="s0">private </span><span class="s1">Timer timer</span><span class="s0">;</span>
+    <span class="s2">/** The main view of the game. */</span>
+    <span class="s0">private </span><span class="s1">MainView view</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the lines in the background. */</span>
+    <span class="s0">private </span><span class="s1">Paint bgLinePaint</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the background. */</span>
+    <span class="s0">private </span><span class="s1">Paint bgPaint</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the arrows. */</span>
+    <span class="s0">private </span><span class="s1">Paint arrowPaint</span><span class="s0">;</span>
+    <span class="s2">/** The thread of the Manager object. */</span>
+    <span class="s0">private </span><span class="s1">Thread thread</span><span class="s0">;</span>
+    <span class="s2">/** A Random object used for generating random values. */</span>
+    <span class="s0">private </span><span class="s1">Random random</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructor for the manager object.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">view  The view to associate with the manager.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">level The initial level obtained from the view.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">kills The initial kills obtained from the view.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">score The initial score obtained from the view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Manager(MainView view</span><span class="s0">, int </span><span class="s1">level</span><span class="s0">, int </span><span class="s1">kills</span><span class="s0">, int </span><span class="s1">score) {</span>
+        <span class="s0">if </span><span class="s1">(MainActivity.getNewGame()) {</span>
+            <span class="s1">timer = </span><span class="s0">new </span><span class="s1">Timer(</span><span class="s6">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">timer = </span><span class="s0">new </span><span class="s1">Timer(Store.readLong(view.getContext().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.time_key</span><span class="s0">, </span><span class="s6">0</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">this</span><span class="s1">.level = level</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.kills = kills</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.score = score</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.boundLeft = -</span><span class="s6">10f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.boundTop = -</span><span class="s6">7.5f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.boundRight = </span><span class="s6">10f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.boundBottom = </span><span class="s6">7.5f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.boundPaint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.boundPaint.setColor(</span><span class="s6">0xa0ff0000</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">player = </span><span class="s0">new </span><span class="s1">Player(</span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s6">0</span><span class="s0">, </span><span class="s6">0</span><span class="s1">)</span><span class="s0">, </span><span class="s1">view</span><span class="s0">, this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">enemies = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">playerProjectiles = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">enemyProjectiles = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">healthPacks = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.view = view</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.director = </span><span class="s0">new </span><span class="s1">Director(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.bgLinePaint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.bgLinePaint.setStrokeWidth(</span><span class="s6">3</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.bgLinePaint.setColor(</span><span class="s6">0xa0ffffff</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.bgPaint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.bgPaint.setColor(</span><span class="s6">0xff000000</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.arrowPaint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.arrowPaint.setColor(</span><span class="s6">0xffffffff</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.random = </span><span class="s0">new </span><span class="s1">Random()</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.thread = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.thread.start()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* The code executed by the thread.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">run() {</span>
+        <span class="s0">int </span><span class="s1">maxHealthPacks = </span><span class="s6">5</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">rand</span><span class="s0">;</span>
+        <span class="s0">while </span><span class="s1">(player.isAlive()) {</span>
+            <span class="s3">// Generate enemies using the director</span>
+            <span class="s1">director.setCredits(</span><span class="s6">30 </span><span class="s1">+ </span><span class="s6">30 </span><span class="s1">* level)</span><span class="s0">;</span>
+            <span class="s1">director.generateEnemies()</span><span class="s0">;</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">i &lt; enemies.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+                <span class="s0">if </span><span class="s1">(enemies.get(i) != </span><span class="s0">null</span><span class="s1">) {</span>
+                    <span class="s1">enemies.get(i).startThread()</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s1">rand = random.nextInt(</span><span class="s6">3</span><span class="s1">)</span><span class="s0">;</span>
+
+            <span class="s3">// While enemies exist, continue running the level</span>
+            <span class="s0">while </span><span class="s1">(!enemies.isEmpty()) {</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">i &lt; enemies.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">j &lt; playerProjectiles.size()</span><span class="s0">; </span><span class="s1">j++) {</span>
+                        <span class="s0">if </span><span class="s1">(playerProjectiles.get(j) != </span><span class="s0">null</span><span class="s1">) {</span>
+                            <span class="s0">if </span><span class="s1">(enemies.get(i) != </span><span class="s0">null </span><span class="s1">&amp;&amp; enemies.get(i).detectHit(playerProjectiles.get(j))) {</span>
+                                <span class="s1">enemies.get(i).damage(playerProjectiles.get(j).getDamage())</span><span class="s0">;</span>
+                                <span class="s1">playerProjectiles.get(j).setHitTarget(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if </span><span class="s1">(playerProjectiles.get(j).isHitTarget()) {</span>
+                                <span class="s1">playerProjectiles.remove(j)</span><span class="s0">;</span>
+                                <span class="s1">j--</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                    <span class="s3">// If an enemy is killed, remove it and increase score</span>
+                    <span class="s0">if </span><span class="s1">(enemies.get(i) != </span><span class="s0">null </span><span class="s1">&amp;&amp; !enemies.get(i).isAlive()) {</span>
+                        <span class="s3">// Check that the enemy isn't an Exploder that exploded to increase score</span>
+                        <span class="s0">if </span><span class="s1">(!(enemies.get(i) </span><span class="s0">instanceof </span><span class="s1">Exploder &amp;&amp; enemies.get(i).getHealth() &gt; </span><span class="s6">0</span><span class="s1">)) {</span>
+                            <span class="s1">score += enemies.get(i).getScorePoints()</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s1">enemies.remove(i)</span><span class="s0">;</span>
+                        <span class="s1">i--</span><span class="s0">;</span>
+                        <span class="s0">this</span><span class="s1">.kills++</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">k = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">k &lt; enemyProjectiles.size()</span><span class="s0">; </span><span class="s1">k++) {</span>
+                    <span class="s0">if </span><span class="s1">(enemyProjectiles.get(k) != </span><span class="s0">null</span><span class="s1">) {</span>
+                        <span class="s0">if </span><span class="s1">(player.detectHit(enemyProjectiles.get(k))) {</span>
+                            <span class="s1">player.damage(enemyProjectiles.get(k).getDamage())</span><span class="s0">;</span>
+                            <span class="s1">enemyProjectiles.get(k).setHitTarget(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">if </span><span class="s1">(enemyProjectiles.get(k).isHitTarget()) {</span>
+                            <span class="s1">enemyProjectiles.remove(k)</span><span class="s0">;</span>
+                            <span class="s1">k--</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">l = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">l &lt; healthPacks.size()</span><span class="s0">; </span><span class="s1">l++) {</span>
+                    <span class="s0">if </span><span class="s1">(healthPacks.get(l) != </span><span class="s0">null</span><span class="s1">) {</span>
+                        <span class="s0">if </span><span class="s1">(Vector2.distance(</span><span class="s0">this</span><span class="s1">.player.getPosition()</span><span class="s0">, this</span><span class="s1">.healthPacks.get(l).getPosition()) &lt;=</span>
+                                <span class="s1">(</span><span class="s0">this</span><span class="s1">.player.getSize() + </span><span class="s0">this</span><span class="s1">.healthPacks.get(l).getSize()) / </span><span class="s6">2</span><span class="s1">) {</span>
+                            <span class="s0">this</span><span class="s1">.player.heal(</span><span class="s0">this</span><span class="s1">.healthPacks.get(l).getHealAmount())</span><span class="s0">;</span>
+                            <span class="s0">this</span><span class="s1">.healthPacks.remove(l)</span><span class="s0">;</span>
+                            <span class="s1">l--</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+
+                <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.healthPacks.size() &lt; maxHealthPacks &amp;&amp; </span><span class="s0">this</span><span class="s1">.random.nextInt(</span><span class="s6">1000</span><span class="s1">) == </span><span class="s6">0</span><span class="s1">) {</span>
+                    <span class="s1">addHealthPack()</span><span class="s0">;</span>
+                <span class="s1">}</span>
+
+                <span class="s0">if </span><span class="s1">(!player.isAlive()) {</span>
+                    <span class="s0">break;</span>
+                <span class="s1">}</span>
+
+                <span class="s0">try </span><span class="s1">{</span>
+                    <span class="s1">Thread.sleep(</span><span class="s6">5</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">} </span><span class="s0">catch </span><span class="s1">(InterruptedException e) {</span>
+                    <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+
+            <span class="s3">// Continue to next level</span>
+            <span class="s0">if </span><span class="s1">(player.isAlive()) {</span>
+                <span class="s3">// Give the player a random upgrade when finishing a level</span>
+                <span class="s0">switch </span><span class="s1">(rand) {</span>
+                    <span class="s0">case </span><span class="s6">0</span><span class="s1">:</span>
+                        <span class="s0">this</span><span class="s1">.player.increaseHealth()</span><span class="s0">;</span>
+                        <span class="s0">this</span><span class="s1">.view.getActivity().setIncreasedValueString(</span><span class="s7">&quot;Your health has increased&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s6">1</span><span class="s1">:</span>
+                        <span class="s0">this</span><span class="s1">.player.increaseDamage()</span><span class="s0">;</span>
+                        <span class="s0">this</span><span class="s1">.view.getActivity().setIncreasedValueString(</span><span class="s7">&quot;Your damage has increased&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s6">2</span><span class="s1">:</span>
+                        <span class="s0">this</span><span class="s1">.player.increaseAttackSpeed()</span><span class="s0">;</span>
+                        <span class="s0">this</span><span class="s1">.view.getActivity().setIncreasedValueString(</span><span class="s7">&quot;Your attack speed has increased&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                <span class="s1">}</span>
+
+                <span class="s3">// Show the level end dialog, and wait until it's closed before continuing</span>
+                <span class="s1">timer.setPaused(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">this</span><span class="s1">.view.getActivity().showLevelEndDialog()</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.view.getActivity().isLevelEndDialogShown()) {</span>
+                <span class="s1">}</span>
+                <span class="s0">this</span><span class="s1">.level++</span><span class="s0">;</span>
+                <span class="s1">player.healToFull()</span><span class="s0">;</span>
+                <span class="s1">healthPacks.clear()</span><span class="s0">;</span>
+                <span class="s1">timer.setPaused(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s1">timer.setPaused(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Store.saveLong(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.time_key</span><span class="s0">, </span><span class="s6">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Store.saveInt(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.level_key</span><span class="s0">, </span><span class="s6">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Store.saveInt(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.kills_key</span><span class="s0">, </span><span class="s6">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Store.saveFloat(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.damage_key</span><span class="s0">, </span><span class="s6">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Store.saveFloat(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.health_key</span><span class="s0">, </span><span class="s6">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Store.saveFloat(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.attack_speed_key</span><span class="s0">, </span><span class="s6">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(!</span><span class="s0">this</span><span class="s1">.view.getActivity().isDestroyed()) {</span>
+            <span class="s1">SimpleDateFormat dateFormat = </span><span class="s0">new </span><span class="s1">SimpleDateFormat(</span><span class="s7">&quot;dd/MM/yyyy&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">Date date = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span>
+            <span class="s1">GameModel model = </span><span class="s0">new </span><span class="s1">GameModel(-</span><span class="s6">1</span><span class="s0">, </span><span class="s1">dateFormat.format(date)</span><span class="s0">, </span><span class="s1">timer.toString()</span><span class="s0">, </span><span class="s1">level</span><span class="s0">, </span><span class="s1">kills</span><span class="s0">, </span><span class="s1">score</span><span class="s0">, false</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">DatabaseHelper databaseHelper = </span><span class="s0">new </span><span class="s1">DatabaseHelper(view.getActivity().getApplicationContext())</span><span class="s0">;</span>
+            <span class="s1">databaseHelper.addOne(model)</span><span class="s0">;</span>
+            <span class="s0">this</span><span class="s1">.view.getActivity().showGameOverDialog()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Adds an enemy to the enemy list.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">enemy The enemy to add the the list.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">addEnemy(Enemy enemy) {</span>
+        <span class="s0">this</span><span class="s1">.enemies.add(enemy)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Add a health pack at a random spot within the map bounds.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">addHealthPack() {</span>
+        <span class="s1">Vector2 pos = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s0">this</span><span class="s1">.random.nextFloat() * (</span><span class="s0">this</span><span class="s1">.boundRight - </span><span class="s0">this</span><span class="s1">.boundLeft) + </span><span class="s0">this</span><span class="s1">.boundLeft</span><span class="s0">,</span>
+                <span class="s0">this</span><span class="s1">.random.nextFloat() * (</span><span class="s0">this</span><span class="s1">.boundBottom - </span><span class="s0">this</span><span class="s1">.boundTop) + </span><span class="s0">this</span><span class="s1">.boundTop)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.healthPacks.add(</span><span class="s0">new </span><span class="s1">HealthPack(pos</span><span class="s0">, this</span><span class="s1">.view))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw all enemies.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">drawEnemies(Canvas canvas) {</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">i &lt; </span><span class="s0">this</span><span class="s1">.enemies.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s0">this</span><span class="s1">.enemies.get(i).draw(canvas)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw all projectiles.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">drawProjectiles(Canvas canvas) {</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">i &lt; playerProjectiles.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">playerProjectiles.get(i).draw(canvas)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">j &lt; enemyProjectiles.size()</span><span class="s0">; </span><span class="s1">j++) {</span>
+            <span class="s1">enemyProjectiles.get(j).draw(canvas)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw all health packs.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">drawHealthPacks(Canvas canvas) {</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">i &lt; healthPacks.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">healthPacks.get(i).draw(canvas)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw the tiled background.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">drawBackground(Canvas canvas) {</span>
+        <span class="s0">float </span><span class="s1">x = player.getPosition().getX()</span><span class="s0">, </span><span class="s1">y = player.getPosition().getY()</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">heightInUnits = </span><span class="s0">this</span><span class="s1">.view.getDisplaySize().getY() / </span><span class="s0">this</span><span class="s1">.view.getDisplaySize().getX() *</span>
+                <span class="s0">this</span><span class="s1">.view.getWidthInUnits()</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">horizontalLines = (</span><span class="s0">int</span><span class="s1">)Math.ceil(heightInUnits * </span><span class="s6">2 </span><span class="s1">+ </span><span class="s6">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">verticalLines = (</span><span class="s0">int</span><span class="s1">)Math.ceil(</span><span class="s0">this</span><span class="s1">.view.getWidthInUnits() * </span><span class="s6">2 </span><span class="s1">+ </span><span class="s6">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">distBetweenLines = </span><span class="s6">0.5f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.view.getPixelsPerUnit()</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">beginHorizontal = </span><span class="s0">this</span><span class="s1">.view.getDisplaySize().getY() / </span><span class="s6">2 </span><span class="s1">+ (</span><span class="s6">0.5f </span><span class="s1">- y % </span><span class="s6">0.5f</span><span class="s1">) * (distBetweenLines * </span><span class="s6">2</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">beginVertical = </span><span class="s0">this</span><span class="s1">.view.getDisplaySize().getX() / </span><span class="s6">2 </span><span class="s1">+ (</span><span class="s6">0.5f </span><span class="s1">- x % </span><span class="s6">0.5f</span><span class="s1">) * (distBetweenLines * </span><span class="s6">2</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">canvas.drawRect(</span><span class="s6">0f</span><span class="s0">, </span><span class="s6">0f</span><span class="s0">, this</span><span class="s1">.view.getDisplaySize().getX()</span><span class="s0">, this</span><span class="s1">.view.getDisplaySize().getY()</span><span class="s0">, </span><span class="s1">bgPaint)</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">i &lt; horizontalLines / </span><span class="s6">2 </span><span class="s1">+ </span><span class="s6">1</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">canvas.drawLine(</span><span class="s6">0f</span><span class="s0">, </span><span class="s1">beginHorizontal + distBetweenLines * i</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.view.getDisplaySize().getX()</span><span class="s0">, </span><span class="s1">beginHorizontal + distBetweenLines * i</span><span class="s0">, </span><span class="s1">bgLinePaint)</span><span class="s0">;</span>
+            <span class="s1">canvas.drawLine(</span><span class="s6">0f</span><span class="s0">, </span><span class="s1">beginHorizontal - distBetweenLines * (i + </span><span class="s6">1</span><span class="s1">)</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.view.getDisplaySize().getX()</span><span class="s0">, </span><span class="s1">beginHorizontal - distBetweenLines * (i + </span><span class="s6">1</span><span class="s1">)</span><span class="s0">, </span><span class="s1">bgLinePaint)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s6">0</span><span class="s0">; </span><span class="s1">j &lt; verticalLines / </span><span class="s6">2 </span><span class="s1">+ </span><span class="s6">1</span><span class="s0">; </span><span class="s1">j++) {</span>
+            <span class="s1">canvas.drawLine(beginVertical + distBetweenLines * j</span><span class="s0">,</span>
+                    <span class="s6">0f</span><span class="s0">, </span><span class="s1">beginVertical + distBetweenLines * j</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.view.getDisplaySize().getY()</span><span class="s0">, </span><span class="s1">bgLinePaint)</span><span class="s0">;</span>
+            <span class="s1">canvas.drawLine(beginVertical - distBetweenLines * (j + </span><span class="s6">1</span><span class="s1">)</span><span class="s0">,</span>
+                    <span class="s6">0f</span><span class="s0">, </span><span class="s1">beginVertical - distBetweenLines * (j + </span><span class="s6">1</span><span class="s1">)</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.view.getDisplaySize().getY()</span><span class="s0">, </span><span class="s1">bgLinePaint)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw the map bounds.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">drawBounds(Canvas canvas) {</span>
+        <span class="s0">float </span><span class="s1">x = player.getPosition().getX()</span><span class="s0">, </span><span class="s1">y = player.getPosition().getY()</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect(</span><span class="s6">0f</span><span class="s0">, </span><span class="s6">0f</span><span class="s0">,</span>
+                <span class="s1">view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(boundLeft</span><span class="s0">, </span><span class="s6">0f</span><span class="s1">))).getX()</span><span class="s0">,</span>
+                <span class="s1">view.getDisplaySize().getY()</span><span class="s0">, </span><span class="s1">boundPaint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect(view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(boundLeft</span><span class="s0">, </span><span class="s6">0f</span><span class="s1">))).getX()</span><span class="s0">,</span>
+                <span class="s6">0f</span><span class="s0">, </span><span class="s1">view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(boundRight</span><span class="s0">, </span><span class="s6">0f</span><span class="s1">))).getX()</span><span class="s0">,</span>
+                <span class="s1">view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s6">0f</span><span class="s0">, </span><span class="s1">boundTop))).getY()</span><span class="s0">, </span><span class="s1">boundPaint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect(view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(boundRight</span><span class="s0">, </span><span class="s6">0f</span><span class="s1">))).getX()</span><span class="s0">,</span>
+                <span class="s6">0f</span><span class="s0">, </span><span class="s1">view.getDisplaySize().getX()</span><span class="s0">, </span><span class="s1">view.getDisplaySize().getY()</span><span class="s0">, </span><span class="s1">boundPaint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect(view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(boundLeft</span><span class="s0">, </span><span class="s6">0f</span><span class="s1">))).getX()</span><span class="s0">,</span>
+                <span class="s1">view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s6">0f</span><span class="s0">, </span><span class="s1">boundBottom))).getY()</span><span class="s0">,</span>
+                <span class="s1">view.positionToPixels(view.relativePosition(</span><span class="s0">new </span><span class="s1">Vector2(boundRight</span><span class="s0">, </span><span class="s6">0f</span><span class="s1">))).getX()</span><span class="s0">,</span>
+                <span class="s1">view.getDisplaySize().getY()</span><span class="s0">, </span><span class="s1">boundPaint)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the current level.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The current level.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getLevel() {</span>
+        <span class="s0">return </span><span class="s1">level</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the current amount of kills.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The current kills.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getKills() {</span>
+        <span class="s0">return </span><span class="s1">kills</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the current score.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The current score.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getScore() {</span>
+        <span class="s0">return </span><span class="s1">score</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the player object.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The player object.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Player getPlayer() {</span>
+        <span class="s0">return this</span><span class="s1">.player</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the main view of the game.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The main game view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">MainView getView() {</span>
+        <span class="s0">return </span><span class="s1">view</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the list of all enemies.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The list of all enemies.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">ArrayList&lt;Enemy&gt; getEnemies() {</span>
+        <span class="s0">return </span><span class="s1">enemies</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the left bound of the map.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The left map bound.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getBoundLeft() {</span>
+        <span class="s0">return </span><span class="s1">boundLeft</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the upper bound of the map.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The upper map bound.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getBoundTop() {</span>
+        <span class="s0">return </span><span class="s1">boundTop</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the right bound of the map.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The right map bound.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getBoundRight() {</span>
+        <span class="s0">return </span><span class="s1">boundRight</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the bottom bound of the map.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The bottom map bound.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getBoundBottom() {</span>
+        <span class="s0">return </span><span class="s1">boundBottom</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Add a projectile to the player projectile list.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">projectile The projectile to add.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">addPlayerProjectile(Projectile projectile) {</span>
+        <span class="s1">playerProjectiles.add(projectile)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Add a projectile to the enemy projectile list.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">projectile The projectile to add.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">addEnemyProjectile(Projectile projectile) {</span>
+        <span class="s1">enemyProjectiles.add(projectile)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The current time of the timer in string format.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">String getTime() {</span>
+        <span class="s0">return </span><span class="s1">timer.toString()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The current time of the timer in milliseconds.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public long </span><span class="s1">getTimeMillis() {</span>
+        <span class="s0">return </span><span class="s1">timer.getMillis()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

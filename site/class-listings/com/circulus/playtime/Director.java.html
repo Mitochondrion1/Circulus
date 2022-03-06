@@ -1,0 +1,168 @@
+<html>
+<head>
+<title>Director.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #77b767; font-style: italic;}
+.s6 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Director.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.playtime</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Exploder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Laserman</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Shooter</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Summoner</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.Random</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The object responsible for enemy generation at the beginning of each level</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Director {</span>
+    <span class="s2">/** The manager object associated with the director. */</span>
+    <span class="s0">private </span><span class="s1">Manager manager</span><span class="s0">;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Costs of each enemy:</span>
+     <span class="s2">* costs[0] - The cost of a Shooter enemy.</span>
+     <span class="s2">* costs[1] - The cost of an Exploder enemy.</span>
+     <span class="s2">* costs[2] - The cost of a Laserman enemy.</span>
+     <span class="s2">* costs[3] - The cost of a Summoner enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private final int</span><span class="s1">[] costs = {</span><span class="s3">5</span><span class="s0">, </span><span class="s3">10</span><span class="s0">, </span><span class="s3">15</span><span class="s0">, </span><span class="s3">20</span><span class="s1">}</span><span class="s0">;</span>
+    <span class="s2">/** The amount of credits the director can use. */</span>
+    <span class="s0">private int </span><span class="s1">credits</span><span class="s0">;</span>
+    <span class="s2">/** The amount of credits given to the director initially. Updates each level. */</span>
+    <span class="s0">private int </span><span class="s1">initialCredits</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a Director object.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">manager The manager to associate with the director.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Director(Manager manager) {</span>
+        <span class="s0">this</span><span class="s1">.manager = manager</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the amount of credits the director can use for enemy generation.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">credits The amount of credits to give the director.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setCredits(</span><span class="s0">int </span><span class="s1">credits) {</span>
+        <span class="s0">this</span><span class="s1">.credits = credits</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.initialCredits = </span><span class="s0">this</span><span class="s1">.credits</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* The method that generates the enemies.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">generateEnemies() {</span>
+        <span class="s6">/* 
+         * Each enemy type gets a values based on its director cost and the initial 
+         * amount of director credits, using a mathematical function 
+         */</span>
+        <span class="s0">float</span><span class="s1">[] values = </span><span class="s0">new float</span><span class="s1">[</span><span class="s0">this</span><span class="s1">.costs.length]</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; values.length</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">values[i] = generateValue(</span><span class="s0">this</span><span class="s1">.costs[i])</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">int </span><span class="s1">mostExpensive = </span><span class="s0">this</span><span class="s1">.costs.length - </span><span class="s3">1</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">sum</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">generatedNum</span><span class="s0">;</span>
+        <span class="s1">Random random = </span><span class="s0">new </span><span class="s1">Random()</span><span class="s0">;</span>
+
+        <span class="s6">// Add a random enemy based on the values generated earlier</span>
+        <span class="s0">while </span><span class="s1">(mostExpensive &gt;= </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s0">this</span><span class="s1">.costs.length - </span><span class="s3">1</span><span class="s0">; </span><span class="s1">i &gt;= </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i--) {</span>
+                <span class="s0">if </span><span class="s1">(mostExpensive &gt;= </span><span class="s3">0 </span><span class="s1">&amp;&amp; </span><span class="s0">this</span><span class="s1">.costs[i] &gt; </span><span class="s0">this</span><span class="s1">.credits) {</span>
+                    <span class="s1">mostExpensive--</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s1">normalizeValues(values</span><span class="s0">, </span><span class="s1">mostExpensive)</span><span class="s0">;</span>
+
+            <span class="s1">generatedNum = random.nextFloat()</span><span class="s0">;</span>
+
+            <span class="s1">sum = </span><span class="s3">0f</span><span class="s0">;</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">k = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">k &lt;= mostExpensive</span><span class="s0">; </span><span class="s1">k++) {</span>
+                <span class="s1">sum += values[k]</span><span class="s0">;</span>
+                <span class="s0">if </span><span class="s1">(generatedNum &lt; sum) {</span>
+                    <span class="s0">this</span><span class="s1">.addEnemy(k)</span><span class="s0">;</span>
+                    <span class="s0">break;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gives each enemy type a value</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">cost  The cost of the enemy.</span>
+     <span class="s2">* </span><span class="s4">@return      </span><span class="s2">A value for a given enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private float </span><span class="s1">generateValue(</span><span class="s0">int </span><span class="s1">cost) {</span>
+        <span class="s0">float </span><span class="s1">constant = </span><span class="s3">0.3f</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">(</span><span class="s0">float</span><span class="s1">)Math.pow(constant / cost * </span><span class="s0">this</span><span class="s1">.initialCredits</span><span class="s0">, </span><span class="s3">0.05 </span><span class="s1">* cost)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Changes the values for enemies, so that the sum of all values for enemies that can be spawned is 1.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">values    The values generated for each enemy type by the {</span><span class="s4">@link </span><span class="s2">#generateValue(int)} method.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">x         The index of the last enemy to normalize the values for.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">normalizeValues(</span><span class="s0">float</span><span class="s1">[] values</span><span class="s0">, int </span><span class="s1">x) {</span>
+        <span class="s0">float </span><span class="s1">sum = </span><span class="s3">0f</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt;= x</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">sum += values[i]</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">j &lt;= x</span><span class="s0">; </span><span class="s1">j++) {</span>
+            <span class="s1">values[j] *= </span><span class="s3">1f </span><span class="s1">/ sum</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Adds an enemy based on a generated number.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">num The number of the enemy: 0 - Shooter; 1 - Exploder; 2 - Laserman; 3 - Summoner.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">addEnemy(</span><span class="s0">int </span><span class="s1">num) {</span>
+        <span class="s1">Vector2 position</span><span class="s0">;</span>
+        <span class="s1">Random random = </span><span class="s0">new </span><span class="s1">Random()</span><span class="s0">;</span>
+        <span class="s1">position = </span><span class="s0">new </span><span class="s1">Vector2(random.nextFloat() * (manager.getBoundRight() - manager.getBoundLeft()) + manager.getBoundLeft()</span><span class="s0">,</span>
+                <span class="s1">random.nextFloat() * (manager.getBoundBottom() - manager.getBoundTop()) + manager.getBoundTop())</span><span class="s0">;</span>
+        <span class="s0">switch </span><span class="s1">(num) {</span>
+            <span class="s0">case </span><span class="s3">0</span><span class="s1">:</span>
+                <span class="s0">this</span><span class="s1">.manager.addEnemy(</span><span class="s0">new </span><span class="s1">Shooter(position</span><span class="s0">, this</span><span class="s1">.manager</span><span class="s0">, this</span><span class="s1">.manager.getView()))</span><span class="s0">;</span>
+                <span class="s0">this</span><span class="s1">.credits -= costs[</span><span class="s3">0</span><span class="s1">]</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">1</span><span class="s1">:</span>
+                <span class="s1">Exploder exploder = </span><span class="s0">new </span><span class="s1">Exploder(position</span><span class="s0">, this</span><span class="s1">.manager</span><span class="s0">, this</span><span class="s1">.manager.getView())</span><span class="s0">;</span>
+                <span class="s0">this</span><span class="s1">.manager.addEnemy(exploder)</span><span class="s0">;</span>
+                <span class="s0">this</span><span class="s1">.credits -= costs[</span><span class="s3">1</span><span class="s1">]</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">2</span><span class="s1">:</span>
+                <span class="s0">this</span><span class="s1">.manager.addEnemy(</span><span class="s0">new </span><span class="s1">Laserman(position</span><span class="s0">, this</span><span class="s1">.manager</span><span class="s0">, this</span><span class="s1">.manager.getView()))</span><span class="s0">;</span>
+                <span class="s0">this</span><span class="s1">.credits -= costs[</span><span class="s3">2</span><span class="s1">]</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">3</span><span class="s1">:</span>
+                <span class="s0">this</span><span class="s1">.manager.addEnemy(</span><span class="s0">new </span><span class="s1">Summoner(position</span><span class="s0">, this</span><span class="s1">.manager</span><span class="s0">, this</span><span class="s1">.manager.getView()))</span><span class="s0">;</span>
+                <span class="s0">this</span><span class="s1">.credits -= costs[</span><span class="s3">3</span><span class="s1">]</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

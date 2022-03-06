@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>Arrow.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Arrow.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Arrows are drawn around the player and point to enemies. Change in transparency depending on the distance between the player and the enemy.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Arrow </span><span class="s0">implements </span><span class="s1">Drawable {</span>
+    <span class="s2">/** The position of the arrow. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 position</span><span class="s0">;</span>
+    <span class="s2">/** The view in which the arrow is drawn. */</span>
+    <span class="s0">private </span><span class="s1">MainView view</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the arrow. */</span>
+    <span class="s0">private </span><span class="s1">Paint paint</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs an arrow object.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">view The view to associate with the arrow (the main game view).</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Arrow(MainView view) {</span>
+        <span class="s0">this</span><span class="s1">.position = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s5">0f</span><span class="s0">, </span><span class="s5">0f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.view = view</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.paint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.paint.setColor(</span><span class="s5">0xffffffff</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the position of the arrow.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The position of the arrow.</span>
+     <span class="s2">* */</span>
+    <span class="s0">public </span><span class="s1">Vector2 getPosition() {</span>
+        <span class="s0">return </span><span class="s1">position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set a new value for the arrow's position.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position A new position for the arrow. */</span>
+    <span class="s0">public void </span><span class="s1">setPosition(Vector2 position) {</span>
+        <span class="s0">this</span><span class="s1">.position = position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Change the alpha (transparency) of the arrow.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">x The new alpha of the arrow.</span>
+     <span class="s2">* */</span>
+    <span class="s0">public void </span><span class="s1">setAlpha(</span><span class="s0">int </span><span class="s1">x) {</span>
+        <span class="s0">this</span><span class="s1">.paint.setAlpha(x)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+     <span class="s2">/**</span>
+      <span class="s2">* {</span><span class="s4">@inheritDoc</span><span class="s2">}</span>
+      <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">draw(Canvas canvas) {</span>
+        <span class="s1">canvas.drawCircle(</span><span class="s0">this</span><span class="s1">.position.getX()</span><span class="s0">, this</span><span class="s1">.position.getY()</span><span class="s0">,</span>
+                <span class="s1">view.getPixelsPerUnit() * </span><span class="s5">0.05f</span><span class="s0">, this</span><span class="s1">.paint)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

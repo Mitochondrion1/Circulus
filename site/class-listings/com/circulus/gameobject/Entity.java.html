@@ -1,0 +1,201 @@
+<html>
+<head>
+<title>Entity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Entity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Defines dynamic object, with health and damage</span>
+ <span class="s2">*/</span>
+<span class="s0">public abstract class </span><span class="s1">Entity </span><span class="s0">implements </span><span class="s1">Runnable</span><span class="s0">, </span><span class="s1">Drawable {</span>
+    <span class="s2">/** The base health of the entity. */</span>
+    <span class="s0">protected float </span><span class="s1">baseHealth</span><span class="s0">;</span>
+    <span class="s2">/** The base damage of the entity. */</span>
+    <span class="s0">protected float </span><span class="s1">baseDamage</span><span class="s0">;</span>
+
+    <span class="s2">/** The position of the entity. */</span>
+    <span class="s0">protected </span><span class="s1">Vector2 position</span><span class="s0">;</span>
+    <span class="s2">/** The pixel position of the entity (position on screen). */</span>
+    <span class="s0">protected </span><span class="s1">Vector2 pixelPosition</span><span class="s0">;</span>
+    <span class="s2">/** The velocity of the entity (has direction). */</span>
+    <span class="s0">protected </span><span class="s1">Vector2 velocity</span><span class="s0">;</span>
+    <span class="s2">/** The speed of the entity (scalar). */</span>
+    <span class="s0">protected float </span><span class="s1">speed</span><span class="s0">;</span>
+    <span class="s2">/** The current health of the entity. */</span>
+    <span class="s0">protected float </span><span class="s1">health</span><span class="s0">;</span>
+    <span class="s2">/** The maximum health of the entity. */</span>
+    <span class="s0">protected float </span><span class="s1">maxHealth</span><span class="s0">;</span>
+    <span class="s2">/** The real damage of the entity. */</span>
+    <span class="s0">protected float </span><span class="s1">damage</span><span class="s0">;</span>
+    <span class="s2">/** The diameter of the entity. */</span>
+    <span class="s0">protected float </span><span class="s1">size</span><span class="s0">;</span>
+    <span class="s2">/** The wait time between executions of code on the thread. */</span>
+    <span class="s0">protected long </span><span class="s1">waitTime</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the entity. */</span>
+    <span class="s0">protected </span><span class="s1">Paint paint</span><span class="s0">;</span>
+    <span class="s2">/** The thread of the entity. */</span>
+    <span class="s0">protected </span><span class="s1">Thread thread</span><span class="s0">;</span>
+    <span class="s2">/** The main game view. */</span>
+    <span class="s0">protected </span><span class="s1">MainView view</span><span class="s0">;</span>
+    <span class="s2">/** The manager object associated with the entity. */</span>
+    <span class="s0">protected </span><span class="s1">Manager manager</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructor</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position  The position of the entity.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">view      The main game view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Entity(Vector2 position</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+        <span class="s0">this</span><span class="s1">.position = position</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.view = view</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.velocity = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s5">0</span><span class="s0">, </span><span class="s5">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.paint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.waitTime = </span><span class="s5">15</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.thread = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Code executed by the thread.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">run() {</span>
+        <span class="s1">behave()</span><span class="s0">;</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">Thread.sleep(waitTime)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(InterruptedException e) {</span>
+            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the position of the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The position of the entity.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getPosition() {</span>
+        <span class="s0">return </span><span class="s1">position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set a new position for the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position The new position.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setPosition(Vector2 position) {</span>
+        <span class="s0">this</span><span class="s1">.position = position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the size of the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The size (diameter) of the entity.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getSize() {</span>
+        <span class="s0">return this</span><span class="s1">.size</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the current health of the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">Entity's current health.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getHealth() {</span>
+        <span class="s0">return </span><span class="s1">health</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Damage the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">damage Amount of damage to do to the entity.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">damage(</span><span class="s0">float </span><span class="s1">damage) {</span>
+        <span class="s0">this</span><span class="s1">.health -= damage</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Detect a collision of a projectile with the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">projectile    The projectile to check collision with.</span>
+     <span class="s2">* </span><span class="s4">@return              </span><span class="s2">True if there is a collision, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">detectHit(Projectile projectile) {</span>
+        <span class="s0">return </span><span class="s1">Vector2.distance(</span><span class="s0">this</span><span class="s1">.position</span><span class="s0">, </span><span class="s1">projectile.getPosition()) &lt; </span><span class="s0">this</span><span class="s1">.size / </span><span class="s5">2 </span><span class="s1">+ projectile.getSize() / </span><span class="s5">2</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Returns whether the entity is alive or not.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">True if the entity is alive, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">isAlive() {</span>
+        <span class="s0">return this</span><span class="s1">.health &gt; </span><span class="s5">0</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* A method that defines the behavior of the entity.</span>
+     <span class="s2">*/</span>
+    <span class="s0">protected void </span><span class="s1">behave() {</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">draw(Canvas canvas) {</span>
+        <span class="s1">canvas.drawCircle(pixelPosition.getX()</span><span class="s0">, </span><span class="s1">pixelPosition.getY()</span><span class="s0">,</span>
+                <span class="s0">this</span><span class="s1">.view.getPixelsPerUnit() * </span><span class="s0">this</span><span class="s1">.size / </span><span class="s5">2</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+        <span class="s1">drawHealthBar(canvas)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw the health bar of the entity.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">canvas The canvas used to draw.</span>
+     <span class="s2">*/</span>
+    <span class="s0">protected void </span><span class="s1">drawHealthBar(Canvas canvas) {</span>
+        <span class="s0">float </span><span class="s1">healthBarBottom = </span><span class="s0">this</span><span class="s1">.position.getY() - </span><span class="s5">0.6f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.size</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">height = </span><span class="s5">15f</span><span class="s0">;</span>
+
+        <span class="s1">Paint green</span><span class="s0">, </span><span class="s1">red</span><span class="s0">;</span>
+        <span class="s1">green = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s1">green.setColor(Color.GREEN)</span><span class="s0">;</span>
+        <span class="s1">red = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s1">red.setColor(Color.RED)</span><span class="s0">;</span>
+
+        <span class="s1">Vector2 bottomLeft = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s0">this</span><span class="s1">.position.getX() - </span><span class="s0">this</span><span class="s1">.size / </span><span class="s5">2</span><span class="s0">, </span><span class="s1">healthBarBottom)</span><span class="s0">;</span>
+        <span class="s1">bottomLeft = view.positionToPixels(view.relativePosition(bottomLeft))</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(health &lt; maxHealth &amp;&amp; health &gt; </span><span class="s5">0</span><span class="s1">) {</span>
+            <span class="s1">canvas.drawRect(bottomLeft.getX()</span><span class="s0">, </span><span class="s1">bottomLeft.getY() - </span><span class="s5">15f</span><span class="s0">,</span>
+                    <span class="s1">bottomLeft.getX() + (</span><span class="s0">this</span><span class="s1">.health / </span><span class="s0">this</span><span class="s1">.maxHealth) * </span><span class="s0">this</span><span class="s1">.size * view.getPixelsPerUnit()</span><span class="s0">,</span>
+                    <span class="s1">bottomLeft.getY()</span><span class="s0">, </span><span class="s1">green)</span><span class="s0">;</span>
+            <span class="s1">canvas.drawRect(bottomLeft.getX() + (</span><span class="s0">this</span><span class="s1">.health / </span><span class="s0">this</span><span class="s1">.maxHealth) * </span><span class="s0">this</span><span class="s1">.size * view.getPixelsPerUnit()</span><span class="s0">,</span>
+                    <span class="s1">bottomLeft.getY() - height</span><span class="s0">, </span><span class="s1">bottomLeft.getX() + </span><span class="s0">this</span><span class="s1">.size * view.getPixelsPerUnit()</span><span class="s0">,</span>
+                    <span class="s1">bottomLeft.getY()</span><span class="s0">, </span><span class="s1">red)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
