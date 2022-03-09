@@ -19,8 +19,6 @@ public class Shooter extends Enemy {
     /** The closest approach distance to the player. */
     private static final float stopDistance = 1f;
 
-    /** True if the enemy is shooting, otherwise false. */
-    private boolean shooting;
     /** True if the enemy has detected and is chasing the player, otherwise false. */
     private boolean detectedPlayer;
     /** The current tick in the attack cycle. */
@@ -42,7 +40,6 @@ public class Shooter extends Enemy {
         this.size = 0.3f;
         this.paint.setColor(Color.GREEN);
 
-        this.shooting = false;
         this.detectedPlayer = false;
         this.shootingTick = 0;
         this.forgetTick = 0;
@@ -63,14 +60,11 @@ public class Shooter extends Enemy {
 
         float distToPlayer = Vector2.distance(position, manager.getPlayer().getPosition());
         boolean moved = false;
-        if (distToPlayer <= detectDistance) {
+        if (distToPlayer <= detectDistance && !detectedPlayer) {
             // Detect the player if close enough
             this.detectedPlayer = true;
             this.forgetTick = ticksToForget;
-            if (!shooting) {
-                this.shooting = true;
-                this.shootingTick = 0;
-            }
+            this.shootingTick = 0;
             if (distToPlayer >= stopDistance) {
                 move();
                 moved = true;
@@ -83,7 +77,6 @@ public class Shooter extends Enemy {
             }
             else if (this.forgetTick == 0) {
                 this.detectedPlayer = false;
-                this.shooting = false;
                 this.shootingTick = 0;
             }
         }
