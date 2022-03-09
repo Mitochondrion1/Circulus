@@ -1,0 +1,232 @@
+<html>
+<head>
+<title>MainView.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #808080;}
+.s6 { color: #6897bb;}
+.s7 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainView.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.playtime</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.activity.MainActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.gameobject.Player</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Store</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The main game view.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">MainView </span><span class="s0">extends </span><span class="s1">View {</span>
+    <span class="s2">/** A reference to the player object. */</span>
+    <span class="s0">private </span><span class="s1">Player player</span><span class="s0">;</span>
+    <span class="s2">/** The manager object. */</span>
+    <span class="s0">private </span><span class="s1">Manager manager</span><span class="s0">;</span>
+    <span class="s2">/** The activity this view is nested in. */</span>
+    <span class="s0">private </span><span class="s1">MainActivity activity</span><span class="s0">;</span>
+
+    <span class="s2">/** The display resolution. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 displaySize</span><span class="s0">;</span>
+    <span class="s2">/** The width of the screen in world-space units. */</span>
+    <span class="s0">private float </span><span class="s1">widthInUnits</span><span class="s0">;</span>
+    <span class="s2">/** The number of pixel per world-space unit.*/</span>
+    <span class="s0">private float </span><span class="s1">pixelsPerUnit</span><span class="s0">;</span>
+
+    <span class="s2">/** The text paint. */</span>
+    <span class="s0">private </span><span class="s1">Paint paint</span><span class="s0">;</span>
+
+    <span class="s2">/** True if the movement and shot directions of the player should be shown, otherwise false. Triggered in settings. */</span>
+    <span class="s0">private boolean </span><span class="s1">showDirections</span><span class="s0">;</span>
+    <span class="s2">/** The length the direction displaying lines. */</span>
+    <span class="s0">private float </span><span class="s1">dirLength</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the shot direction line. */</span>
+    <span class="s0">private </span><span class="s1">Paint dirPaint1</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the movement direction line. */</span>
+    <span class="s0">private </span><span class="s1">Paint dirPaint2</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Construct the view.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">activity The activity this view is nested in.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">MainView(MainActivity activity) {</span>
+        <span class="s0">super</span><span class="s1">(activity)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.activity = activity</span><span class="s0">;</span>
+
+        <span class="s5">//displaySize = DisplayParams.getDisplaySize(activity);</span>
+        <span class="s1">displaySize = activity.getRealDisplaySize()</span><span class="s0">;</span>
+        <span class="s1">widthInUnits = </span><span class="s6">5f</span><span class="s0">;</span>
+        <span class="s1">pixelsPerUnit = displaySize.getX() / widthInUnits</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(MainActivity.getNewGame()) {</span>
+            <span class="s1">manager = </span><span class="s0">new </span><span class="s1">Manager(</span><span class="s0">this, </span><span class="s6">1</span><span class="s0">, </span><span class="s6">0</span><span class="s0">, </span><span class="s6">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">manager = </span><span class="s0">new </span><span class="s1">Manager(</span><span class="s0">this, </span><span class="s1">Store.readInt(activity.getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.level_key</span><span class="s0">, </span><span class="s6">1</span><span class="s1">)</span><span class="s0">,</span>
+                    <span class="s1">Store.readInt(activity.getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.kills_key</span><span class="s0">, </span><span class="s6">0</span><span class="s1">)</span><span class="s0">,</span>
+                    <span class="s1">Store.readInt(activity.getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.score_key</span><span class="s0">, </span><span class="s6">0</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">player = manager.getPlayer()</span><span class="s0">;</span>
+
+        <span class="s1">paint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s1">paint.setColor(Color.WHITE)</span><span class="s0">;</span>
+        <span class="s1">paint.setTextSize(displaySize.getY() / </span><span class="s6">20</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">showDirections = Store.readBool(activity.getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.direction_display_key</span><span class="s0">, false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">dirLength = </span><span class="s6">0.75f </span><span class="s1">* getPixelsPerUnit()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(showDirections) {</span>
+            <span class="s1">dirPaint1 = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+            <span class="s1">dirPaint1.setStrokeWidth(</span><span class="s6">3f</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">dirPaint1.setColor(Color.RED)</span><span class="s0">;</span>
+
+            <span class="s1">dirPaint2 = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+            <span class="s1">dirPaint2.setStrokeWidth(</span><span class="s6">3f</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">dirPaint2.setColor(Color.BLUE)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw on screen.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onDraw(Canvas canvas) {</span>
+        <span class="s0">super</span><span class="s1">.onDraw(canvas)</span><span class="s0">;</span>
+
+        <span class="s5">// Draw the background</span>
+        <span class="s1">manager.drawBackground(canvas)</span><span class="s0">;</span>
+
+        <span class="s5">// Draw shot and movement directions</span>
+        <span class="s0">if </span><span class="s1">(showDirections) {</span>
+            <span class="s1">canvas.drawLine(displaySize.getX() / </span><span class="s6">2</span><span class="s0">, </span><span class="s1">displaySize.getY() / </span><span class="s6">2</span><span class="s0">,</span>
+                    <span class="s1">displaySize.getX() / </span><span class="s6">2 </span><span class="s1">+ player.getTrueVelocity().getX() * dirLength</span><span class="s0">,</span>
+                    <span class="s1">displaySize.getY() / </span><span class="s6">2 </span><span class="s1">+ player.getTrueVelocity().getY() * dirLength</span><span class="s0">,</span>
+                    <span class="s1">dirPaint2)</span><span class="s0">;</span>
+            <span class="s1">canvas.drawLine(displaySize.getX() / </span><span class="s6">2</span><span class="s0">, </span><span class="s1">displaySize.getY() / </span><span class="s6">2</span><span class="s0">,</span>
+                    <span class="s1">displaySize.getX() / </span><span class="s6">2 </span><span class="s1">+ player.getProjectileVelocityNormalized().getX() * dirLength</span><span class="s0">,</span>
+                    <span class="s1">displaySize.getY() / </span><span class="s6">2 </span><span class="s1">+ player.getProjectileVelocityNormalized().getY() * dirLength</span><span class="s0">,</span>
+                    <span class="s1">dirPaint1)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s5">// Draw projectiles, enemies, the player, health packs and the map bounds</span>
+        <span class="s1">manager.drawProjectiles(canvas)</span><span class="s0">;</span>
+        <span class="s1">player.draw(canvas)</span><span class="s0">;</span>
+        <span class="s1">manager.drawEnemies(canvas)</span><span class="s0">;</span>
+        <span class="s1">manager.drawHealthPacks(canvas)</span><span class="s0">;</span>
+        <span class="s1">manager.drawBounds(canvas)</span><span class="s0">;</span>
+
+        <span class="s5">// Draw text with different values on the top-lef corner of the screen</span>
+        <span class="s1">canvas.drawText(</span><span class="s7">&quot;Level: &quot; </span><span class="s1">+ manager.getLevel()</span><span class="s0">, </span><span class="s6">0.01f </span><span class="s1">* displaySize.getX() </span><span class="s0">,</span><span class="s6">0.06f </span><span class="s1">* displaySize.getY()</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawText(manager.getTime()</span><span class="s0">, </span><span class="s6">0.01f </span><span class="s1">* displaySize.getX()</span><span class="s0">, </span><span class="s6">0.12f </span><span class="s1">* displaySize.getY()</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawText(</span><span class="s7">&quot;Score: &quot; </span><span class="s1">+ manager.getScore()</span><span class="s0">, </span><span class="s6">0.01f </span><span class="s1">* displaySize.getX()</span><span class="s0">, </span><span class="s6">0.98f </span><span class="s1">* displaySize.getY()</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+
+        <span class="s1">invalidate()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the player object.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The player object.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Player getPlayer() {</span>
+        <span class="s0">return </span><span class="s1">manager.getPlayer()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Find the position of a vector relative to the player.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position  The vector.</span>
+     <span class="s2">* </span><span class="s4">@return          </span><span class="s2">The vector's position relative to the player.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 relativePosition(Vector2 position) {</span>
+        <span class="s0">return new </span><span class="s1">Vector2(position.getX() - player.getPosition().getX()</span><span class="s0">,</span>
+                <span class="s1">position.getY() - player.getPosition().getY())</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Converts world-space position into pixel position.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position  The world-space position.</span>
+     <span class="s2">* </span><span class="s4">@return          </span><span class="s2">The pixel position of the given vector.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 positionToPixels(Vector2 position) {</span>
+        <span class="s0">return new </span><span class="s1">Vector2(position.getX() * pixelsPerUnit + displaySize.getX() / </span><span class="s6">2</span><span class="s0">,</span>
+                <span class="s1">position.getY() * pixelsPerUnit + displaySize.getY() / </span><span class="s6">2</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get tge width of the display in world-space units.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The width of the display in world-space units.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getWidthInUnits() {</span>
+        <span class="s0">return this</span><span class="s1">.widthInUnits</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the display size.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The display size (in pixels).</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getDisplaySize() {</span>
+        <span class="s0">return this</span><span class="s1">.displaySize</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the amount of pixels per world-space unit.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">Amount of pixels per world-space unit.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getPixelsPerUnit() {</span>
+        <span class="s0">return </span><span class="s1">pixelsPerUnit</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the activity this view is nested in.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The activity this view is nested in.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">MainActivity getActivity() {</span>
+        <span class="s0">return </span><span class="s1">activity</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the manager object.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The manager object.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Manager getManager() {</span>
+        <span class="s0">return </span><span class="s1">manager</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the manger object.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">manager The new manager object.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setManager(Manager manager) {</span>
+        <span class="s0">this</span><span class="s1">.manager = manager</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

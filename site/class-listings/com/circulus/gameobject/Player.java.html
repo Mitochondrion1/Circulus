@@ -1,0 +1,334 @@
+<html>
+<head>
+<title>Player.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #77b767; font-style: italic;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Player.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Store</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The player class.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Player </span><span class="s0">extends </span><span class="s1">Entity </span><span class="s0">implements </span><span class="s1">Runnable {</span>
+    <span class="s2">/** The base tick delay between shots. */</span>
+    <span class="s0">private final int </span><span class="s1">baseProjectileDelay = </span><span class="s3">20</span><span class="s0">;</span>
+    <span class="s2">/** The real tick delay between shots. */</span>
+    <span class="s0">private int </span><span class="s1">projectileDelay</span><span class="s0">;</span>
+    <span class="s2">/** The current tick in the attack cycle. */</span>
+    <span class="s0">private int </span><span class="s1">tick</span><span class="s0">;</span>
+
+    <span class="s2">/** The health multiplier. */</span>
+    <span class="s0">private float </span><span class="s1">healthMultiplier</span><span class="s0">;</span>
+    <span class="s2">/** The damage multiplier. */</span>
+    <span class="s0">private float </span><span class="s1">damageMultiplier</span><span class="s0">;</span>
+    <span class="s2">/** The attack speed multiplier. */</span>
+    <span class="s0">private float </span><span class="s1">attackSpeedMultiplier</span><span class="s0">;</span>
+
+    <span class="s2">/** The start x of the movement touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">startX</span><span class="s0">;</span>
+    <span class="s2">/** The start y of the movement touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">startY</span><span class="s0">;</span>
+    <span class="s2">/** The end x of the movement touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">endX</span><span class="s0">;</span>
+    <span class="s2">/** The end y of the movement touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">endY</span><span class="s0">;</span>
+    <span class="s2">/** The start x of the shot touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">shotStartX</span><span class="s0">;</span>
+    <span class="s2">/** The start y of the shot touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">shotStartY</span><span class="s0">;</span>
+    <span class="s2">/** The end x of the shot touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">shotEndX</span><span class="s0">;</span>
+    <span class="s2">/** The end y of the shot touch gesture. */</span>
+    <span class="s0">private float </span><span class="s1">shotEndY</span><span class="s0">;</span>
+
+    <span class="s2">/** The real velocity of the player at a certain time, unaffected during velocity calculations in values. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 trueVelocity</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a player object.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">position  The initial position of the player.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">view      The main game view.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">manager   The manager object associated with the player.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Player(Vector2 position</span><span class="s0">, </span><span class="s1">MainView view</span><span class="s0">, </span><span class="s1">Manager manager) {</span>
+        <span class="s0">super</span><span class="s1">(position</span><span class="s0">, </span><span class="s1">view)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.pixelPosition = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s0">this</span><span class="s1">.view.getDisplaySize().getX() / </span><span class="s3">2</span><span class="s0">,</span>
+                <span class="s0">this</span><span class="s1">.view.getDisplaySize().getY() / </span><span class="s3">2</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">trueVelocity = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s3">0f</span><span class="s0">, </span><span class="s3">0f</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.baseHealth = </span><span class="s3">100f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.baseDamage = </span><span class="s3">10f</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.damageMultiplier = Store.readFloat(</span><span class="s0">this</span><span class="s1">.view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.damage_key</span><span class="s0">, </span><span class="s3">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.healthMultiplier = Store.readFloat(</span><span class="s0">this</span><span class="s1">.view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.health_key</span><span class="s0">, </span><span class="s3">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.attackSpeedMultiplier = Store.readFloat(</span><span class="s0">this</span><span class="s1">.view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.attack_speed_key</span><span class="s0">, </span><span class="s3">1f</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.speed = </span><span class="s3">1f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.damage = </span><span class="s0">this</span><span class="s1">.damageMultiplier * baseDamage</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.maxHealth = </span><span class="s0">this</span><span class="s1">.healthMultiplier * baseHealth</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.health = </span><span class="s0">this</span><span class="s1">.maxHealth</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.projectileDelay = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s0">this</span><span class="s1">.attackSpeedMultiplier * </span><span class="s0">this</span><span class="s1">.baseProjectileDelay)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.manager = manager</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.size = </span><span class="s3">0.3f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.paint.setColor(Color.WHITE)</span><span class="s0">;</span>
+
+        <span class="s1">tick = </span><span class="s3">0</span><span class="s0">;</span>
+
+        <span class="s1">startX = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s1">startY = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s1">endX = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s1">endY = </span><span class="s3">0</span><span class="s0">;</span>
+
+        <span class="s1">thread.start()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">run() {</span>
+        <span class="s0">while </span><span class="s1">(health &gt; </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s0">super</span><span class="s1">.run()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the position of the player.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">Player's position.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getPosition() {</span>
+        <span class="s0">return </span><span class="s1">position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the start x of the movement touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">startX The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setStartX(</span><span class="s0">float </span><span class="s1">startX) {</span>
+        <span class="s0">this</span><span class="s1">.startX = startX</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the start y of the movement touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">startY The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setStartY(</span><span class="s0">float </span><span class="s1">startY) {</span>
+        <span class="s0">this</span><span class="s1">.startY = startY</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the end x of the movement touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">endX The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setEndX(</span><span class="s0">float </span><span class="s1">endX) {</span>
+        <span class="s0">this</span><span class="s1">.endX = endX</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the end y of the movement touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">endY The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setEndY(</span><span class="s0">float </span><span class="s1">endY) {</span>
+        <span class="s0">this</span><span class="s1">.endY = endY</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the start x of the shot touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">shotStartX The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setShotStartX(</span><span class="s0">float </span><span class="s1">shotStartX) {</span>
+        <span class="s0">this</span><span class="s1">.shotStartX = shotStartX</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the start y of the shot touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">shotStartY The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setShotStartY(</span><span class="s0">float </span><span class="s1">shotStartY) {</span>
+        <span class="s0">this</span><span class="s1">.shotStartY = shotStartY</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the end x of the shot touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">shotEndX The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setShotEndX(</span><span class="s0">float </span><span class="s1">shotEndX) {</span>
+        <span class="s0">this</span><span class="s1">.shotEndX = shotEndX</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the end y of the shot touch gesture.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">shotEndY The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setShotEndY(</span><span class="s0">float </span><span class="s1">shotEndY) {</span>
+        <span class="s0">this</span><span class="s1">.shotEndY = shotEndY</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Heals the player.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">hp The amount of health to heal.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">heal(</span><span class="s0">float </span><span class="s1">hp) {</span>
+        <span class="s0">this</span><span class="s1">.health = Math.min(</span><span class="s0">this</span><span class="s1">.health + </span><span class="s0">this</span><span class="s1">.maxHealth * hp / </span><span class="s3">100f</span><span class="s0">, this</span><span class="s1">.maxHealth)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Heals the player to full health.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">healToFull() {</span>
+        <span class="s0">this</span><span class="s1">.health = </span><span class="s0">this</span><span class="s1">.maxHealth</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Defines the Player's behaviour</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">behave() {</span>
+        <span class="s6">// Calculate the desired velocity of the player</span>
+        <span class="s1">velocity.setX(endX - startX)</span><span class="s0">;</span>
+        <span class="s1">velocity.setY(endY - startY)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(velocity.getLength() != </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s1">velocity.setLength(</span><span class="s3">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">trueVelocity = </span><span class="s0">new </span><span class="s1">Vector2(velocity.getX()</span><span class="s0">, </span><span class="s1">velocity.getY())</span><span class="s0">;</span>
+
+        <span class="s6">// Shoot a projectile under right conditions</span>
+        <span class="s0">if </span><span class="s1">(shotEndX - shotStartX != </span><span class="s3">0 </span><span class="s1">|| shotEndY - shotStartY != </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(tick == </span><span class="s3">0</span><span class="s1">) {</span>
+                <span class="s1">summonProjectile()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s6">// Move the player based on the velocity calculated earlier</span>
+        <span class="s1">position.setX(position.getX() + (waitTime / </span><span class="s3">1000f</span><span class="s1">) * velocity.getX())</span><span class="s0">;</span>
+        <span class="s1">position.setY(position.getY() + (waitTime / </span><span class="s3">1000f</span><span class="s1">) * velocity.getY())</span><span class="s0">;</span>
+
+        <span class="s6">// Update the current tick</span>
+        <span class="s1">tick = (tick + </span><span class="s3">1</span><span class="s1">) % projectileDelay</span><span class="s0">;</span>
+
+        <span class="s6">// Damage the player if they are out of the map bounds</span>
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.isOutOfBounds()) {</span>
+            <span class="s0">this</span><span class="s1">.damage(</span><span class="s0">this</span><span class="s1">.maxHealth / </span><span class="s3">300f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the current tick int the attack cycle.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">tick The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setTick(</span><span class="s0">int </span><span class="s1">tick) {</span>
+        <span class="s0">this</span><span class="s1">.tick = tick</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Returns a normalized projectile velocity vector.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The normalized vector.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getProjectileVelocityNormalized() {</span>
+        <span class="s1">Vector2 vel = </span><span class="s0">new </span><span class="s1">Vector2(shotEndX - shotStartX</span><span class="s0">, </span><span class="s1">shotEndY - shotStartY)</span><span class="s0">;</span>
+        <span class="s1">vel.setLength(</span><span class="s3">1f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">vel</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Shoots a projectile.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">summonProjectile() {</span>
+        <span class="s1">Vector2 projVelocity = </span><span class="s0">new </span><span class="s1">Vector2(shotEndX - shotStartX</span><span class="s0">, </span><span class="s1">shotEndY - shotStartY)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.manager.addPlayerProjectile(</span><span class="s0">new </span><span class="s1">Projectile(</span><span class="s0">this</span><span class="s1">.damage</span><span class="s0">, this</span><span class="s1">.position</span><span class="s0">, </span><span class="s1">projVelocity</span><span class="s0">, this</span><span class="s1">.view))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Increases the maximum health of the player.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">increaseHealth() {</span>
+        <span class="s0">float </span><span class="s1">healthPercentage = </span><span class="s0">this</span><span class="s1">.health / </span><span class="s0">this</span><span class="s1">.maxHealth</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.healthMultiplier += </span><span class="s3">0.4f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.maxHealth = </span><span class="s0">this</span><span class="s1">.healthMultiplier * </span><span class="s0">this</span><span class="s1">.baseHealth</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.health = healthPercentage * </span><span class="s0">this</span><span class="s1">.maxHealth</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Increases the damage of the player.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">increaseDamage() {</span>
+        <span class="s0">this</span><span class="s1">.damageMultiplier += </span><span class="s3">0.4f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.damage = </span><span class="s0">this</span><span class="s1">.damageMultiplier * </span><span class="s0">this</span><span class="s1">.baseDamage</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Increases the attack speed of the player.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">increaseAttackSpeed() {</span>
+        <span class="s0">this</span><span class="s1">.attackSpeedMultiplier *= </span><span class="s3">0.9f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.projectileDelay = (</span><span class="s0">int</span><span class="s1">)Math.ceil(</span><span class="s0">this</span><span class="s1">.attackSpeedMultiplier * </span><span class="s0">this</span><span class="s1">.baseProjectileDelay)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Stores the multipliers for a loaded game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">saveMultipliers() {</span>
+        <span class="s1">Store.saveFloat(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.damage_key</span><span class="s0">, this</span><span class="s1">.damageMultiplier)</span><span class="s0">;</span>
+        <span class="s1">Store.saveFloat(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.health_key</span><span class="s0">, this</span><span class="s1">.healthMultiplier)</span><span class="s0">;</span>
+        <span class="s1">Store.saveFloat(view.getActivity().getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.attack_speed_key</span><span class="s0">, this</span><span class="s1">.attackSpeedMultiplier)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Checks if the player is out of the map bounds.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">True if out of bounds, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">isOutOfBounds() {</span>
+        <span class="s0">return this</span><span class="s1">.position.getX() - </span><span class="s0">this</span><span class="s1">.size / </span><span class="s3">2 </span><span class="s1">&lt; </span><span class="s0">this</span><span class="s1">.manager.getBoundLeft() ||</span>
+                <span class="s0">this</span><span class="s1">.position.getX() + </span><span class="s0">this</span><span class="s1">.size / </span><span class="s3">2 </span><span class="s1">&gt; </span><span class="s0">this</span><span class="s1">.manager.getBoundRight() ||</span>
+                <span class="s0">this</span><span class="s1">.position.getY() - </span><span class="s0">this</span><span class="s1">.size / </span><span class="s3">2 </span><span class="s1">&lt; </span><span class="s0">this</span><span class="s1">.manager.getBoundTop() ||</span>
+                <span class="s0">this</span><span class="s1">.position.getY() + </span><span class="s0">this</span><span class="s1">.size / </span><span class="s3">2 </span><span class="s1">&gt; </span><span class="s0">this</span><span class="s1">.manager.getBoundBottom()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the true velocity vector.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">The true velocity vector.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getTrueVelocity() {</span>
+        <span class="s0">return </span><span class="s1">trueVelocity</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<html>
+<head>
+<title>Laserman.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #77b767; font-style: italic;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Laserman.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Defines the Laserman enemy type. Shoots a beam that damages the player over time.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Laserman </span><span class="s0">extends </span><span class="s1">Enemy {</span>
+    <span class="s2">/** The amount of ticks the attack is on cool down. */</span>
+    <span class="s0">private static final int </span><span class="s1">cooldownTicks = </span><span class="s3">150</span><span class="s0">;</span>
+    <span class="s2">/** The amount of ticks it takes to charge the attack. */</span>
+    <span class="s0">private static final int </span><span class="s1">chargeTicks = </span><span class="s3">150</span><span class="s0">;</span>
+    <span class="s2">/** The amount of ticks that the attack charges and doesn't change direction. */</span>
+    <span class="s0">private static final int </span><span class="s1">finalChargeTicks = </span><span class="s3">75</span><span class="s0">;</span>
+    <span class="s2">/** The length of the attack in ticks. */</span>
+    <span class="s0">private static final int </span><span class="s1">shotTickLength = </span><span class="s3">50</span><span class="s0">;</span>
+    <span class="s2">/** The distance from which an enemy detects the player. */</span>
+    <span class="s0">private static final float </span><span class="s1">detectDistance = </span><span class="s3">2f</span><span class="s0">;</span>
+    <span class="s2">/** The closest an enemy approaches to the player. */</span>
+    <span class="s0">private static final float </span><span class="s1">closestMoveDistance = </span><span class="s3">1.2f</span><span class="s0">;</span>
+    <span class="s2">/** The maximum distance from the player which can trigger a shot. */</span>
+    <span class="s0">private static final float </span><span class="s1">maxShotDistance = </span><span class="s3">3f</span><span class="s0">;</span>
+
+    <span class="s2">/** The direction of the shot. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 shotDirection</span><span class="s0">;</span>
+    <span class="s2">/** True if the enemy is charging the beam, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">isCharging</span><span class="s0">;</span>
+    <span class="s2">/** True if the enemy is in the final stage of charging the beam, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">isFinalCharging</span><span class="s0">;</span>
+    <span class="s2">/** True if the enemy is shooting the beam, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">isShooting</span><span class="s0">;</span>
+    <span class="s2">/** True if the attack is on cool down, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">isOnCoolDown</span><span class="s0">;</span>
+    <span class="s2">/** True if the enemy has detected the player, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">detectedPlayer</span><span class="s0">;</span>
+    <span class="s2">/** The current tick in the attack cycle. */</span>
+    <span class="s0">private int </span><span class="s1">tick</span><span class="s0">;</span>
+
+    <span class="s2">/** The paint of the beam if the enemy is charging the attack. */</span>
+    <span class="s0">private </span><span class="s1">Paint laserPaint1</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the beam when the enemy shoots. */</span>
+    <span class="s0">private </span><span class="s1">Paint laserPaint2</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a Laserman enemy.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">position  The position of the enemy.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">manager   The manager associated with the enemy.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">view      The main game view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Laserman(Vector2 position</span><span class="s0">, </span><span class="s1">Manager manager</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+        <span class="s0">super</span><span class="s1">(position</span><span class="s0">, </span><span class="s1">manager</span><span class="s0">, </span><span class="s1">view)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.speed = </span><span class="s3">0.2f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.size = </span><span class="s3">0.4f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.shotDirection = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s3">0f</span><span class="s0">, </span><span class="s3">0f</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.detectedPlayer = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.isCharging = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.isFinalCharging = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.isShooting = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.isOnCoolDown = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.paint.setColor(</span><span class="s3">0xffa0a0a0</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.laserPaint1 = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.laserPaint1.setColor(Color.RED)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.laserPaint1.setAlpha(</span><span class="s3">100</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.laserPaint1.setStrokeWidth(</span><span class="s3">10f</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.laserPaint2 = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.laserPaint2.setColor(Color.RED)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.laserPaint2.setStrokeWidth(</span><span class="s3">10f</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.assignBasicValues(</span><span class="s3">80f</span><span class="s0">, </span><span class="s3">1f</span><span class="s0">, </span><span class="s3">5</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.health = baseHealth * (</span><span class="s3">0.9f </span><span class="s1">+ </span><span class="s3">0.1f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel() * </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.maxHealth = </span><span class="s0">this</span><span class="s1">.health</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.damage = baseDamage * (</span><span class="s3">0.8f </span><span class="s1">+ </span><span class="s3">0.2f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draw the enemy and its beam.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">draw(Canvas canvas) {</span>
+        <span class="s6">// Draw the shot of an enemy while the shot is charging</span>
+        <span class="s0">if </span><span class="s1">(isCharging || isFinalCharging) {</span>
+            <span class="s1">canvas.drawLine(</span><span class="s0">this</span><span class="s1">.pixelPosition.getX()</span><span class="s0">, this</span><span class="s1">.pixelPosition.getY()</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.pixelPosition.getX() + </span><span class="s0">this</span><span class="s1">.shotDirection.getX() * view.getPixelsPerUnit()</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.pixelPosition.getY() + </span><span class="s0">this</span><span class="s1">.shotDirection.getY() * view.getPixelsPerUnit()</span><span class="s0">, </span><span class="s1">laserPaint1)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s6">// Draw the shot of an enemy while shooting</span>
+        <span class="s0">else if </span><span class="s1">(isShooting) {</span>
+            <span class="s1">canvas.drawLine(</span><span class="s0">this</span><span class="s1">.pixelPosition.getX()</span><span class="s0">, this</span><span class="s1">.pixelPosition.getY()</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.pixelPosition.getX() + </span><span class="s0">this</span><span class="s1">.shotDirection.getX() * view.getPixelsPerUnit()</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.pixelPosition.getY() + </span><span class="s0">this</span><span class="s1">.shotDirection.getY() * view.getPixelsPerUnit()</span><span class="s0">, </span><span class="s1">laserPaint2)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s6">// Draw the enemy itself</span>
+        <span class="s0">super</span><span class="s1">.draw(canvas)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Defines the behavior of the Laserman.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">behave() {</span>
+        <span class="s0">super</span><span class="s1">.behave()</span><span class="s0">;</span>
+
+        <span class="s0">float </span><span class="s1">distToPlayer = Vector2.distance(</span><span class="s0">this</span><span class="s1">.position</span><span class="s0">, this</span><span class="s1">.manager.getPlayer().getPosition())</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(!detectedPlayer &amp;&amp; (distToPlayer &lt;= detectDistance || </span><span class="s0">this</span><span class="s1">.health &lt; </span><span class="s0">this</span><span class="s1">.maxHealth)) {</span>
+            <span class="s6">// Trigger the enemy if close enough to the player or hit</span>
+            <span class="s1">detectedPlayer = </span><span class="s0">true;</span>
+            <span class="s1">isOnCoolDown = </span><span class="s0">true;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(isOnCoolDown) {</span>
+            <span class="s6">// What happens when the enemy is on cool down</span>
+            <span class="s0">this</span><span class="s1">.tick++</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(distToPlayer &gt; maxShotDistance) {</span>
+                <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">if </span><span class="s1">(distToPlayer &gt; closestMoveDistance) {</span>
+                <span class="s1">move()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.tick == cooldownTicks &amp;&amp; distToPlayer &lt;= maxShotDistance) {</span>
+                <span class="s1">isOnCoolDown = </span><span class="s0">false;</span>
+                <span class="s1">isCharging = </span><span class="s0">true;</span>
+                <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">else if </span><span class="s1">(isCharging) {</span>
+            <span class="s6">// What happens when the enemy is charging the attack</span>
+            <span class="s0">this</span><span class="s1">.tick++</span><span class="s0">;</span>
+            <span class="s0">this</span><span class="s1">.shotDirection = Vector2.sub(</span><span class="s0">this</span><span class="s1">.position</span><span class="s0">, this</span><span class="s1">.manager.getPlayer().getPosition())</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.shotDirection.getLength() != </span><span class="s3">0</span><span class="s1">) {</span>
+                <span class="s0">this</span><span class="s1">.shotDirection.setLength(</span><span class="s3">10f</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.tick == chargeTicks) {</span>
+                <span class="s1">isCharging = </span><span class="s0">false;</span>
+                <span class="s1">isFinalCharging = </span><span class="s0">true;</span>
+                <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">else if </span><span class="s1">(isFinalCharging) {</span>
+            <span class="s6">// What happens when the enemy final-charges the attack</span>
+            <span class="s0">this</span><span class="s1">.tick++</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.tick == finalChargeTicks) {</span>
+                <span class="s1">isFinalCharging = </span><span class="s0">false;</span>
+                <span class="s1">isShooting = </span><span class="s0">true;</span>
+                <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">else if </span><span class="s1">(isShooting) {</span>
+            <span class="s6">// What happens when the enemy is shooting</span>
+            <span class="s0">this</span><span class="s1">.tick++</span><span class="s0">;</span>
+            <span class="s1">Vector2 v = Vector2.sub(</span><span class="s0">this</span><span class="s1">.position</span><span class="s0">, this</span><span class="s1">.manager.getPlayer().getPosition())</span><span class="s0">;</span>
+            <span class="s0">float </span><span class="s1">cos = (v.getX() * shotDirection.getX() + v.getY() * shotDirection.getY()) / (v.getLength() * shotDirection.getLength())</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(cos &gt; (</span><span class="s0">float</span><span class="s1">)Math.sqrt(</span><span class="s3">1 </span><span class="s1">- Math.pow((</span><span class="s0">this</span><span class="s1">.manager.getPlayer().getSize() / </span><span class="s3">2</span><span class="s1">) / v.getLength()</span><span class="s0">, </span><span class="s3">2</span><span class="s1">))) {</span>
+                <span class="s6">// Damage the player if they get hit by the laser</span>
+                <span class="s0">this</span><span class="s1">.manager.getPlayer().damage(</span><span class="s0">this</span><span class="s1">.damage)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.tick == shotTickLength) {</span>
+                <span class="s1">isShooting = </span><span class="s0">false;</span>
+                <span class="s1">isOnCoolDown = </span><span class="s0">true;</span>
+                <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<html>
+<head>
+<title>DatabaseHelper.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6a8759;}
+.s4 { color: #77b767; font-style: italic;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DatabaseHelper.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.database</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.ContentValues</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.database.Cursor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.database.sqlite.SQLiteDatabase</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.database.sqlite.SQLiteOpenHelper</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The class that defines an object used for saving game info into an SQLite database.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">DatabaseHelper </span><span class="s0">extends </span><span class="s1">SQLiteOpenHelper {</span>
+    <span class="s2">/** Represents the name of the table. */</span>
+    <span class="s0">public static final </span><span class="s1">String GAMES_TABLE = </span><span class="s3">&quot;GAMES_TABLE&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represent the id column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_ID = </span><span class="s3">&quot;ID&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represents the date column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_DATE = </span><span class="s3">&quot;DATE&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represents the game length column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_TIME = </span><span class="s3">&quot;TIME&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represents the game level column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_GAME_LEVEL = </span><span class="s3">&quot;GAME_LEVEL&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represents the game kill amount column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_GAME_KILLS = </span><span class="s3">&quot;GAME_KILLS&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represents the game score column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_GAME_SCORE = </span><span class="s3">&quot;GAME_SCORE&quot;</span><span class="s0">;</span>
+    <span class="s2">/** Represents the favorite game column. */</span>
+    <span class="s0">public static final </span><span class="s1">String COLUMN_FAVORITE = </span><span class="s3">&quot;FAVORITE&quot;</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a database helper object.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">context The context of the database.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">DatabaseHelper(Context context) {</span>
+        <span class="s0">super</span><span class="s1">(context</span><span class="s0">, </span><span class="s3">&quot;games.db&quot;</span><span class="s0">, null, </span><span class="s6">1</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Creates the database table once the helper object is created.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">db The database.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onCreate(SQLiteDatabase db) {</span>
+        <span class="s1">String createTableStatement = </span><span class="s3">&quot;CREATE TABLE &quot; </span><span class="s1">+ GAMES_TABLE +</span>
+                <span class="s3">&quot; (&quot; </span><span class="s1">+ COLUMN_ID + </span><span class="s3">&quot; INTEGER PRIMARY KEY AUTOINCREMENT, &quot; </span><span class="s1">+</span>
+                <span class="s1">COLUMN_DATE + </span><span class="s3">&quot; TEXT, &quot; </span><span class="s1">+</span>
+                <span class="s1">COLUMN_TIME + </span><span class="s3">&quot; TEXT, &quot; </span><span class="s1">+</span>
+                <span class="s1">COLUMN_GAME_LEVEL + </span><span class="s3">&quot; INT, &quot; </span><span class="s1">+</span>
+                <span class="s1">COLUMN_GAME_KILLS + </span><span class="s3">&quot; INT, &quot; </span><span class="s1">+</span>
+                <span class="s1">COLUMN_GAME_SCORE + </span><span class="s3">&quot; INT, &quot; </span><span class="s1">+</span>
+                <span class="s1">COLUMN_FAVORITE + </span><span class="s3">&quot; BOOL)&quot;</span><span class="s0">;</span>
+
+        <span class="s1">db.execSQL(createTableStatement)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onUpgrade(SQLiteDatabase db</span><span class="s0">, int </span><span class="s1">oldVersion</span><span class="s0">, int </span><span class="s1">newVersion) {</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Adds a game to the game info database.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">gameModel The object that contains game info.</span>
+     <span class="s2">* </span><span class="s5">@return          </span><span class="s2">True if the game info has been successfully added to the database, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">addOne(GameModel gameModel) {</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">ContentValues cv = </span><span class="s0">new </span><span class="s1">ContentValues()</span><span class="s0">;</span>
+
+        <span class="s1">cv.put(COLUMN_DATE</span><span class="s0">, </span><span class="s1">gameModel.getDate())</span><span class="s0">;</span>
+        <span class="s1">cv.put(COLUMN_TIME</span><span class="s0">, </span><span class="s1">gameModel.getTime())</span><span class="s0">;</span>
+        <span class="s1">cv.put(COLUMN_GAME_LEVEL</span><span class="s0">, </span><span class="s1">gameModel.getLevel())</span><span class="s0">;</span>
+        <span class="s1">cv.put(COLUMN_GAME_KILLS</span><span class="s0">, </span><span class="s1">gameModel.getKills())</span><span class="s0">;</span>
+        <span class="s1">cv.put(COLUMN_GAME_SCORE</span><span class="s0">, </span><span class="s1">gameModel.getScore())</span><span class="s0">;</span>
+        <span class="s1">cv.put(COLUMN_FAVORITE</span><span class="s0">, false</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">long </span><span class="s1">insert = db.insert(GAMES_TABLE</span><span class="s0">, null, </span><span class="s1">cv)</span><span class="s0">;</span>
+
+        <span class="s1">db.close()</span><span class="s0">;</span>
+
+        <span class="s0">return </span><span class="s1">insert != -</span><span class="s6">1</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get a list of games from the database</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">mode  What games to retrieve: 1 - favorites; otherwise - all.</span>
+     <span class="s2">* </span><span class="s5">@return      </span><span class="s2">A list of games retrieved according to the given value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">List&lt;GameModel&gt; getGames(</span><span class="s0">int </span><span class="s1">mode) {</span>
+        <span class="s1">List&lt;GameModel&gt; returnList = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+
+        <span class="s1">String queryString = </span><span class="s3">&quot;SELECT * FROM &quot; </span><span class="s1">+ GAMES_TABLE</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(mode == </span><span class="s6">1</span><span class="s1">) {</span>
+            <span class="s1">queryString = queryString + </span><span class="s3">&quot; WHERE &quot; </span><span class="s1">+ COLUMN_FAVORITE + </span><span class="s3">&quot; = 1&quot;</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">SQLiteDatabase db = </span><span class="s0">this</span><span class="s1">.getReadableDatabase()</span><span class="s0">;</span>
+
+        <span class="s1">Cursor cursor = db.rawQuery(queryString</span><span class="s0">, null</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">int </span><span class="s1">gameId</span><span class="s0">, </span><span class="s1">gameLevel</span><span class="s0">, </span><span class="s1">gameKills</span><span class="s0">, </span><span class="s1">gameScore</span><span class="s0">;</span>
+        <span class="s0">boolean </span><span class="s1">favorite</span><span class="s0">;</span>
+        <span class="s1">String gameDate</span><span class="s0">, </span><span class="s1">gameTime</span><span class="s0">;</span>
+        <span class="s1">GameModel model</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(cursor.moveToLast()) {</span>
+            <span class="s0">do </span><span class="s1">{</span>
+                <span class="s1">gameId = cursor.getInt(</span><span class="s6">0</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">gameDate = cursor.getString(</span><span class="s6">1</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">gameTime = cursor.getString(</span><span class="s6">2</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">gameLevel = cursor.getInt(</span><span class="s6">3</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">gameKills = cursor.getInt(</span><span class="s6">4</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">gameScore = cursor.getInt(</span><span class="s6">5</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">favorite = cursor.getInt(</span><span class="s6">6</span><span class="s1">) == </span><span class="s6">1</span><span class="s0">;</span>
+
+                <span class="s1">model = </span><span class="s0">new </span><span class="s1">GameModel(gameId</span><span class="s0">, </span><span class="s1">gameDate</span><span class="s0">, </span><span class="s1">gameTime</span><span class="s0">, </span><span class="s1">gameLevel</span><span class="s0">, </span><span class="s1">gameKills</span><span class="s0">, </span><span class="s1">gameScore</span><span class="s0">, </span><span class="s1">favorite)</span><span class="s0">;</span>
+                <span class="s1">returnList.add(model)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">while </span><span class="s1">(cursor.moveToPrevious())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">cursor.close()</span><span class="s0">;</span>
+        <span class="s1">db.close()</span><span class="s0">;</span>
+
+        <span class="s0">return </span><span class="s1">returnList</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Delete a game with the id of a given game from the database.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">gameModel The game to remove.</span>
+     <span class="s2">* </span><span class="s5">@return          </span><span class="s2">True if the game was removed from the database, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">deleteOne(GameModel gameModel) {</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">String queryString = </span><span class="s3">&quot;DELETE FROM &quot; </span><span class="s1">+ GAMES_TABLE + </span><span class="s3">&quot; WHERE &quot; </span><span class="s1">+ COLUMN_ID + </span><span class="s3">&quot; = &quot; </span><span class="s1">+ gameModel.getId()</span><span class="s0">;</span>
+
+        <span class="s1">Cursor cursor = db.rawQuery(queryString</span><span class="s0">, null</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">return </span><span class="s1">cursor.moveToFirst()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Toggles the favorite value of a given game.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">gameModel The game to toggle favorite for.</span>
+     <span class="s2">* </span><span class="s5">@return          </span><span class="s2">True if successful, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">toggleFavorite(GameModel gameModel) {</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">ContentValues cv = </span><span class="s0">new </span><span class="s1">ContentValues()</span><span class="s0">;</span>
+
+        <span class="s1">gameModel.setFavorite(!gameModel.isFavorite())</span><span class="s0">;</span>
+        <span class="s1">cv.put(COLUMN_FAVORITE</span><span class="s0">, </span><span class="s1">gameModel.isFavorite())</span><span class="s0">;</span>
+
+        <span class="s0">int </span><span class="s1">success = db.update(GAMES_TABLE</span><span class="s0">, </span><span class="s1">cv</span><span class="s0">, </span><span class="s1">COLUMN_ID + </span><span class="s3">&quot; = &quot; </span><span class="s1">+ gameModel.getId()</span><span class="s0">, null</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">db.close()</span><span class="s0">;</span>
+
+        <span class="s0">return </span><span class="s1">success != -</span><span class="s6">1</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

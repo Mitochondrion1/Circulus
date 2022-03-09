@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>Vector2.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #808080;}
+.s4 { color: #6a8759;}
+.s5 { color: #77b767; font-style: italic;}
+.s6 { color: #629755; font-weight: bold; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Vector2.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.utility</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Defines a 2-dimensional vector object, with float coordinates.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Vector2 {</span>
+    <span class="s3">// Load native-lib.cpp</span>
+    <span class="s0">static </span><span class="s1">{</span>
+        <span class="s1">System.loadLibrary(</span><span class="s4">&quot;native-lib&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/** The x coordinate. */</span>
+    <span class="s0">private float </span><span class="s1">x</span><span class="s0">;</span>
+    <span class="s2">/** The y coordinate. */</span>
+    <span class="s0">private float </span><span class="s1">y</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a Vector2 object.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">x The x coordinate.</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">y The y coordinate.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2(</span><span class="s0">float </span><span class="s1">x</span><span class="s0">, float </span><span class="s1">y) {</span>
+        <span class="s0">this</span><span class="s1">.x = x</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.y = y</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the x coordinate.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@return </span><span class="s2">The x coordinate of the vector.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getX() {</span>
+        <span class="s0">return </span><span class="s1">x</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set a new x coordinate for the vector.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">x The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setX(</span><span class="s0">float </span><span class="s1">x) {</span>
+        <span class="s0">this</span><span class="s1">.x = x</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the y coordinate.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@return </span><span class="s2">The y coordinate of the vector.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getY() {</span>
+        <span class="s0">return </span><span class="s1">y</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set a new y coordinate for the vector.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">y The new value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setY(</span><span class="s0">float </span><span class="s1">y) {</span>
+        <span class="s0">this</span><span class="s1">.y = y</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Calculates the length of the vector.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@return </span><span class="s2">The length of the vector.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getLength() {</span>
+        <span class="s0">return </span><span class="s1">(</span><span class="s0">float</span><span class="s1">)Math.sqrt(x * x + y * y)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the length of the vector to a certain length.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">length The desired length.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setLength(</span><span class="s0">float </span><span class="s1">length) {</span>
+        <span class="s3">// New length calculation uses the algorithm from native-lib</span>
+        <span class="s0">float </span><span class="s1">multiplier = length * quickInvSqrt(</span><span class="s0">this</span><span class="s1">.x * </span><span class="s0">this</span><span class="s1">.x + </span><span class="s0">this</span><span class="s1">.y * </span><span class="s0">this</span><span class="s1">.y)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.x *= multiplier</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.y *= multiplier</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Calculates the distance between two given points.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">v1    One point.</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">v2    Another point.</span>
+     <span class="s2">* </span><span class="s6">@return      </span><span class="s2">The distance between the points.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static float </span><span class="s1">distance(Vector2 v1</span><span class="s0">, </span><span class="s1">Vector2 v2) {</span>
+        <span class="s0">return </span><span class="s1">(</span><span class="s0">float</span><span class="s1">)Math.sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Subtracts 2 vectors.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">v1    One vector.</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">v2    Another Vector.</span>
+     <span class="s2">* </span><span class="s6">@return      </span><span class="s2">The subtraction of the first vector from the second one.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static </span><span class="s1">Vector2 sub(Vector2 v1</span><span class="s0">, </span><span class="s1">Vector2 v2) {</span>
+        <span class="s0">return new </span><span class="s1">Vector2(v2.x - v1.x</span><span class="s0">, </span><span class="s1">v2.y - v1.y)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get a string representing the vector.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s6">@return </span><span class="s2">The vector string in a (x,y) format.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">String toString() {</span>
+        <span class="s0">return </span><span class="s4">&quot;(&quot; </span><span class="s1">+ x + </span><span class="s4">&quot;, &quot; </span><span class="s1">+ y + </span><span class="s4">&quot;)&quot;</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* C++ fast inverse square root algorithm implementation.</span>
+     <span class="s2">* </span><span class="s5">&lt;p&gt;</span><span class="s2">&lt;</span>
+     <span class="s2">* </span><span class="s6">@param </span><span class="s2">lengthSquared The length of the vector squared.</span>
+     <span class="s2">* </span><span class="s6">@return              </span><span class="s2">The inverse of the length.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public native float </span><span class="s1">quickInvSqrt(</span><span class="s0">float </span><span class="s1">lengthSquared)</span><span class="s0">;</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

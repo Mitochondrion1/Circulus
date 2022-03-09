@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>Enemy.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Enemy.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* An abstract, AI controlled enemy.</span>
+ <span class="s2">*/</span>
+<span class="s0">public abstract class </span><span class="s1">Enemy </span><span class="s0">extends </span><span class="s1">Entity </span><span class="s0">implements </span><span class="s1">Runnable {</span>
+    <span class="s2">/** The change in position in a tick. */</span>
+    <span class="s0">protected </span><span class="s1">Vector2 positionChange</span><span class="s0">;</span>
+    <span class="s2">/** True if the enemy is alive, otherwise false. */</span>
+    <span class="s0">protected boolean </span><span class="s1">alive</span><span class="s0">;</span>
+    <span class="s2">/** The arrow associated with the enemy. */</span>
+    <span class="s0">protected </span><span class="s1">Arrow arrow</span><span class="s0">;</span>
+
+    <span class="s2">/** The amount of points the player gains for killing the enemy. */</span>
+    <span class="s0">protected int </span><span class="s1">scorePoints</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructor</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position  The initial position of the enemy.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">manager   The manager object associated with the enemy.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">view      The view the enemy belongs to (the main game view).</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Enemy(Vector2 position</span><span class="s0">, </span><span class="s1">Manager manager</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+        <span class="s0">super</span><span class="s1">(position</span><span class="s0">, </span><span class="s1">view)</span><span class="s0">;</span>
+
+        <span class="s1">alive = </span><span class="s0">true;</span>
+        <span class="s0">this</span><span class="s1">.manager = manager</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.arrow = </span><span class="s0">new </span><span class="s1">Arrow(</span><span class="s0">this</span><span class="s1">.view)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.arrow.setAlpha((</span><span class="s0">int</span><span class="s1">)Math.min(</span><span class="s5">0xff</span><span class="s0">, </span><span class="s5">0xff </span><span class="s1">/ Vector2.distance(</span>
+                <span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition()</span><span class="s0">, this</span><span class="s1">.position)))</span><span class="s0">;</span>
+        <span class="s1">pixelPosition = </span><span class="s0">this</span><span class="s1">.view.positionToPixels(</span><span class="s0">this</span><span class="s1">.view.relativePosition(</span><span class="s0">this</span><span class="s1">.position))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* The code that executes on the thread of the enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">run() {</span>
+        <span class="s1">Vector2 arrowDir</span><span class="s0">;</span>
+        <span class="s0">while </span><span class="s1">(health &gt; </span><span class="s5">0</span><span class="s1">) {</span>
+            <span class="s0">this</span><span class="s1">.pixelPosition = </span><span class="s0">this</span><span class="s1">.findPixelPosition()</span><span class="s0">;</span>
+            <span class="s1">arrowDir = Vector2.sub(</span><span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition()</span><span class="s0">, this</span><span class="s1">.position)</span><span class="s0">;</span>
+            <span class="s1">arrowDir.setLength(</span><span class="s5">0.5f</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">arrow.setPosition(view.positionToPixels(view.relativePosition(</span>
+                    <span class="s0">new </span><span class="s1">Vector2(</span><span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition().getX() + arrowDir.getX()</span><span class="s0">,</span>
+                    <span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition().getY() + arrowDir.getY()))))</span><span class="s0">;</span>
+            <span class="s0">this</span><span class="s1">.arrow.setAlpha((</span><span class="s0">int</span><span class="s1">)Math.min(</span><span class="s5">0xff</span><span class="s0">, </span><span class="s5">4 </span><span class="s1">* </span><span class="s5">0xff </span><span class="s1">/ Vector2.distance(</span>
+                    <span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition()</span><span class="s0">, this</span><span class="s1">.position)))</span><span class="s0">;</span>
+
+            <span class="s0">super</span><span class="s1">.run()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">alive = </span><span class="s0">false;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Calculates the pixel position of the enemy (the position on screen).</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The pixel position of the enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">protected </span><span class="s1">Vector2 findPixelPosition() {</span>
+        <span class="s0">return </span><span class="s1">view.positionToPixels(view.relativePosition(position))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">draw(Canvas canvas) {</span>
+        <span class="s0">this</span><span class="s1">.arrow.draw(canvas)</span><span class="s0">;</span>
+        <span class="s0">super</span><span class="s1">.draw(canvas)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the position of the enemy.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The position of the enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getPosition() {</span>
+        <span class="s0">return this</span><span class="s1">.position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the score gain from the enemy.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The score gained for killing the enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getScorePoints() {</span>
+        <span class="s0">return </span><span class="s1">scorePoints</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Starts the thread of the enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">startThread() {</span>
+        <span class="s1">thread.start()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Assigns basic values for an enemy.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">health        The base health of the enemy to assign.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">damage        The base damage of the enemy to assign.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">scorePoints   The score gain for killing the enemy to assign.</span>
+     <span class="s2">*/</span>
+    <span class="s0">protected void </span><span class="s1">assignBasicValues(</span><span class="s0">float </span><span class="s1">health</span><span class="s0">, float </span><span class="s1">damage</span><span class="s0">, int </span><span class="s1">scorePoints) {</span>
+        <span class="s0">this</span><span class="s1">.baseHealth = health</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.baseDamage = damage</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.scorePoints = scorePoints</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Moves the enemy.</span>
+     <span class="s2">*/</span>
+    <span class="s0">protected void </span><span class="s1">move() {</span>
+        <span class="s0">this</span><span class="s1">.positionChange = Vector2.sub(position</span><span class="s0">, </span><span class="s1">manager.getPlayer().getPosition())</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.positionChange.setLength(waitTime / </span><span class="s5">1000f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.speed)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.position.setX(</span><span class="s0">this</span><span class="s1">.position.getX() + </span><span class="s0">this</span><span class="s1">.positionChange.getX())</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.position.setY(</span><span class="s0">this</span><span class="s1">.position.getY() + </span><span class="s0">this</span><span class="s1">.positionChange.getY())</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<html>
+<head>
+<title>SettingsActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #77b767; font-style: italic;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SettingsActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.activity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.pm.ActivityInfo</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.Menu</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.MenuInflater</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.MenuItem</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.SeekBar</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Switch</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Store</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The activity that allows to change settings.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">SettingsActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+    <span class="s2">/** Headset volume slider. */</span>
+    <span class="s0">private </span><span class="s1">SeekBar headsetVolume</span><span class="s0">;</span>
+    <span class="s2">/** Speaker volume slider. */</span>
+    <span class="s0">private </span><span class="s1">SeekBar speakerVolume</span><span class="s0">;</span>
+    <span class="s2">/** Accelerometer mode switch. */</span>
+    <span class="s0">private </span><span class="s1">Switch accSwitch</span><span class="s0">;</span>
+    <span class="s2">/** Direction display switch. */</span>
+    <span class="s0">private </span><span class="s1">Switch dirSwitch</span><span class="s0">;</span>
+    <span class="s2">/** Accelerometer sensitivity slider. */</span>
+    <span class="s0">private </span><span class="s1">SeekBar accSensitivity</span><span class="s0">;</span>
+
+    <span class="s2">/** A value representing the current layout: 0 - volume, 1 - accessibility. */</span>
+    <span class="s0">private int </span><span class="s1">currentView</span><span class="s0">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.settings_volume)</span><span class="s0">;</span>
+        <span class="s1">getSupportActionBar().setTitle(R.string.button_settings)</span><span class="s0">;</span>
+        <span class="s1">currentView = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s1">headsetVolume = findViewById(R.id.headsetVol)</span><span class="s0">;</span>
+        <span class="s1">speakerVolume = findViewById(R.id.speakerVol)</span><span class="s0">;</span>
+        <span class="s1">headsetVolume.setMax(</span><span class="s3">100</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">speakerVolume.setMax(</span><span class="s3">100</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">headsetVolume.setProgress(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.headset_volume_key</span><span class="s0">, </span><span class="s3">20</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s1">speakerVolume.setProgress(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.speaker_volume_key</span><span class="s0">, </span><span class="s3">100</span><span class="s1">))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Inflates the options menu.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">menu  The menu to inflate.</span>
+     <span class="s2">* </span><span class="s5">@return      </span><span class="s2">true (has no meaning).</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">onCreateOptionsMenu(Menu menu) {</span>
+        <span class="s6">// Inflate the menu</span>
+        <span class="s1">MenuInflater inflater = getMenuInflater()</span><span class="s0">;</span>
+        <span class="s1">inflater.inflate(R.menu.settings_menu</span><span class="s0">, </span><span class="s1">menu)</span><span class="s0">;</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Defines what happens when an options menu item is selected.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">item  The menu item that is selected.</span>
+     <span class="s2">* </span><span class="s5">@return      </span><span class="s2">Returned value has no meaning.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">onOptionsItemSelected(MenuItem item) {</span>
+        <span class="s6">// Handle menu item selection</span>
+        <span class="s0">switch </span><span class="s1">(item.getItemId()) {</span>
+            <span class="s0">case </span><span class="s1">R.id.volume_option:</span>
+                <span class="s0">if </span><span class="s1">(currentView != </span><span class="s3">0</span><span class="s1">) {</span>
+                    <span class="s1">saveSettings()</span><span class="s0">;</span>
+                    <span class="s1">setContentView(R.layout.settings_volume)</span><span class="s0">;</span>
+                    <span class="s1">currentView = </span><span class="s3">0</span><span class="s0">;</span>
+                    <span class="s1">headsetVolume = findViewById(R.id.headsetVol)</span><span class="s0">;</span>
+                    <span class="s1">speakerVolume = findViewById(R.id.speakerVol)</span><span class="s0">;</span>
+                    <span class="s1">headsetVolume.setMax(</span><span class="s3">100</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">speakerVolume.setMax(</span><span class="s3">100</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">headsetVolume.setProgress(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.headset_volume_key</span><span class="s0">, </span><span class="s3">20</span><span class="s1">))</span><span class="s0">;</span>
+                    <span class="s1">speakerVolume.setProgress(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.speaker_volume_key</span><span class="s0">, </span><span class="s3">100</span><span class="s1">))</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">return true;</span>
+            <span class="s0">case </span><span class="s1">R.id.accessibility_option:</span>
+                <span class="s0">if </span><span class="s1">(currentView != </span><span class="s3">1</span><span class="s1">) {</span>
+                    <span class="s1">saveSettings()</span><span class="s0">;</span>
+                    <span class="s1">setContentView(R.layout.settings_accessibility)</span><span class="s0">;</span>
+                    <span class="s1">currentView = </span><span class="s3">1</span><span class="s0">;</span>
+                    <span class="s1">accSwitch = findViewById(R.id.accelerometer_switch)</span><span class="s0">;</span>
+                    <span class="s1">dirSwitch = findViewById(R.id.direction_switch)</span><span class="s0">;</span>
+                    <span class="s1">accSensitivity = findViewById(R.id.accSensitivity)</span><span class="s0">;</span>
+                    <span class="s1">accSwitch.setChecked(Store.readBool(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.accelerometer_key</span><span class="s0">, true</span><span class="s1">))</span><span class="s0">;</span>
+                    <span class="s1">dirSwitch.setChecked(Store.readBool(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.direction_display_key</span><span class="s0">, false</span><span class="s1">))</span><span class="s0">;</span>
+                    <span class="s1">accSensitivity.setMax(</span><span class="s3">3</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">accSensitivity.setProgress(Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.sensitivity_key</span><span class="s0">, </span><span class="s3">2</span><span class="s1">) - </span><span class="s3">1</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">return true;</span>
+            <span class="s0">case </span><span class="s1">R.id.to_menu_option:</span>
+                <span class="s1">finish()</span><span class="s0">;</span>
+            <span class="s0">default</span><span class="s1">:</span>
+                <span class="s0">return super</span><span class="s1">.onOptionsItemSelected(item)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s6">// Save settings when the activity is stopped, destroyed or paused</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onStop() {</span>
+        <span class="s0">super</span><span class="s1">.onStop()</span><span class="s0">;</span>
+        <span class="s1">saveSettings()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onDestroy() {</span>
+        <span class="s0">super</span><span class="s1">.onDestroy()</span><span class="s0">;</span>
+        <span class="s1">saveSettings()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onPause() {</span>
+        <span class="s0">super</span><span class="s1">.onPause()</span><span class="s0">;</span>
+        <span class="s1">saveSettings()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+
+    <span class="s2">/**</span>
+     <span class="s2">* Saves the settings.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">saveSettings() {</span>
+        <span class="s0">if </span><span class="s1">(currentView == </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s1">Store.saveInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.headset_volume_key</span><span class="s0">, </span><span class="s1">headsetVolume.getProgress())</span><span class="s0">;</span>
+            <span class="s1">Store.saveInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.speaker_volume_key</span><span class="s0">, </span><span class="s1">speakerVolume.getProgress())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(currentView == </span><span class="s3">1</span><span class="s1">) {</span>
+            <span class="s1">Store.saveBool(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.accelerometer_key</span><span class="s0">, </span><span class="s1">accSwitch.isChecked())</span><span class="s0">;</span>
+            <span class="s1">Store.saveBool(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.direction_display_key</span><span class="s0">, </span><span class="s1">dirSwitch.isChecked())</span><span class="s0">;</span>
+            <span class="s1">Store.saveInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.sensitivity_key</span><span class="s0">, </span><span class="s1">accSensitivity.getProgress() + </span><span class="s3">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

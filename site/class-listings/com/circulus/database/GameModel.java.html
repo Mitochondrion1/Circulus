@@ -1,0 +1,211 @@
+<html>
+<head>
+<title>GameModel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GameModel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.database</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* A class of an object that contains the properties of a game.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">GameModel {</span>
+    <span class="s2">/** The id of the game. */</span>
+    <span class="s0">private int </span><span class="s1">id</span><span class="s0">;</span>
+    <span class="s2">/** The date the game was played on. */</span>
+    <span class="s0">private </span><span class="s1">String date</span><span class="s0">;</span>
+    <span class="s2">/** The length of the game. */</span>
+    <span class="s0">private </span><span class="s1">String time</span><span class="s0">;</span>
+    <span class="s2">/** The level the game ended on. */</span>
+    <span class="s0">private int </span><span class="s1">level</span><span class="s0">;</span>
+    <span class="s2">/** The amount of kills in the game. */</span>
+    <span class="s0">private int </span><span class="s1">kills</span><span class="s0">;</span>
+    <span class="s2">/** The score achieved in the game. */</span>
+    <span class="s0">private int </span><span class="s1">score</span><span class="s0">;</span>
+    <span class="s2">/** Is the game marked as favorite. */</span>
+    <span class="s0">private boolean </span><span class="s1">favorite</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a game info object.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">id        The id of the game.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">date      The date the game was played on.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">time      The length of the game.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">level     The level the game ended on.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">kills     The amount of kills in the game.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">score     The score achieved in the game.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">favorite  Is the game marked as favorite.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">GameModel(</span><span class="s0">int </span><span class="s1">id</span><span class="s0">, </span><span class="s1">String date</span><span class="s0">, </span><span class="s1">String time</span><span class="s0">, int </span><span class="s1">level</span><span class="s0">, int </span><span class="s1">kills</span><span class="s0">, int </span><span class="s1">score</span><span class="s0">, boolean </span><span class="s1">favorite) {</span>
+        <span class="s0">this</span><span class="s1">.id = id</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.date = date</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.time = time</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.level = level</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.kills = kills</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.score = score</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.favorite = favorite</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* An empty constructor.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">GameModel() {</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the id of the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The id of the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getId() {</span>
+        <span class="s0">return </span><span class="s1">id</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the id of the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">id The id of the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setId(</span><span class="s0">int </span><span class="s1">id) {</span>
+        <span class="s0">this</span><span class="s1">.id = id</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the level the game ended on.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The level the game ended on.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getLevel() {</span>
+        <span class="s0">return </span><span class="s1">level</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the level the game ended on.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">level The level the game ended on.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setLevel(</span><span class="s0">int </span><span class="s1">level) {</span>
+        <span class="s0">this</span><span class="s1">.level = level</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the amount of kills in the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The amount of kills in the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getKills() {</span>
+        <span class="s0">return </span><span class="s1">kills</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the amount of kills in the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">kills The amount of kills in the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setKills(</span><span class="s0">int </span><span class="s1">kills) {</span>
+        <span class="s0">this</span><span class="s1">.kills = kills</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the score achieved in the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The score achieved in the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getScore() {</span>
+        <span class="s0">return </span><span class="s1">score</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the score achieved in the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">score The score achieved in the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setScore(</span><span class="s0">int </span><span class="s1">score) {</span>
+        <span class="s0">this</span><span class="s1">.score = score</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the date the game was played on.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The date the game was played on.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">String getDate() {</span>
+        <span class="s0">return </span><span class="s1">date</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the date the game was played on.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">date The date the game was played on.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setDate(String date) {</span>
+        <span class="s0">this</span><span class="s1">.date = date</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the length of the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The length of the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">String getTime() {</span>
+        <span class="s0">return </span><span class="s1">time</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the length of the game.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">time The length of the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setTime(String time) {</span>
+        <span class="s0">this</span><span class="s1">.time = time</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Is the game marked as favorite or not.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">True if marked as favorite, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">isFavorite() {</span>
+        <span class="s0">return </span><span class="s1">favorite</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Sets the value for if the game is marked as favorite.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">favorite True if marked as favorite, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setFavorite(</span><span class="s0">boolean </span><span class="s1">favorite) {</span>
+        <span class="s0">this</span><span class="s1">.favorite = favorite</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets a string that represents the object.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">A string with game info.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">String toString() {</span>
+        <span class="s0">return </span><span class="s5">&quot;Game #&quot; </span><span class="s1">+ id + </span><span class="s5">&quot;:</span><span class="s0">\n</span><span class="s5">&quot; </span><span class="s1">+</span>
+                <span class="s5">&quot;Played on &quot; </span><span class="s1">+ date + </span><span class="s5">'</span><span class="s0">\n</span><span class="s5">' </span><span class="s1">+</span>
+                <span class="s5">&quot;Length: &quot; </span><span class="s1">+ time + </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">&quot; </span><span class="s1">+</span>
+                <span class="s5">&quot;Level reached: &quot; </span><span class="s1">+ level + </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">&quot; </span><span class="s1">+</span>
+                <span class="s5">&quot;Total kills: &quot; </span><span class="s1">+ kills + </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">&quot; </span><span class="s1">+</span>
+                <span class="s5">&quot;Score: &quot; </span><span class="s1">+ score</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

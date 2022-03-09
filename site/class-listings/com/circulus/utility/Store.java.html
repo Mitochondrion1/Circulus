@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>Store.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Store.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.utility</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.SharedPreferences</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Contains methods to store and read from shared preferences.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Store {</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Stores an integer.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context   The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key       The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">value     The value to store.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static void </span><span class="s1">saveInt(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, int </span><span class="s1">value) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s1">SharedPreferences.Editor editor = sharedPref.edit()</span><span class="s0">;</span>
+        <span class="s1">editor.putInt(context.getString(key)</span><span class="s0">, </span><span class="s1">value)</span><span class="s0">;</span>
+        <span class="s1">editor.commit()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Reads an integer.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context       The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key           The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">defaultValue  The default value to return.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static int </span><span class="s1">readInt(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, int </span><span class="s1">defaultValue) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">sharedPref.getInt(context.getString(key)</span><span class="s0">, </span><span class="s1">defaultValue)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Stores a long integer.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context   The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key       The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">value     The value to store.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static void </span><span class="s1">saveLong(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, long </span><span class="s1">value) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s1">SharedPreferences.Editor editor = sharedPref.edit()</span><span class="s0">;</span>
+        <span class="s1">editor.putLong(context.getString(key)</span><span class="s0">, </span><span class="s1">value)</span><span class="s0">;</span>
+        <span class="s1">editor.commit()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Reads a long integer.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context       The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key           The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">defaultValue  The default value to return.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static long </span><span class="s1">readLong(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, long </span><span class="s1">defaultValue) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">sharedPref.getLong(context.getString(key)</span><span class="s0">, </span><span class="s1">defaultValue)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Stores a boolean.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context   The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key       The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">value     The value to store.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static void </span><span class="s1">saveBool(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, boolean </span><span class="s1">value) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s1">SharedPreferences.Editor editor = sharedPref.edit()</span><span class="s0">;</span>
+        <span class="s1">editor.putBoolean(context.getString(key)</span><span class="s0">, </span><span class="s1">value)</span><span class="s0">;</span>
+        <span class="s1">editor.commit()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Reads a boolean.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context       The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key           The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">defaultValue  The default value to return.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static boolean </span><span class="s1">readBool(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, boolean </span><span class="s1">defaultValue) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">sharedPref.getBoolean(context.getString(key)</span><span class="s0">, </span><span class="s1">defaultValue)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Stores a float.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context   The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key       The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">value     The value to store.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static void </span><span class="s1">saveFloat(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, float </span><span class="s1">value) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s1">SharedPreferences.Editor editor = sharedPref.edit()</span><span class="s0">;</span>
+        <span class="s1">editor.putFloat(context.getString(key)</span><span class="s0">, </span><span class="s1">value)</span><span class="s0">;</span>
+        <span class="s1">editor.commit()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Reads a float.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">context       The context.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">key           The shared preference key.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">defaultValue  The default value to return.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static float </span><span class="s1">readFloat(Context context</span><span class="s0">, int </span><span class="s1">key</span><span class="s0">, float </span><span class="s1">defaultValue) {</span>
+        <span class="s1">SharedPreferences sharedPref = context.getSharedPreferences(context.getString(R.string.shared_pref_key)</span><span class="s0">, </span><span class="s1">Context.MODE_PRIVATE)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">sharedPref.getFloat(context.getString(key)</span><span class="s0">, </span><span class="s1">defaultValue)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

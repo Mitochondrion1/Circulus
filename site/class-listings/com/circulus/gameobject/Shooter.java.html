@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>Shooter.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #77b767; font-style: italic;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Shooter.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Defines the shooter enemy type. The enemy chases and shoots the player.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Shooter </span><span class="s0">extends </span><span class="s1">Enemy {</span>
+    <span class="s2">/** The delay in ticks between shots. */</span>
+    <span class="s0">private static final int </span><span class="s1">shotTickDelay = </span><span class="s3">60</span><span class="s0">;</span>
+    <span class="s2">/** The time it takes the enemy to forget the player if out of detection range. */</span>
+    <span class="s0">private static final int </span><span class="s1">ticksToForget = </span><span class="s3">100</span><span class="s0">;</span>
+    <span class="s2">/** The distance from which the enemy detects the player. */</span>
+    <span class="s0">private static final float </span><span class="s1">detectDistance = </span><span class="s3">3f</span><span class="s0">;</span>
+    <span class="s2">/** The closest approach distance to the player. */</span>
+    <span class="s0">private static final float </span><span class="s1">stopDistance = </span><span class="s3">1f</span><span class="s0">;</span>
+
+    <span class="s2">/** True if the enemy is shooting, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">shooting</span><span class="s0">;</span>
+    <span class="s2">/** True if the enemy has detected and is chasing the player, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">detectedPlayer</span><span class="s0">;</span>
+    <span class="s2">/** The current tick in the attack cycle. */</span>
+    <span class="s0">private int </span><span class="s1">shootingTick</span><span class="s0">;</span>
+    <span class="s2">/** The amount of ticks remaining until the enemy will forget about the player, if the player is out of range. */</span>
+    <span class="s0">private int </span><span class="s1">forgetTick</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a Shooter enemy.</span>
+     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">position  The position of the enemy.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">manager   The manager associated with the enemy.</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">view      The main game view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Shooter(Vector2 position</span><span class="s0">, </span><span class="s1">Manager manager</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+        <span class="s0">super</span><span class="s1">(position</span><span class="s0">, </span><span class="s1">manager</span><span class="s0">, </span><span class="s1">view)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.speed = </span><span class="s3">0.3f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.size = </span><span class="s3">0.3f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.paint.setColor(Color.GREEN)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.shooting = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.detectedPlayer = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.shootingTick = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.forgetTick = </span><span class="s3">0</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.assignBasicValues(</span><span class="s3">60f</span><span class="s0">, </span><span class="s3">5f</span><span class="s0">, </span><span class="s3">2</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.damage = baseDamage * (</span><span class="s3">0.5f </span><span class="s1">+ </span><span class="s3">0.5f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.health = baseHealth * (</span><span class="s3">0.9f </span><span class="s1">+ </span><span class="s3">0.1f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel() * </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.maxHealth = </span><span class="s0">this</span><span class="s1">.health</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Defines the behavior of the Shooter.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">behave() {</span>
+        <span class="s0">super</span><span class="s1">.behave()</span><span class="s0">;</span>
+
+        <span class="s0">float </span><span class="s1">distToPlayer = Vector2.distance(position</span><span class="s0">, </span><span class="s1">manager.getPlayer().getPosition())</span><span class="s0">;</span>
+        <span class="s0">boolean </span><span class="s1">moved = </span><span class="s0">false;</span>
+        <span class="s0">if </span><span class="s1">(distToPlayer &lt;= detectDistance) {</span>
+            <span class="s6">// Detect the player if close enough</span>
+            <span class="s0">this</span><span class="s1">.detectedPlayer = </span><span class="s0">true;</span>
+            <span class="s0">this</span><span class="s1">.forgetTick = ticksToForget</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(!shooting) {</span>
+                <span class="s0">this</span><span class="s1">.shooting = </span><span class="s0">true;</span>
+                <span class="s0">this</span><span class="s1">.shootingTick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">if </span><span class="s1">(distToPlayer &gt;= stopDistance) {</span>
+                <span class="s1">move()</span><span class="s0">;</span>
+                <span class="s1">moved = </span><span class="s0">true;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">else if </span><span class="s1">(distToPlayer &gt; detectDistance) {</span>
+            <span class="s6">// Start forgetting about the player if too far</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.forgetTick &gt; </span><span class="s3">0</span><span class="s1">) {</span>
+                <span class="s0">this</span><span class="s1">.forgetTick--</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">else if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.forgetTick == </span><span class="s3">0</span><span class="s1">) {</span>
+                <span class="s0">this</span><span class="s1">.detectedPlayer = </span><span class="s0">false;</span>
+                <span class="s0">this</span><span class="s1">.shooting = </span><span class="s0">false;</span>
+                <span class="s0">this</span><span class="s1">.shootingTick = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.detectedPlayer) {</span>
+            <span class="s6">// Move and charge shots while the player is detected</span>
+            <span class="s0">if </span><span class="s1">(!moved &amp;&amp; distToPlayer &gt;= stopDistance) {</span>
+                <span class="s1">move()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">this</span><span class="s1">.shootingTick = (</span><span class="s0">this</span><span class="s1">.shootingTick + </span><span class="s3">1</span><span class="s1">) % shotTickDelay</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(shootingTick == </span><span class="s3">0</span><span class="s1">) {</span>
+                <span class="s1">shoot()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Shoots a projectile.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">shoot() {</span>
+        <span class="s0">this</span><span class="s1">.manager.addEnemyProjectile(</span><span class="s0">new </span><span class="s1">Projectile(</span><span class="s0">this</span><span class="s1">.damage</span><span class="s0">, this</span><span class="s1">.position</span><span class="s0">,</span>
+                <span class="s1">Vector2.sub(position</span><span class="s0">, </span><span class="s1">manager.getPlayer().getPosition())</span><span class="s0">, this</span><span class="s1">.view))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

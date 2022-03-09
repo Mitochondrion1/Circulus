@@ -1,0 +1,473 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+.s5 { color: #808080;}
+.s6 { color: #77b767; font-style: italic;}
+.s7 { color: #629755; font-weight: bold; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.activity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.fragment.app.DialogFragment</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.pm.ActivityInfo</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Point</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.hardware.Sensor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.hardware.SensorEvent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.hardware.SensorEventListener</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.hardware.SensorManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.Display</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.MotionEvent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.dialog.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MusicService</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.main.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Store</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* The main game activity, where the game itself runs.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity </span><span class="s0">implements </span><span class="s1">SensorEventListener {</span>
+    <span class="s2">/** The main game view. */</span>
+    <span class="s0">private </span><span class="s1">MainView view</span><span class="s0">;</span>
+    <span class="s2">/** The intent to activate the music service. */</span>
+    <span class="s0">private </span><span class="s1">Intent musicServiceIntent</span><span class="s0">;</span>
+    <span class="s2">/** The resolution of the display. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 displaySize</span><span class="s0">;</span>
+    <span class="s2">/** True if accelerometer mode is activated, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">accelerometerMode</span><span class="s0">;</span>
+    <span class="s2">/** True if the level end dialog is displayed, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">levelEndDialogShown</span><span class="s0">;</span>
+    <span class="s2">/** A string that represents the text displayed in the level end dialog. */</span>
+    <span class="s0">private </span><span class="s1">String increasedValueString</span><span class="s0">;</span>
+
+    <span class="s2">/** The accelerometer sensitivity, as it was selected in the settings. */</span>
+    <span class="s0">private int </span><span class="s1">accSensitivity</span><span class="s0">;</span>
+    <span class="s2">/** The time between accelerometer updates. */</span>
+    <span class="s0">private static final int </span><span class="s1">UPDATE_THRESHOLD = </span><span class="s3">15</span><span class="s0">;</span>
+    <span class="s2">/** The sensor manager. */</span>
+    <span class="s0">private </span><span class="s1">SensorManager mSensorManager</span><span class="s0">;</span>
+    <span class="s2">/** The accelerometer sensor. */</span>
+    <span class="s0">private </span><span class="s1">Sensor mAccelerometer</span><span class="s0">;</span>
+
+    <span class="s2">/** The time of the last accelerometer update. */</span>
+    <span class="s0">private long </span><span class="s1">mLastUpdate</span><span class="s0">;</span>
+
+    <span class="s2">/** True if the user selected to begin a new game, otherwise false. */</span>
+    <span class="s0">private static boolean </span><span class="s1">newGame = </span><span class="s0">false;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">getSupportActionBar().hide()</span><span class="s0">;</span>
+        <span class="s1">setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)</span><span class="s0">;</span>
+
+        <span class="s1">hideNavigation()</span><span class="s0">;</span>
+
+        <span class="s1">musicServiceIntent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">MusicService.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">view = </span><span class="s0">new </span><span class="s1">MainView(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">displaySize = getRealDisplaySize()</span><span class="s0">;</span>
+        <span class="s1">accelerometerMode = Store.readBool(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.accelerometer_key</span><span class="s0">, true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">levelEndDialogShown = </span><span class="s0">false;</span>
+        <span class="s1">increasedValueString = </span><span class="s4">&quot;&quot;</span><span class="s0">;</span>
+        <span class="s1">accSensitivity = Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.sensitivity_key</span><span class="s0">, </span><span class="s3">2</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s5">// Register the accelerometer if in accelerometer mode</span>
+        <span class="s0">if </span><span class="s1">(accelerometerMode) {</span>
+            <span class="s1">mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE)</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(</span><span class="s0">null </span><span class="s1">== (mAccelerometer = mSensorManager</span>
+                    <span class="s1">.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)))</span>
+                <span class="s1">finish()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s5">// Start the music service</span>
+        <span class="s1">startService(musicServiceIntent)</span><span class="s0">;</span>
+
+        <span class="s5">// Set the content view</span>
+        <span class="s1">setContentView(view)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onResume() {</span>
+        <span class="s0">super</span><span class="s1">.onResume()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(accelerometerMode) {</span>
+            <span class="s1">mSensorManager.registerListener(</span><span class="s0">this, </span><span class="s1">mAccelerometer</span><span class="s0">,</span>
+                    <span class="s1">SensorManager.SENSOR_DELAY_UI)</span><span class="s0">;</span>
+
+            <span class="s1">mLastUpdate = System.currentTimeMillis()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/** True if a touch gesture was detected and the player should move, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">move = </span><span class="s0">false;</span>
+    <span class="s2">/** True if a touch gesture was detected and the player should shoot, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">shoot = </span><span class="s0">false;</span>
+    <span class="s2">/** The id of the move gesture. */</span>
+    <span class="s0">private int </span><span class="s1">moveId</span><span class="s0">;</span>
+    <span class="s2">/** The id of the shot gesture. */</span>
+    <span class="s0">private int </span><span class="s1">shotId</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Manages touch events.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@param </span><span class="s2">event The touch event.</span>
+     <span class="s2">* </span><span class="s7">@return </span><span class="s2">Returned value has no meaning.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">onTouchEvent(MotionEvent event) {</span>
+        <span class="s0">if </span><span class="s1">(!isDestroyed()) {</span>
+            <span class="s0">if </span><span class="s1">(accelerometerMode) {</span>
+                <span class="s5">// In accelerometer mode use touch only for shots</span>
+                <span class="s0">switch </span><span class="s1">(event.getAction()) {</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_DOWN:</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_MOVE:</span>
+                        <span class="s1">view.getPlayer().setShotStartX(displaySize.getX() / </span><span class="s3">2</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setShotStartY(displaySize.getY() / </span><span class="s3">2</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setShotEndX(event.getX())</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setShotEndY(event.getY())</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_UP:</span>
+                        <span class="s1">view.getPlayer().setShotStartX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setShotStartY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setShotEndX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setShotEndY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s0">else </span><span class="s1">{</span>
+                <span class="s5">/* 
+                 * In touch mode use touch in the right side of the screen 
+                 * to move and on the left side to shoot 
+                 */</span>
+                <span class="s0">switch </span><span class="s1">(event.getActionMasked()) {</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_DOWN:</span>
+                        <span class="s0">if </span><span class="s1">(event.getX() &gt;= displaySize.getX() / </span><span class="s3">2</span><span class="s1">) {</span>
+                            <span class="s1">view.getPlayer().setStartX(event.getX())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setStartY(event.getY())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndX(event.getX())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndY(event.getY())</span><span class="s0">;</span>
+                            <span class="s1">move = </span><span class="s0">true;</span>
+                            <span class="s1">moveId = event.getPointerId(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">view.getPlayer().setShotStartX(event.getX())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotStartY(event.getY())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndX(event.getX())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndY(event.getY())</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setTick(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">shoot = </span><span class="s0">true;</span>
+                            <span class="s1">shotId = event.getPointerId(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_POINTER_DOWN:</span>
+                        <span class="s0">if </span><span class="s1">(event.getX(event.getActionIndex()) &gt;= displaySize.getX() / </span><span class="s3">2 </span><span class="s1">&amp;&amp; !move) {</span>
+
+                            <span class="s1">view.getPlayer().setStartX(event.getX(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setStartY(event.getY(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndX(event.getX(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndY(event.getY(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">move = </span><span class="s0">true;</span>
+                            <span class="s1">moveId = event.getPointerId(event.getActionIndex())</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">else if </span><span class="s1">(event.getX(event.getActionIndex()) &lt; displaySize.getX() / </span><span class="s3">2  </span><span class="s1">&amp;&amp; !shoot) {</span>
+                            <span class="s1">view.getPlayer().setShotStartX(event.getX(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotStartY(event.getY(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndX(event.getX(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndY(event.getY(event.getActionIndex()))</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setTick(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">shoot = </span><span class="s0">true;</span>
+                            <span class="s1">shotId = event.getPointerId(event.getActionIndex())</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_MOVE:</span>
+                        <span class="s0">if </span><span class="s1">(move) {</span>
+                            <span class="s0">try </span><span class="s1">{</span>
+                                <span class="s1">view.getPlayer().setEndX(event.getX(event.findPointerIndex(moveId)))</span><span class="s0">;</span>
+                                <span class="s1">view.getPlayer().setEndY(event.getY(event.findPointerIndex(moveId)))</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">catch </span><span class="s1">(IllegalArgumentException e) {</span>
+                                <span class="s1">moveId = event.getPointerId(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                        <span class="s1">}</span>
+                        <span class="s0">if </span><span class="s1">(shoot) {</span>
+                            <span class="s0">try </span><span class="s1">{</span>
+                                <span class="s1">view.getPlayer().setShotEndX(event.getX(event.findPointerIndex(shotId)))</span><span class="s0">;</span>
+                                <span class="s1">view.getPlayer().setShotEndY(event.getY(event.findPointerIndex(shotId)))</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">catch </span><span class="s1">(IllegalArgumentException e) {</span>
+                                <span class="s1">shotId = event.getPointerId(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                        <span class="s1">}</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_POINTER_UP:</span>
+                        <span class="s0">if </span><span class="s1">(event.getActionIndex() == event.findPointerIndex(moveId)) {</span>
+                            <span class="s1">view.getPlayer().setStartX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setStartY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">move = </span><span class="s0">false;</span>
+                            <span class="s1">shotId = event.getPointerId(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">view.getPlayer().setShotStartX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotStartY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">shoot = </span><span class="s0">false;</span>
+                            <span class="s1">moveId = event.getPointerId(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">MotionEvent.ACTION_UP:</span>
+                        <span class="s0">if </span><span class="s1">(move) {</span>
+                            <span class="s1">view.getPlayer().setStartX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setStartY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setEndY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">move = </span><span class="s0">false;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">view.getPlayer().setShotStartX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotStartY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">view.getPlayer().setShotEndY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s1">shoot = </span><span class="s0">false;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">break;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s0">return true;</span>
+        <span class="s1">}</span>
+        <span class="s0">return false;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onPause() {</span>
+        <span class="s0">super</span><span class="s1">.onPause()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(accelerometerMode) {</span>
+            <span class="s1">mSensorManager.unregisterListener(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">stopService(musicServiceIntent)</span><span class="s0">;</span>
+        <span class="s1">finish()</span><span class="s0">;</span>
+        <span class="s1">view = </span><span class="s0">null;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onStop() {</span>
+        <span class="s0">super</span><span class="s1">.onStop()</span><span class="s0">;</span>
+        <span class="s1">stopService(musicServiceIntent)</span><span class="s0">;</span>
+        <span class="s1">finish()</span><span class="s0">;</span>
+        <span class="s1">view = </span><span class="s0">null;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onDestroy() {</span>
+        <span class="s0">super</span><span class="s1">.onDestroy()</span><span class="s0">;</span>
+        <span class="s1">stopService(musicServiceIntent)</span><span class="s0">;</span>
+        <span class="s1">view = </span><span class="s0">null;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Detects accelerometer changes, and acts respectively.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@param </span><span class="s2">event The sensor event.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onSensorChanged(SensorEvent event) {</span>
+        <span class="s5">// Track changes in accelerometer values and respond respectively</span>
+        <span class="s0">if </span><span class="s1">(accelerometerMode) {</span>
+            <span class="s0">if </span><span class="s1">(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {</span>
+                <span class="s0">long </span><span class="s1">actualTime = System.currentTimeMillis()</span><span class="s0">;</span>
+
+                <span class="s0">if </span><span class="s1">(actualTime - mLastUpdate &gt; UPDATE_THRESHOLD) {</span>
+                    <span class="s1">mLastUpdate = actualTime</span><span class="s0">;</span>
+
+                    <span class="s0">float </span><span class="s1">x = event.values[</span><span class="s3">0</span><span class="s1">]</span><span class="s0">, </span><span class="s1">y = event.values[</span><span class="s3">1</span><span class="s1">]</span><span class="s0">;</span>
+
+                    <span class="s0">if </span><span class="s1">(Math.abs(x) &gt; accSensitivity || Math.abs(y) &gt; accSensitivity) {</span>
+                        <span class="s1">view.getPlayer().setStartX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setStartY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setEndY(x)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setEndX(y)</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                    <span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">view.getPlayer().setEndX(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">view.getPlayer().setEndY(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onAccuracyChanged(Sensor sensor</span><span class="s0">, int </span><span class="s1">accuracy) {</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Restarts the game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">restartGame() {</span>
+        <span class="s0">this</span><span class="s1">.view = </span><span class="s0">new </span><span class="s1">MainView(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">setContentView(</span><span class="s0">this</span><span class="s1">.view)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+
+    <span class="s2">/**</span>
+     <span class="s2">* Returns to main menu by destroying the activity.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">returnToMenu() {</span>
+        <span class="s1">finish()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+
+    <span class="s2">/**</span>
+     <span class="s2">* Displays the game over dialog.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">showGameOverDialog() {</span>
+        <span class="s1">saveHighScores()</span><span class="s0">;</span>
+        <span class="s1">DialogFragment dialogFragment = </span><span class="s0">new </span><span class="s1">GameOverDialogFragment()</span><span class="s0">;</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">dialogFragment.show(getSupportFragmentManager()</span><span class="s0">, </span><span class="s4">&quot;game_over&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">finally </span><span class="s1">{</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Displays the level end dialog.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">showLevelEndDialog() {</span>
+        <span class="s1">levelEndDialogShown = </span><span class="s0">true;</span>
+        <span class="s1">DialogFragment dialogFragment = </span><span class="s0">new </span><span class="s1">LevelEndDialogFragment()</span><span class="s0">;</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">dialogFragment.show(getSupportFragmentManager()</span><span class="s0">, </span><span class="s4">&quot;level_complete&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">finally </span><span class="s1">{</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Returns whether the level end dialog is shown.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@return </span><span class="s2">True if the level end dialog is shown, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">isLevelEndDialogShown() {</span>
+        <span class="s0">return this</span><span class="s1">.levelEndDialogShown</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the value for the boolean that represents whether the level end dialog is shown.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@param </span><span class="s2">levelEndDialogShown True if the level end dialog is shown, false otherwise.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setLevelEndDialogShown(</span><span class="s0">boolean </span><span class="s1">levelEndDialogShown) {</span>
+        <span class="s0">this</span><span class="s1">.levelEndDialogShown = levelEndDialogShown</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Save high scores.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">saveHighScores() {</span>
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.view.getManager().getLevel() &gt; Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.highest_level_key</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)) {</span>
+            <span class="s1">Store.saveInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.highest_level_key</span><span class="s0">, this</span><span class="s1">.view.getManager().getLevel())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.view.getManager().getKills() &gt; Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.most_kills_key</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)) {</span>
+            <span class="s1">Store.saveInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.most_kills_key</span><span class="s0">, this</span><span class="s1">.view.getManager().getKills())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(</span><span class="s0">this</span><span class="s1">.view.getManager().getScore() &gt; Store.readInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.highest_score_key</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)) {</span>
+            <span class="s1">Store.saveInt(getApplicationContext()</span><span class="s0">, </span><span class="s1">R.string.highest_score_key</span><span class="s0">, this</span><span class="s1">.view.getManager().getScore())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the message string for an increased value.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@return </span><span class="s2">The string for increased value.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">String getIncreasedValueString() {</span>
+        <span class="s0">return </span><span class="s1">increasedValueString</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the message for an increased value.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@param </span><span class="s2">string The desire message.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setIncreasedValueString(String string) {</span>
+        <span class="s0">this</span><span class="s1">.increasedValueString = string</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Gets the game manager object.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@return </span><span class="s2">The manager object associated with the view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Manager getManager() {</span>
+        <span class="s0">return this</span><span class="s1">.view.getManager()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set the value for the new game field.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@param </span><span class="s2">bool True if it is a new game, false if it is a loaded game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static void </span><span class="s1">setNewGame(</span><span class="s0">boolean </span><span class="s1">bool) {</span>
+        <span class="s1">newGame = bool</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the value of the new game field.</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@return </span><span class="s2">True if new game, false if loaded game.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static boolean </span><span class="s1">getNewGame() {</span>
+        <span class="s0">return </span><span class="s1">newGame</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Hides the navigation bar.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">hideNavigation() {</span>
+        <span class="s1">View decorView = getWindow().getDecorView()</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE</span>
+                <span class="s1">| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</span>
+                <span class="s1">| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN</span>
+                <span class="s1">| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION</span>
+                <span class="s1">| View.SYSTEM_UI_FLAG_FULLSCREEN</span>
+                <span class="s1">| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY</span><span class="s0">;</span>
+        <span class="s1">decorView.setSystemUiVisibility(flags)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Find the real display size (when navigation is hidden).</span>
+     <span class="s2">* </span><span class="s6">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s7">@return </span><span class="s2">The display size when the navigation bar is hidden.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getRealDisplaySize() {</span>
+        <span class="s1">Display display = getWindowManager().getDefaultDisplay()</span><span class="s0">;</span>
+        <span class="s1">Point size = </span><span class="s0">new </span><span class="s1">Point()</span><span class="s0">;</span>
+        <span class="s1">display.getRealSize(size)</span><span class="s0">;</span>
+        <span class="s0">return new </span><span class="s1">Vector2(size.x</span><span class="s0">, </span><span class="s1">size.y)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

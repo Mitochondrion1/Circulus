@@ -1,0 +1,171 @@
+<html>
+<head>
+<title>Projectile.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Projectile.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* Defines a round projectile, moving in a straight line.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">Projectile </span><span class="s0">implements </span><span class="s1">Runnable</span><span class="s0">, </span><span class="s1">Drawable {</span>
+    <span class="s2">/** The damage of the projectile. */</span>
+    <span class="s0">private float </span><span class="s1">damage</span><span class="s0">;</span>
+    <span class="s2">/** The position of the projectile. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 position</span><span class="s0">;</span>
+    <span class="s2">/** The velocity of the projectile (has direction). */</span>
+    <span class="s0">private </span><span class="s1">Vector2 velocity</span><span class="s0">;</span>
+    <span class="s2">/** The speed of the projectile (scalar). */</span>
+    <span class="s0">private float </span><span class="s1">speed</span><span class="s0">;</span>
+    <span class="s2">/** The diameter of the projectile. */</span>
+    <span class="s0">private float </span><span class="s1">size</span><span class="s0">;</span>
+    <span class="s2">/** The pause time between ticks. */</span>
+    <span class="s0">private int </span><span class="s1">waitTime</span><span class="s0">;</span>
+    <span class="s2">/** The lifetime of the projectile in ticks. */</span>
+    <span class="s0">private int </span><span class="s1">lifetime</span><span class="s0">;</span>
+    <span class="s2">/** True if the projectile has hit a target, otherwise false. */</span>
+    <span class="s0">private boolean </span><span class="s1">hitTarget</span><span class="s0">;</span>
+    <span class="s2">/** The projectile paint. */</span>
+    <span class="s0">private </span><span class="s1">Paint paint</span><span class="s0">;</span>
+    <span class="s2">/** The main game view. */</span>
+    <span class="s0">private </span><span class="s1">MainView view</span><span class="s0">;</span>
+    <span class="s2">/** The thread of the projectile. */</span>
+    <span class="s0">private </span><span class="s1">Thread thread</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a projectile.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">damage    The projectile damage.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position  The projectile position.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">velocity  The projectile velocity.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">view      The main game view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Projectile(</span><span class="s0">float </span><span class="s1">damage</span><span class="s0">, </span><span class="s1">Vector2 position</span><span class="s0">, </span><span class="s1">Vector2 velocity</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+        <span class="s0">this</span><span class="s1">.damage = damage</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.position = </span><span class="s0">new </span><span class="s1">Vector2(position.getX()</span><span class="s0">, </span><span class="s1">position.getY())</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.velocity = velocity</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.size = </span><span class="s5">0.1f</span><span class="s0">;</span>
+        <span class="s1">speed = </span><span class="s5">2f</span><span class="s0">;</span>
+        <span class="s1">waitTime = </span><span class="s5">15</span><span class="s0">;</span>
+        <span class="s1">lifetime = </span><span class="s5">200</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.velocity.setLength(speed)</span><span class="s0">;</span>
+        <span class="s1">hitTarget = </span><span class="s0">false;</span>
+        <span class="s0">this</span><span class="s1">.view = view</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.paint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s1">paint.setColor(Color.YELLOW)</span><span class="s0">;</span>
+
+        <span class="s1">thread = </span><span class="s0">new </span><span class="s1">Thread(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">thread.start()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Code Executed by the thread.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">run() {</span>
+        <span class="s0">while </span><span class="s1">(!hitTarget &amp;&amp; lifetime &gt; </span><span class="s5">0</span><span class="s1">) {</span>
+            <span class="s0">this</span><span class="s1">.position.setX(</span><span class="s0">this</span><span class="s1">.position.getX() + (waitTime / </span><span class="s5">1000f</span><span class="s1">) * </span><span class="s0">this</span><span class="s1">.velocity.getX())</span><span class="s0">;</span>
+            <span class="s0">this</span><span class="s1">.position.setY(</span><span class="s0">this</span><span class="s1">.position.getY() + (waitTime / </span><span class="s5">1000f</span><span class="s1">) * </span><span class="s0">this</span><span class="s1">.velocity.getY())</span><span class="s0">;</span>
+            <span class="s1">lifetime--</span><span class="s0">;</span>
+
+            <span class="s0">try </span><span class="s1">{</span>
+                <span class="s1">Thread.sleep(waitTime)</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">catch </span><span class="s1">(InterruptedException e) {</span>
+                <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(lifetime == </span><span class="s5">0</span><span class="s1">) {</span>
+            <span class="s1">hitTarget = </span><span class="s0">true;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the damage of the projectile.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">Projectile's damage.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getDamage() {</span>
+        <span class="s0">return </span><span class="s1">damage</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the position of the projectile.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">Projectile's position.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getPosition() {</span>
+        <span class="s0">return </span><span class="s1">position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Returns whether the projectile has hit a target or not.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">True if the projectile has hit a target or its lifetime has expired, otherwise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">isHitTarget() {</span>
+        <span class="s0">return </span><span class="s1">hitTarget</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the size of the projectile.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">Projectile's size (diameter).</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getSize() {</span>
+        <span class="s0">return </span><span class="s1">size</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set whether the projectile has hit a target.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">hasHitTarget True if the projectile hit a target, other wise false.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setHitTarget(</span><span class="s0">boolean </span><span class="s1">hasHitTarget) {</span>
+        <span class="s0">this</span><span class="s1">.hitTarget = hasHitTarget</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draws the projectile.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">draw(Canvas canvas) {</span>
+        <span class="s1">canvas.drawCircle(findPixelPosition().getX()</span><span class="s0">, </span><span class="s1">findPixelPosition().getY()</span><span class="s0">,</span>
+                <span class="s0">this</span><span class="s1">.view.getPixelsPerUnit() * </span><span class="s0">this</span><span class="s1">.size / </span><span class="s5">2</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Finds the pixel position of the projectile and returns it.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">Projectile's pixel position.</span>
+     <span class="s2">*/</span>
+    <span class="s0">private </span><span class="s1">Vector2 findPixelPosition() {</span>
+        <span class="s0">return </span><span class="s1">view.positionToPixels(view.relativePosition(</span><span class="s0">this</span><span class="s1">.position))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

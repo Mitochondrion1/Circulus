@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>HealthPack.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #77b767; font-style: italic;}
+.s4 { color: #629755; font-weight: bold; font-style: italic;}
+.s5 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HealthPack.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.graphics.Canvas</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Paint</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+
+<span class="s2">/**</span>
+ <span class="s2">* A health pack that heals the player.</span>
+ <span class="s2">*/</span>
+<span class="s0">public class </span><span class="s1">HealthPack </span><span class="s0">implements </span><span class="s1">Drawable {</span>
+    <span class="s2">/** The diameter of the health pack. */</span>
+    <span class="s0">private float </span><span class="s1">size</span><span class="s0">;</span>
+    <span class="s2">/** The amount of health the health pack heals. */</span>
+    <span class="s0">private float </span><span class="s1">healAmount</span><span class="s0">;</span>
+    <span class="s2">/** The position of the health pack. */</span>
+    <span class="s0">private </span><span class="s1">Vector2 position</span><span class="s0">;</span>
+    <span class="s2">/** The main paint of the pack. */</span>
+    <span class="s0">private </span><span class="s1">Paint paint</span><span class="s0">;</span>
+    <span class="s2">/** The paint of the cross on the pack. */</span>
+    <span class="s0">private </span><span class="s1">Paint crossPaint</span><span class="s0">;</span>
+    <span class="s2">/** The main game view. */</span>
+    <span class="s0">private </span><span class="s1">MainView view</span><span class="s0">;</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Constructs a health pack.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">position  The position of the health pack.</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">view      The main game view.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">HealthPack(Vector2 position</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+        <span class="s0">this</span><span class="s1">.size = </span><span class="s5">0.1f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.healAmount = </span><span class="s5">20f</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.position = position</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.view = view</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.paint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.paint.setColor(</span><span class="s5">0xffffffff</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s0">this</span><span class="s1">.crossPaint = </span><span class="s0">new </span><span class="s1">Paint()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.crossPaint.setColor(</span><span class="s5">0xff00ff00</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the size of the health pack.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The size (diameter) of the health pack.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getSize() {</span>
+        <span class="s0">return </span><span class="s1">size</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the heal amount of the health pack.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The heal amount of the pack.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public float </span><span class="s1">getHealAmount() {</span>
+        <span class="s0">return </span><span class="s1">healAmount</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Get the position of the health pack.</span>
+     <span class="s2">* </span><span class="s4">@return </span><span class="s2">The position of the pack.</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Vector2 getPosition() {</span>
+        <span class="s0">return </span><span class="s1">position</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Draws the health pack.</span>
+     <span class="s2">* </span><span class="s3">&lt;p&gt;</span>
+     <span class="s2">* </span><span class="s4">@param </span><span class="s2">canvas The canvas used for drawing.</span>
+     <span class="s2">*/</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">draw(Canvas canvas) {</span>
+        <span class="s1">Vector2 pixelPosition = </span><span class="s0">this</span><span class="s1">.view.positionToPixels(</span><span class="s0">this</span><span class="s1">.view.relativePosition(</span><span class="s0">this</span><span class="s1">.position))</span><span class="s0">;</span>
+        <span class="s0">float </span><span class="s1">pixelSize = </span><span class="s0">this</span><span class="s1">.size * </span><span class="s0">this</span><span class="s1">.view.getPixelsPerUnit()</span><span class="s0">;</span>
+        <span class="s1">canvas.drawCircle(pixelPosition.getX()</span><span class="s0">, </span><span class="s1">pixelPosition.getY()</span><span class="s0">, </span><span class="s1">pixelSize / </span><span class="s5">2</span><span class="s0">, </span><span class="s1">paint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect(pixelPosition.getX() - pixelSize / </span><span class="s5">6</span><span class="s0">, </span><span class="s1">pixelPosition.getY() - pixelSize / </span><span class="s5">3</span><span class="s0">,</span>
+                <span class="s1">pixelPosition.getX() + pixelSize / </span><span class="s5">6</span><span class="s0">, </span><span class="s1">pixelPosition.getY() + pixelSize / </span><span class="s5">3</span><span class="s0">, </span><span class="s1">crossPaint)</span><span class="s0">;</span>
+        <span class="s1">canvas.drawRect(pixelPosition.getX() - pixelSize / </span><span class="s5">3</span><span class="s0">, </span><span class="s1">pixelPosition.getY() - pixelSize / </span><span class="s5">6</span><span class="s0">,</span>
+                <span class="s1">pixelPosition.getX() + pixelSize / </span><span class="s5">3</span><span class="s0">, </span><span class="s1">pixelPosition.getY() + pixelSize / </span><span class="s5">6</span><span class="s0">, </span><span class="s1">crossPaint)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
