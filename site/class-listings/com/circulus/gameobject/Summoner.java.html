@@ -10,6 +10,7 @@
 .s4 { color: #77b767; font-style: italic;}
 .s5 { color: #629755; font-weight: bold; font-style: italic;}
 .s6 { color: #808080;}
+.ln { color: #606366; font-weight: normal; font-style: normal; }
 </style>
 </head>
 <body bgcolor="#2b2b2b">
@@ -18,75 +19,75 @@
 <font face="Arial, Helvetica" color="#000000">
 Summoner.java</font>
 </center></td></tr></table>
-<pre><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
-
-<span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
-
-<span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
-<span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
-<span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
-
-<span class="s2">/**</span>
- <span class="s2">* Defines the Summoner enemy type. Summons Shooters occasionally.</span>
- <span class="s2">*/</span>
-<span class="s0">public class </span><span class="s1">Summoner </span><span class="s0">extends </span><span class="s1">Enemy {</span>
-    <span class="s2">/** The delay in ticks between summons. */</span>
-    <span class="s0">private static final int </span><span class="s1">summonTickDelay = </span><span class="s3">800</span><span class="s0">;</span>
-    <span class="s2">/** The distance from the Summoner that Shooters spawn. */</span>
-    <span class="s0">private static final float </span><span class="s1">summonDistance = </span><span class="s3">1f</span><span class="s0">;</span>
-
-    <span class="s2">/** True if the enemy detected the player, otherwise false. */</span>
-    <span class="s0">private boolean </span><span class="s1">detectedPlayer</span><span class="s0">;</span>
-    <span class="s2">/** The current tick in the attack cycle. */</span>
-    <span class="s0">private int </span><span class="s1">tick</span><span class="s0">;</span>
-
-    <span class="s2">/**</span>
-     <span class="s2">* Constructs a Summoner enemy.</span>
-     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
-     <span class="s2">* </span><span class="s5">@param </span><span class="s2">position  The position of the enemy.</span>
-     <span class="s2">* </span><span class="s5">@param </span><span class="s2">manager   The manager associated with the enemy.</span>
-     <span class="s2">* </span><span class="s5">@param </span><span class="s2">view      The main game view.</span>
-     <span class="s2">*/</span>
-    <span class="s0">public </span><span class="s1">Summoner(Vector2 position</span><span class="s0">, </span><span class="s1">Manager manager</span><span class="s0">, </span><span class="s1">MainView view) {</span>
-        <span class="s0">super</span><span class="s1">(position</span><span class="s0">, </span><span class="s1">manager</span><span class="s0">, </span><span class="s1">view)</span><span class="s0">;</span>
-
-        <span class="s0">this</span><span class="s1">.speed = </span><span class="s3">0.2f</span><span class="s0">;</span>
-        <span class="s0">this</span><span class="s1">.size = </span><span class="s3">0.5f</span><span class="s0">;</span>
-        <span class="s0">this</span><span class="s1">.detectedPlayer = </span><span class="s0">false;</span>
-        <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">600</span><span class="s0">;</span>
-        <span class="s0">this</span><span class="s1">.paint.setColor(Color.MAGENTA)</span><span class="s0">;</span>
-
-        <span class="s0">this</span><span class="s1">.assignBasicValues(</span><span class="s3">100f</span><span class="s0">, </span><span class="s3">0f</span><span class="s0">, </span><span class="s3">15</span><span class="s1">)</span><span class="s0">;</span>
-
-        <span class="s0">this</span><span class="s1">.health = baseHealth * (</span><span class="s3">0.9f </span><span class="s1">+ </span><span class="s3">0.1f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel() * </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
-        <span class="s0">this</span><span class="s1">.maxHealth = </span><span class="s0">this</span><span class="s1">.health</span><span class="s0">;</span>
-        <span class="s0">this</span><span class="s1">.damage = baseDamage * (</span><span class="s3">0.8f </span><span class="s1">+ </span><span class="s3">0.2f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
-    <span class="s1">}</span>
-
-    <span class="s2">/**</span>
-     <span class="s2">* Defines the behavior of the Summoner.</span>
-     <span class="s2">*/</span>
-    <span class="s1">@Override</span>
-    <span class="s0">protected void </span><span class="s1">behave() {</span>
-        <span class="s0">super</span><span class="s1">.behave()</span><span class="s0">;</span>
-
-        <span class="s0">if </span><span class="s1">(detectedPlayer) {</span>
-            <span class="s6">// Move and occasionally summon a Shooter</span>
-            <span class="s1">move()</span><span class="s0">;</span>
-            <span class="s1">tick = (tick + </span><span class="s3">1</span><span class="s1">) % summonTickDelay</span><span class="s0">;</span>
-            <span class="s0">if </span><span class="s1">(tick == </span><span class="s3">0</span><span class="s1">) {</span>
-                <span class="s1">Vector2 summonPos = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s0">this</span><span class="s1">.position.getX()</span><span class="s0">, this</span><span class="s1">.position.getY() - summonDistance)</span><span class="s0">;</span>
-                <span class="s1">Shooter shooter = </span><span class="s0">new </span><span class="s1">Shooter(summonPos</span><span class="s0">, this</span><span class="s1">.manager</span><span class="s0">, this</span><span class="s1">.view)</span><span class="s0">;</span>
-                <span class="s1">shooter.startThread()</span><span class="s0">;</span>
-                <span class="s0">this</span><span class="s1">.manager.addEnemy(shooter)</span><span class="s0">;</span>
-            <span class="s1">}</span>
-        <span class="s1">}</span>
-        <span class="s0">else if </span><span class="s1">(Vector2.distance(</span><span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition()</span><span class="s0">, this</span><span class="s1">.position) &lt;= </span><span class="s3">2 </span><span class="s1">|| health &lt; maxHealth) {</span>
-            <span class="s6">// Trigger if the player is close or the enemy is hit</span>
-            <span class="s1">detectedPlayer = </span><span class="s0">true;</span>
-        <span class="s1">}</span>
-    <span class="s1">}</span>
-<span class="s1">}</span>
-</pre>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">package </span><span class="s1">com.circulus.gameobject</span><span class="s0">;</span>
+<a name="l2"><span class="ln">2    </span></a>
+<a name="l3"><span class="ln">3    </span></a><span class="s0">import </span><span class="s1">android.graphics.Color</span><span class="s0">;</span>
+<a name="l4"><span class="ln">4    </span></a>
+<a name="l5"><span class="ln">5    </span></a><span class="s0">import </span><span class="s1">com.circulus.playtime.MainView</span><span class="s0">;</span>
+<a name="l6"><span class="ln">6    </span></a><span class="s0">import </span><span class="s1">com.circulus.playtime.Manager</span><span class="s0">;</span>
+<a name="l7"><span class="ln">7    </span></a><span class="s0">import </span><span class="s1">com.circulus.utility.Vector2</span><span class="s0">;</span>
+<a name="l8"><span class="ln">8    </span></a>
+<a name="l9"><span class="ln">9    </span></a><span class="s2">/**</span>
+<a name="l10"><span class="ln">10   </span></a> <span class="s2">* Defines the Summoner enemy type. Summons Shooters occasionally.</span>
+<a name="l11"><span class="ln">11   </span></a> <span class="s2">*/</span>
+<a name="l12"><span class="ln">12   </span></a><span class="s0">public class </span><span class="s1">Summoner </span><span class="s0">extends </span><span class="s1">Enemy {</span>
+<a name="l13"><span class="ln">13   </span></a>    <span class="s2">/** The delay in ticks between summons. */</span>
+<a name="l14"><span class="ln">14   </span></a>    <span class="s0">private static final int </span><span class="s1">summonTickDelay = </span><span class="s3">800</span><span class="s0">;</span>
+<a name="l15"><span class="ln">15   </span></a>    <span class="s2">/** The distance from the Summoner that Shooters spawn. */</span>
+<a name="l16"><span class="ln">16   </span></a>    <span class="s0">private static final float </span><span class="s1">summonDistance = </span><span class="s3">1f</span><span class="s0">;</span>
+<a name="l17"><span class="ln">17   </span></a>
+<a name="l18"><span class="ln">18   </span></a>    <span class="s2">/** True if the enemy detected the player, otherwise false. */</span>
+<a name="l19"><span class="ln">19   </span></a>    <span class="s0">private boolean </span><span class="s1">detectedPlayer</span><span class="s0">;</span>
+<a name="l20"><span class="ln">20   </span></a>    <span class="s2">/** The current tick in the attack cycle. */</span>
+<a name="l21"><span class="ln">21   </span></a>    <span class="s0">private int </span><span class="s1">tick</span><span class="s0">;</span>
+<a name="l22"><span class="ln">22   </span></a>
+<a name="l23"><span class="ln">23   </span></a>    <span class="s2">/**</span>
+<a name="l24"><span class="ln">24   </span></a>     <span class="s2">* Constructs a Summoner enemy.</span>
+<a name="l25"><span class="ln">25   </span></a>     <span class="s2">* </span><span class="s4">&lt;p&gt;</span>
+<a name="l26"><span class="ln">26   </span></a>     <span class="s2">* </span><span class="s5">@param </span><span class="s2">position  The position of the enemy.</span>
+<a name="l27"><span class="ln">27   </span></a>     <span class="s2">* </span><span class="s5">@param </span><span class="s2">manager   The manager associated with the enemy.</span>
+<a name="l28"><span class="ln">28   </span></a>     <span class="s2">* </span><span class="s5">@param </span><span class="s2">view      The main game view.</span>
+<a name="l29"><span class="ln">29   </span></a>     <span class="s2">*/</span>
+<a name="l30"><span class="ln">30   </span></a>    <span class="s0">public </span><span class="s1">Summoner(Vector2 position</span><span class="s0">, </span><span class="s1">Manager manager</span><span class="s0">, </span><span class="s1">MainView view) {</span>
+<a name="l31"><span class="ln">31   </span></a>        <span class="s0">super</span><span class="s1">(position</span><span class="s0">, </span><span class="s1">manager</span><span class="s0">, </span><span class="s1">view)</span><span class="s0">;</span>
+<a name="l32"><span class="ln">32   </span></a>
+<a name="l33"><span class="ln">33   </span></a>        <span class="s0">this</span><span class="s1">.speed = </span><span class="s3">0.2f</span><span class="s0">;</span>
+<a name="l34"><span class="ln">34   </span></a>        <span class="s0">this</span><span class="s1">.size = </span><span class="s3">0.5f</span><span class="s0">;</span>
+<a name="l35"><span class="ln">35   </span></a>        <span class="s0">this</span><span class="s1">.detectedPlayer = </span><span class="s0">false;</span>
+<a name="l36"><span class="ln">36   </span></a>        <span class="s0">this</span><span class="s1">.tick = </span><span class="s3">600</span><span class="s0">;</span>
+<a name="l37"><span class="ln">37   </span></a>        <span class="s0">this</span><span class="s1">.paint.setColor(Color.MAGENTA)</span><span class="s0">;</span>
+<a name="l38"><span class="ln">38   </span></a>
+<a name="l39"><span class="ln">39   </span></a>        <span class="s0">this</span><span class="s1">.assignBasicValues(</span><span class="s3">100f</span><span class="s0">, </span><span class="s3">0f</span><span class="s0">, </span><span class="s3">15</span><span class="s1">)</span><span class="s0">;</span>
+<a name="l40"><span class="ln">40   </span></a>
+<a name="l41"><span class="ln">41   </span></a>        <span class="s0">this</span><span class="s1">.health = baseHealth * (</span><span class="s3">0.9f </span><span class="s1">+ </span><span class="s3">0.1f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel() * </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
+<a name="l42"><span class="ln">42   </span></a>        <span class="s0">this</span><span class="s1">.maxHealth = </span><span class="s0">this</span><span class="s1">.health</span><span class="s0">;</span>
+<a name="l43"><span class="ln">43   </span></a>        <span class="s0">this</span><span class="s1">.damage = baseDamage * (</span><span class="s3">0.8f </span><span class="s1">+ </span><span class="s3">0.2f </span><span class="s1">* </span><span class="s0">this</span><span class="s1">.manager.getLevel())</span><span class="s0">;</span>
+<a name="l44"><span class="ln">44   </span></a>    <span class="s1">}</span>
+<a name="l45"><span class="ln">45   </span></a>
+<a name="l46"><span class="ln">46   </span></a>    <span class="s2">/**</span>
+<a name="l47"><span class="ln">47   </span></a>     <span class="s2">* Defines the behavior of the Summoner.</span>
+<a name="l48"><span class="ln">48   </span></a>     <span class="s2">*/</span>
+<a name="l49"><span class="ln">49   </span></a>    <span class="s1">@Override</span>
+<a name="l50"><span class="ln">50   </span></a>    <span class="s0">protected void </span><span class="s1">behave() {</span>
+<a name="l51"><span class="ln">51   </span></a>        <span class="s0">super</span><span class="s1">.behave()</span><span class="s0">;</span>
+<a name="l52"><span class="ln">52   </span></a>
+<a name="l53"><span class="ln">53   </span></a>        <span class="s0">if </span><span class="s1">(detectedPlayer) {</span>
+<a name="l54"><span class="ln">54   </span></a>            <span class="s6">// Move and occasionally summon a Shooter</span>
+<a name="l55"><span class="ln">55   </span></a>            <span class="s1">move()</span><span class="s0">;</span>
+<a name="l56"><span class="ln">56   </span></a>            <span class="s1">tick = (tick + </span><span class="s3">1</span><span class="s1">) % summonTickDelay</span><span class="s0">;</span>
+<a name="l57"><span class="ln">57   </span></a>            <span class="s0">if </span><span class="s1">(tick == </span><span class="s3">0</span><span class="s1">) {</span>
+<a name="l58"><span class="ln">58   </span></a>                <span class="s1">Vector2 summonPos = </span><span class="s0">new </span><span class="s1">Vector2(</span><span class="s0">this</span><span class="s1">.position.getX()</span><span class="s0">, this</span><span class="s1">.position.getY() - summonDistance)</span><span class="s0">;</span>
+<a name="l59"><span class="ln">59   </span></a>                <span class="s1">Shooter shooter = </span><span class="s0">new </span><span class="s1">Shooter(summonPos</span><span class="s0">, this</span><span class="s1">.manager</span><span class="s0">, this</span><span class="s1">.view)</span><span class="s0">;</span>
+<a name="l60"><span class="ln">60   </span></a>                <span class="s1">shooter.startThread()</span><span class="s0">;</span>
+<a name="l61"><span class="ln">61   </span></a>                <span class="s0">this</span><span class="s1">.manager.addEnemy(shooter)</span><span class="s0">;</span>
+<a name="l62"><span class="ln">62   </span></a>            <span class="s1">}</span>
+<a name="l63"><span class="ln">63   </span></a>        <span class="s1">}</span>
+<a name="l64"><span class="ln">64   </span></a>        <span class="s0">else if </span><span class="s1">(Vector2.distance(</span><span class="s0">this</span><span class="s1">.manager.getPlayer().getPosition()</span><span class="s0">, this</span><span class="s1">.position) &lt;= </span><span class="s3">2 </span><span class="s1">|| health &lt; maxHealth) {</span>
+<a name="l65"><span class="ln">65   </span></a>            <span class="s6">// Trigger if the player is close or the enemy is hit</span>
+<a name="l66"><span class="ln">66   </span></a>            <span class="s1">detectedPlayer = </span><span class="s0">true;</span>
+<a name="l67"><span class="ln">67   </span></a>        <span class="s1">}</span>
+<a name="l68"><span class="ln">68   </span></a>    <span class="s1">}</span>
+<a name="l69"><span class="ln">69   </span></a><span class="s1">}</span>
+<a name="l70"><span class="ln">70   </span></a></pre>
 </body>
 </html>
