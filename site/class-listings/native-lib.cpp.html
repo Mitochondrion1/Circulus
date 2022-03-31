@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>native-lib.cpp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bbb529;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #cc7832;}
+.s4 { color: #808080;}
+.s5 { color: #6897bb;}
+.ln { color: #606366; font-weight: normal; font-style: normal; }
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+native-lib.cpp</font>
+</center></td></tr></table>
+<pre><a name="l1"><span class="ln">1    </span></a><span class="s0">#include </span><span class="s2">&lt;jni.h&gt;</span>
+<a name="l2"><span class="ln">2    </span></a>
+<a name="l3"><span class="ln">3    </span></a><span class="s3">extern </span><span class="s2">&quot;C&quot; </span><span class="s1">JNIEXPORT jfloat JNICALL</span>
+<a name="l4"><span class="ln">4    </span></a><span class="s1">Java_com_circulus_utility_Vector2_quickInvSqrt(JNIEnv *env</span><span class="s3">, </span><span class="s1">jobject vct</span><span class="s3">, </span><span class="s1">jfloat l) {</span>
+<a name="l5"><span class="ln">5    </span></a>    <span class="s4">/* 
+<a name="l6"><span class="ln">6    </span></a>     * This is the fast inverse square root algorithm. 
+<a name="l7"><span class="ln">7    </span></a>     * Calculates the value of 1 / sqrt(l) for a given float l in a more efficient way 
+<a name="l8"><span class="ln">8    </span></a>     * than calculating it straight forward. 
+<a name="l9"><span class="ln">9    </span></a>     * 
+<a name="l10"><span class="ln">10   </span></a>     * Sources: 
+<a name="l11"><span class="ln">11   </span></a>     * https://en.wikipedia.org/wiki/Fast_inverse_square_root 
+<a name="l12"><span class="ln">12   </span></a>     * https://www.youtube.com/watch?v=p8u_k2LIZyo 
+<a name="l13"><span class="ln">13   </span></a>     */</span>
+<a name="l14"><span class="ln">14   </span></a>
+<a name="l15"><span class="ln">15   </span></a>    <span class="s3">int </span><span class="s1">i</span><span class="s3">;</span>
+<a name="l16"><span class="ln">16   </span></a>    <span class="s3">float </span><span class="s1">x2</span><span class="s3">, </span><span class="s1">y</span><span class="s3">;</span>
+<a name="l17"><span class="ln">17   </span></a>    <span class="s3">const float </span><span class="s1">threehalfs = </span><span class="s5">1.5F</span><span class="s3">;</span>
+<a name="l18"><span class="ln">18   </span></a>
+<a name="l19"><span class="ln">19   </span></a>    <span class="s1">x2 = l * </span><span class="s5">0.5F</span><span class="s3">;</span>
+<a name="l20"><span class="ln">20   </span></a>    <span class="s1">y  = l</span><span class="s3">;</span>
+<a name="l21"><span class="ln">21   </span></a>    <span class="s1">i  = * ( </span><span class="s3">int </span><span class="s1">* ) &amp;y</span><span class="s3">;                       </span><span class="s4">// evil floating point bit level hacking</span>
+<a name="l22"><span class="ln">22   </span></a>    <span class="s1">i  = </span><span class="s5">0x5f3759df </span><span class="s1">- ( i &gt;&gt; </span><span class="s5">1 </span><span class="s1">)</span><span class="s3">;               </span><span class="s4">// wtf?</span>
+<a name="l23"><span class="ln">23   </span></a>    <span class="s1">y  = * ( </span><span class="s3">float </span><span class="s1">* ) &amp;i</span><span class="s3">;</span>
+<a name="l24"><span class="ln">24   </span></a>    <span class="s1">y  = y * ( threehalfs - ( x2 * y * y ) )</span><span class="s3">;   </span><span class="s4">// 1st iteration</span>
+<a name="l25"><span class="ln">25   </span></a>	<span class="s1">y  = y * ( threehalfs - ( x2 * y * y ) )</span><span class="s3">;   </span><span class="s4">// 2nd iteration, this can be removed</span>
+<a name="l26"><span class="ln">26   </span></a>
+<a name="l27"><span class="ln">27   </span></a>	<span class="s4">// Ensure that the value of y is positive</span>
+<a name="l28"><span class="ln">28   </span></a>	<span class="s3">if </span><span class="s1">(y &lt; </span><span class="s5">0</span><span class="s1">) {</span>
+<a name="l29"><span class="ln">29   </span></a>	    <span class="s1">y = -y</span><span class="s3">;</span>
+<a name="l30"><span class="ln">30   </span></a>	<span class="s1">}</span>
+<a name="l31"><span class="ln">31   </span></a>
+<a name="l32"><span class="ln">32   </span></a>    <span class="s3">return </span><span class="s1">y</span><span class="s3">;</span>
+<a name="l33"><span class="ln">33   </span></a><span class="s1">}</span></pre>
+</body>
+</html>
